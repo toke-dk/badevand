@@ -57,11 +57,10 @@ class _MyAppState extends State<MyApp> {
               _selectedMenuIndex = newIndex;
             }),
           ),
-          body: SingleChildScrollView(
-            child: _pages.elementAt(_selectedMenuIndex)
+          body: _pages.elementAt(_selectedMenuIndex)
           ),
         ),
-      ),
+
     );
   }
 }
@@ -89,46 +88,48 @@ class Home extends StatelessWidget {
 
     List<Beach> beaches = context.watch<BeachesProvider>().getBeaches;
 
-    return Column(
-      children: [
-        const Text("Den bedste badevandsapp"),
-        OutlinedButton(
-            onPressed: () async {
-              List<dynamic> result = await getBeachData();
-
-              context.read<BeachesProvider>().setBeaches(result.map((e) => Beach.fromMap(e)).toList());
-
-            },
-            child: Text(
-                "Get data (${beaches.isNotEmpty ? 'hasData' : "hasNotData"})")),
-        OutlinedButton(
-            onPressed: () async {
-              print(beaches);
-            },
-            child: const Text("Convert to dart class")),
-        Column(
-          children: List.generate(beaches.length, (index) {
-            final Beach indexBeach = beaches[index];
-            return ListTile(
-              title: Text(indexBeach.name),
-              leading: indexBeach.getSpecsOfToday.waterQualityType.flag,
-              subtitle: Row(
-                children: [
-                  const Icon(Icons.water_drop_outlined),
-                  const Gap(4),
-                  Text(
-                      "${indexBeach.getSpecsOfToday.waterTemperature} \u2103"),
-                  const Gap(10),
-                  indexBeach.getSpecsOfToday.weatherType.icon,
-                  const Gap(4),
-                  Text(
-                      "${indexBeach.getSpecsOfToday.airTemperature} \u2103")
-                ],
-              ),
-            );
-          }),
-        )
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          const Text("Den bedste badevandsapp"),
+          OutlinedButton(
+              onPressed: () async {
+                List<dynamic> result = await getBeachData();
+      
+                context.read<BeachesProvider>().setBeaches(result.map((e) => Beach.fromMap(e)).toList());
+      
+              },
+              child: Text(
+                  "Get data (${beaches.isNotEmpty ? 'hasData' : "hasNotData"})")),
+          OutlinedButton(
+              onPressed: () async {
+                print(beaches);
+              },
+              child: const Text("Convert to dart class")),
+          Column(
+            children: List.generate(beaches.length, (index) {
+              final Beach indexBeach = beaches[index];
+              return ListTile(
+                title: Text(indexBeach.name),
+                leading: indexBeach.getSpecsOfToday.waterQualityType.flag,
+                subtitle: Row(
+                  children: [
+                    const Icon(Icons.water_drop_outlined),
+                    const Gap(4),
+                    Text(
+                        "${indexBeach.getSpecsOfToday.waterTemperature} \u2103"),
+                    const Gap(10),
+                    indexBeach.getSpecsOfToday.weatherType.icon,
+                    const Gap(4),
+                    Text(
+                        "${indexBeach.getSpecsOfToday.airTemperature} \u2103")
+                  ],
+                ),
+              );
+            }),
+          )
+        ],
+      ),
     );
   }
 }
@@ -153,7 +154,7 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
 
-    return SizedBox(height:300, width: 300, child: const GoogleMap(initialCameraPosition: CameraPosition(target: MapPage._kGooglePlex, zoom: 13)));
+    return const GoogleMap(initialCameraPosition: CameraPosition(target: MapPage._kGooglePlex, zoom: 13));
   }
 }
 
