@@ -19,7 +19,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  List<dynamic> beachesRaw = [];
+  List<dynamic> _beachesRaw = [];
+
+  int _selectedMenuIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -34,26 +36,36 @@ class _MyAppState extends State<MyApp> {
           title: const Text("Badevand"),
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.water), label: "Hjem"),
+            BottomNavigationBarItem(icon: Icon(Icons.map), label: "Kort"),
+          ],
+          currentIndex: _selectedMenuIndex,
+          onTap: (int newIndex) => setState(() {
+            _selectedMenuIndex = newIndex;
+          }),
+        ),
         body: SingleChildScrollView(
           child: Column(
             children: [
               const Text("Den bedste badevandsapp"),
               OutlinedButton(
                   onPressed: () async {
-                    beachesRaw = await getBeachData();
+                    _beachesRaw = await getBeachData();
 
                     setState(() {});
                   },
                   child: Text(
-                      "Get data (${beachesRaw.isNotEmpty ? 'hasData' : "hasNotData"})")),
+                      "Get data (${_beachesRaw.isNotEmpty ? 'hasData' : "hasNotData"})")),
               OutlinedButton(
                   onPressed: () async {
-                    print((beachesRaw).map((e) => Beach.fromMap(e)));
+                    print((_beachesRaw).map((e) => Beach.fromMap(e)));
                   },
                   child: const Text("Convert to dart class")),
               Column(
-                children: List.generate(beachesRaw.length, (index) {
-                  final Beach indexBeach = Beach.fromMap(beachesRaw[index]);
+                children: List.generate(_beachesRaw.length, (index) {
+                  final Beach indexBeach = Beach.fromMap(_beachesRaw[index]);
                   return ListTile(
                     title: Text(indexBeach.name),
                     leading: indexBeach.getSpecsOfToday.waterQualityType.flag,
