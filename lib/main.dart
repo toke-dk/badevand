@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:badevand/enums/water_quality.dart';
+import 'package:badevand/enums/weather_types.dart';
 import 'package:badevand/models/beach.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -63,10 +64,8 @@ class _MyAppState extends State<MyApp> {
                         Text(
                             "${indexBeach.getSpecsOfToday.waterTemperature} \u2103"),
                         const Gap(10),
-                        const Icon(
-                          Icons.sunny,
-                          color: Colors.amber,
-                        ),
+                          indexBeach.getSpecsOfToday.weatherType.icon,
+
                         const Gap(4),
                         Text(
                             "${indexBeach.getSpecsOfToday.airTemperature} \u2103")

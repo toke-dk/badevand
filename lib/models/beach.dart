@@ -1,3 +1,4 @@
+import 'package:badevand/enums/weather_types.dart';
 import 'package:badevand/extenstions/date_extensions.dart';
 
 import '../enums/water_quality.dart';
@@ -36,12 +37,15 @@ class BeachSpecifications {
   WaterQualityTypes waterQualityType;
   double waterTemperature;
   double airTemperature;
+  WeatherTypes weatherType;
 
-  BeachSpecifications(
-      {required this.dataDate,
-      required this.waterQualityType,
-      required this.waterTemperature,
-      required this.airTemperature});
+  BeachSpecifications({
+    required this.dataDate,
+    required this.waterQualityType,
+    required this.waterTemperature,
+    required this.airTemperature,
+    required this.weatherType,
+  });
 
   factory BeachSpecifications.fromMap(Map<String, dynamic> map) {
     return BeachSpecifications(
@@ -49,6 +53,8 @@ class BeachSpecifications {
         waterQualityType: convertIntToQualityType(
             int.parse(map["water_quality"].toString()))!,
         waterTemperature: double.parse(map["water_temperature"].toString()),
-        airTemperature: double.parse(map["air_temperature"].toString()));
+        airTemperature: double.parse(map["air_temperature"].toString()),
+        weatherType: convertIntToWeatherType(
+            int.parse(map["weather_type"].toString()))!);
   }
 }
