@@ -64,8 +64,7 @@ class _MyAppState extends State<MyApp> {
                         Text(
                             "${indexBeach.getSpecsOfToday.waterTemperature} \u2103"),
                         const Gap(10),
-                          indexBeach.getSpecsOfToday.weatherType.icon,
-
+                        indexBeach.getSpecsOfToday.weatherType.icon,
                         const Gap(4),
                         Text(
                             "${indexBeach.getSpecsOfToday.airTemperature} \u2103")
