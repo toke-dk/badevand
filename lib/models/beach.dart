@@ -28,17 +28,19 @@ class BeachSpecifications {
   DateTime dataDate;
   WaterQualityTypes waterQualityType;
   double waterTemperature;
+  double airTemperature;
 
   BeachSpecifications(
       {required this.dataDate,
       required this.waterQualityType,
-      required this.waterTemperature});
+      required this.waterTemperature,
+      required this.airTemperature});
 
   factory BeachSpecifications.fromMap(Map<String, dynamic> map) {
     return BeachSpecifications(
         dataDate: DateTime.parse(map["date"].toString()),
         waterQualityType: convertIntToQualityType(
             int.parse(map["water_quality"].toString()))!,
-        waterTemperature: double.parse(map["water_temperature"].toString()));
+        waterTemperature: double.parse(map["water_temperature"].toString()), airTemperature: double.parse(map["air_temperature"].toString()));
   }
 }

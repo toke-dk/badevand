@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:badevand/enums/water_quality.dart';
 import 'package:badevand/models/beach.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:http/http.dart' as http;
 
 void main() {
@@ -19,7 +20,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   List<dynamic> beachesRaw = [];
 
-    @override
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
@@ -32,23 +33,49 @@ class _MyAppState extends State<MyApp> {
           title: const Text("Badevand"),
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         ),
-        body: Column(
-          children: [
-            const Text("Den bedste badevandsapp"),
-            OutlinedButton(
-                onPressed: () async {
-                  beachesRaw = await getBeachData();
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              const Text("Den bedste badevandsapp"),
+              OutlinedButton(
+                  onPressed: () async {
+                    beachesRaw = await getBeachData();
 
-                  setState(()  {
-                  });
-                },
-                child: Text("Get data (${beachesRaw.isNotEmpty ? 'hasData' : "hasNotData"})")),
-            OutlinedButton(
-                onPressed: () async {
-                 print((beachesRaw).map((e) => Beach.fromMap(e)));
-                },
-                child: const Text("Convert to dart class"))
-          ],
+                    setState(() {});
+                  },
+                  child: Text(
+                      "Get data (${beachesRaw.isNotEmpty ? 'hasData' : "hasNotData"})")),
+              OutlinedButton(
+                  onPressed: () async {
+                    print((beachesRaw).map((e) => Beach.fromMap(e)));
+                  },
+                  child: const Text("Convert to dart class")),
+              Column(
+                children: List.generate(beachesRaw.length, (index) {
+                  final Beach indexBeach = Beach.fromMap(beachesRaw[index]);
+                  return ListTile(
+                    title: Text(indexBeach.name),
+                    subtitle: Row(
+                      children: [
+                        const Icon(Icons.water_drop_outlined),
+                        const Gap(4),
+                        Text(
+                            "${indexBeach.beachSpecifications[0].waterTemperature} \u2103"),
+                        const Gap(10),
+                        const Icon(
+                          Icons.sunny,
+                          color: Colors.amber,
+                        ),
+                        const Gap(4),
+                        Text(
+                            "${indexBeach.beachSpecifications[0].airTemperature} \u2103")
+                      ],
+                    ),
+                  );
+                }),
+              )
+            ],
+          ),
         ),
       ),
     );
