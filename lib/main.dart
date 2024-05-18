@@ -19,12 +19,18 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  List<dynamic> _beachesRaw = [];
+
+
 
   int _selectedMenuIndex = 0;
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> _pages = [
+      const Home(),
+      const MapPage(),
+    ];
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -47,46 +53,7 @@ class _MyAppState extends State<MyApp> {
           }),
         ),
         body: SingleChildScrollView(
-          child: Column(
-            children: [
-              const Text("Den bedste badevandsapp"),
-              OutlinedButton(
-                  onPressed: () async {
-                    _beachesRaw = await getBeachData();
-
-                    setState(() {});
-                  },
-                  child: Text(
-                      "Get data (${_beachesRaw.isNotEmpty ? 'hasData' : "hasNotData"})")),
-              OutlinedButton(
-                  onPressed: () async {
-                    print((_beachesRaw).map((e) => Beach.fromMap(e)));
-                  },
-                  child: const Text("Convert to dart class")),
-              Column(
-                children: List.generate(_beachesRaw.length, (index) {
-                  final Beach indexBeach = Beach.fromMap(_beachesRaw[index]);
-                  return ListTile(
-                    title: Text(indexBeach.name),
-                    leading: indexBeach.getSpecsOfToday.waterQualityType.flag,
-                    subtitle: Row(
-                      children: [
-                        const Icon(Icons.water_drop_outlined),
-                        const Gap(4),
-                        Text(
-                            "${indexBeach.getSpecsOfToday.waterTemperature} \u2103"),
-                        const Gap(10),
-                        indexBeach.getSpecsOfToday.weatherType.icon,
-                        const Gap(4),
-                        Text(
-                            "${indexBeach.getSpecsOfToday.airTemperature} \u2103")
-                      ],
-                    ),
-                  );
-                }),
-              )
-            ],
-          ),
+          child: _pages.elementAt(_selectedMenuIndex)
         ),
       ),
     );
@@ -107,3 +74,73 @@ Future<List<dynamic>> getBeachData() async {
     throw Exception('Could not find the data from the vandusigt link:(');
   }
 }
+
+class Home extends StatefulWidget {
+  const Home({super.key});
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+
+  List<dynamic> _beachesRaw = [];
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const Text("Den bedste badevandsapp"),
+        OutlinedButton(
+            onPressed: () async {
+              _beachesRaw = await getBeachData();
+
+              setState(() {});
+            },
+            child: Text(
+                "Get data (${_beachesRaw.isNotEmpty ? 'hasData' : "hasNotData"})")),
+        OutlinedButton(
+            onPressed: () async {
+              print((_beachesRaw).map((e) => Beach.fromMap(e)));
+            },
+            child: const Text("Convert to dart class")),
+        Column(
+          children: List.generate(_beachesRaw.length, (index) {
+            final Beach indexBeach = Beach.fromMap(_beachesRaw[index]);
+            return ListTile(
+              title: Text(indexBeach.name),
+              leading: indexBeach.getSpecsOfToday.waterQualityType.flag,
+              subtitle: Row(
+                children: [
+                  const Icon(Icons.water_drop_outlined),
+                  const Gap(4),
+                  Text(
+                      "${indexBeach.getSpecsOfToday.waterTemperature} \u2103"),
+                  const Gap(10),
+                  indexBeach.getSpecsOfToday.weatherType.icon,
+                  const Gap(4),
+                  Text(
+                      "${indexBeach.getSpecsOfToday.airTemperature} \u2103")
+                ],
+              ),
+            );
+          }),
+        )
+      ],
+    );
+  }
+}
+
+class MapPage extends StatelessWidget {
+  const MapPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      children: [
+        Text("data")
+      ],
+    );
+  }
+}
+
