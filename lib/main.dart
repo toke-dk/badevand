@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:badevand/enums/water_quality.dart';
 import 'package:badevand/enums/weather_types.dart';
 import 'package:badevand/models/beach.dart';
+import 'package:badevand/providers/beaches_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,29 +33,32 @@ class _MyAppState extends State<MyApp> {
       const MapPage(),
     ];
 
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text("Badevand"),
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+    return ChangeNotifierProvider(
+      create: (BuildContext context) => BeachesProvider(),
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
         ),
-        bottomNavigationBar: BottomNavigationBar(
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.water), label: "Hjem"),
-            BottomNavigationBarItem(icon: Icon(Icons.map), label: "Kort"),
-          ],
-          currentIndex: _selectedMenuIndex,
-          onTap: (int newIndex) => setState(() {
-            _selectedMenuIndex = newIndex;
-          }),
-        ),
-        body: SingleChildScrollView(
-          child: _pages.elementAt(_selectedMenuIndex)
+        home: Scaffold(
+          appBar: AppBar(
+            title: const Text("Badevand"),
+            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            items: const [
+              BottomNavigationBarItem(icon: Icon(Icons.water), label: "Hjem"),
+              BottomNavigationBarItem(icon: Icon(Icons.map), label: "Kort"),
+            ],
+            currentIndex: _selectedMenuIndex,
+            onTap: (int newIndex) => setState(() {
+              _selectedMenuIndex = newIndex;
+            }),
+          ),
+          body: SingleChildScrollView(
+            child: _pages.elementAt(_selectedMenuIndex)
+          ),
         ),
       ),
     );
@@ -75,38 +80,34 @@ Future<List<dynamic>> getBeachData() async {
   }
 }
 
-class Home extends StatefulWidget {
+class Home extends StatelessWidget {
   const Home({super.key});
 
   @override
-  State<Home> createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
-
-  List<dynamic> _beachesRaw = [];
-
-  @override
   Widget build(BuildContext context) {
+
+    List<Beach> beaches = context.watch<BeachesProvider>().getBeaches;
+
     return Column(
       children: [
         const Text("Den bedste badevandsapp"),
         OutlinedButton(
             onPressed: () async {
-              _beachesRaw = await getBeachData();
+              List<dynamic> result = await getBeachData();
 
-              setState(() {});
+              context.read<BeachesProvider>().setBeaches(result.map((e) => Beach.fromMap(e)).toList());
+
             },
             child: Text(
-                "Get data (${_beachesRaw.isNotEmpty ? 'hasData' : "hasNotData"})")),
+                "Get data (${beaches.isNotEmpty ? 'hasData' : "hasNotData"})")),
         OutlinedButton(
             onPressed: () async {
-              print((_beachesRaw).map((e) => Beach.fromMap(e)));
+              print(beaches);
             },
             child: const Text("Convert to dart class")),
         Column(
-          children: List.generate(_beachesRaw.length, (index) {
-            final Beach indexBeach = Beach.fromMap(_beachesRaw[index]);
+          children: List.generate(beaches.length, (index) {
+            final Beach indexBeach = beaches[index];
             return ListTile(
               title: Text(indexBeach.name),
               leading: indexBeach.getSpecsOfToday.waterQualityType.flag,
@@ -136,9 +137,12 @@ class MapPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+
+    List<Beach> beaches = context.watch<BeachesProvider>().getBeaches;
+
+    return Column(
       children: [
-        Text("data")
+        Text(beaches.first.name)
       ],
     );
   }
