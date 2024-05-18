@@ -55,13 +55,13 @@ class _MyAppState extends State<MyApp> {
                   final Beach indexBeach = Beach.fromMap(beachesRaw[index]);
                   return ListTile(
                     title: Text(indexBeach.name),
-                    leading: indexBeach.beachSpecifications[0].waterQualityType.flag,
+                    leading: indexBeach.getSpecsOfToday.waterQualityType.flag,
                     subtitle: Row(
                       children: [
                         const Icon(Icons.water_drop_outlined),
                         const Gap(4),
                         Text(
-                            "${indexBeach.beachSpecifications[0].waterTemperature} \u2103"),
+                            "${indexBeach.getSpecsOfToday.waterTemperature} \u2103"),
                         const Gap(10),
                         const Icon(
                           Icons.sunny,
@@ -69,7 +69,7 @@ class _MyAppState extends State<MyApp> {
                         ),
                         const Gap(4),
                         Text(
-                            "${indexBeach.beachSpecifications[0].airTemperature} \u2103")
+                            "${indexBeach.getSpecsOfToday.airTemperature} \u2103")
                       ],
                     ),
                   );

@@ -1,3 +1,5 @@
+import 'package:badevand/extenstions/date_extensions.dart';
+
 import '../enums/water_quality.dart';
 
 class Beach {
@@ -22,6 +24,8 @@ class Beach {
         comments: map["comments"]?.toString(),
         beachSpecifications: (map["data"] as List<dynamic>).map((dataMap) => BeachSpecifications.fromMap(dataMap)).toList());
   }
+  
+  BeachSpecifications get getSpecsOfToday => beachSpecifications.firstWhere((element) => element.dataDate.isToday);
 }
 
 class BeachSpecifications {
