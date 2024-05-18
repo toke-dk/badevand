@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:badevand/enums/water_quality.dart';
+import 'package:badevand/models/beach.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -7,10 +9,17 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  List<dynamic> beachesRaw = [];
+
+    @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
@@ -27,10 +36,18 @@ class MyApp extends StatelessWidget {
           children: [
             const Text("Den bedste badevandsapp"),
             OutlinedButton(
-                onPressed: () {
-                  getBeachData();
+                onPressed: () async {
+                  beachesRaw = await getBeachData();
+
+                  setState(()  {
+                  });
                 },
-                child: const Text("Get data"))
+                child: Text("Get data (${beachesRaw.isNotEmpty ? 'hasData' : "hasNotData"})")),
+            OutlinedButton(
+                onPressed: () async {
+                 print((beachesRaw).map((e) => Beach.fromMap(e)));
+                },
+                child: const Text("Convert to dart class"))
           ],
         ),
       ),
@@ -38,7 +55,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-Future<void> getBeachData() async {
+Future<List<dynamic>> getBeachData() async {
   final url = Uri.parse('http://api.vandudsigten.dk/beaches');
 
   final response = await http.get(url);
@@ -46,6 +63,7 @@ Future<void> getBeachData() async {
   if (response.statusCode == 200) {
     final List<dynamic> data = jsonDecode(response.body);
     print(data[1]["name"]);
+    return data;
   } else {
     // Handle error scenario
     throw Exception('Could not find the data from the vandusigt link:(');
