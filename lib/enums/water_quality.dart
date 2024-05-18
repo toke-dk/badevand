@@ -19,13 +19,25 @@ extension WaterQualityTypesExtension on WaterQualityTypes {
   Widget get flag {
     switch (this) {
       case WaterQualityTypes.badQuality:
-        return const Icon(Icons.flag, color: Colors.red,);
+        return const Icon(
+          Icons.flag,
+          color: Colors.red,
+        );
       case WaterQualityTypes.goodQuality:
-        return const Icon(Icons.flag, color: Colors.green,);
+        return const Icon(
+          Icons.flag,
+          color: Colors.green,
+        );
       case WaterQualityTypes.noWarning:
-        return const Icon(Icons.flag, color: Colors.amber,);
+        return const Icon(
+          Icons.flag,
+          color: Colors.amber,
+        );
       case WaterQualityTypes.closed:
-        return const Icon(Icons.flag, color: Colors.grey,);
+        return const Icon(
+          Icons.flag,
+          color: Colors.grey,
+        );
     }
   }
 }

@@ -22,10 +22,13 @@ class Beach {
         name: map["name"] as String,
         description: map["description"] as String?,
         comments: map["comments"]?.toString(),
-        beachSpecifications: (map["data"] as List<dynamic>).map((dataMap) => BeachSpecifications.fromMap(dataMap)).toList());
+        beachSpecifications: (map["data"] as List<dynamic>)
+            .map((dataMap) => BeachSpecifications.fromMap(dataMap))
+            .toList());
   }
-  
-  BeachSpecifications get getSpecsOfToday => beachSpecifications.firstWhere((element) => element.dataDate.isToday);
+
+  BeachSpecifications get getSpecsOfToday =>
+      beachSpecifications.firstWhere((element) => element.dataDate.isToday);
 }
 
 class BeachSpecifications {
@@ -45,6 +48,7 @@ class BeachSpecifications {
         dataDate: DateTime.parse(map["date"].toString()),
         waterQualityType: convertIntToQualityType(
             int.parse(map["water_quality"].toString()))!,
-        waterTemperature: double.parse(map["water_temperature"].toString()), airTemperature: double.parse(map["air_temperature"].toString()));
+        waterTemperature: double.parse(map["water_temperature"].toString()),
+        airTemperature: double.parse(map["air_temperature"].toString()));
   }
 }
