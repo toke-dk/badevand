@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 enum WaterQualityTypes { badQuality, goodQuality, noWarning, closed }
 
 extension WaterQualityTypesExtension on WaterQualityTypes {
@@ -11,6 +13,19 @@ extension WaterQualityTypesExtension on WaterQualityTypes {
         return "Ingen automatisk varsling";
       case WaterQualityTypes.closed:
         return "Badested lukket for sæsonen";
+    }
+  }
+
+  Widget get flag {
+    switch (this) {
+      case WaterQualityTypes.badQuality:
+        return const Icon(Icons.flag, color: Colors.red,);
+      case WaterQualityTypes.goodQuality:
+        return const Icon(Icons.flag, color: Colors.green,);
+      case WaterQualityTypes.noWarning:
+        return const Icon(Icons.flag, color: Colors.amber,);
+      case WaterQualityTypes.closed:
+        return const Icon(Icons.flag, color: Colors.grey,);
     }
   }
 }

@@ -55,6 +55,7 @@ class _MyAppState extends State<MyApp> {
                   final Beach indexBeach = Beach.fromMap(beachesRaw[index]);
                   return ListTile(
                     title: Text(indexBeach.name),
+                    leading: indexBeach.beachSpecifications[0].waterQualityType.flag,
                     subtitle: Row(
                       children: [
                         const Icon(Icons.water_drop_outlined),
