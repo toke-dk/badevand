@@ -6,6 +6,7 @@ import 'package:badevand/models/beach.dart';
 import 'package:badevand/providers/beaches_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
@@ -132,19 +133,27 @@ class Home extends StatelessWidget {
   }
 }
 
-class MapPage extends StatelessWidget {
+class MapPage extends StatefulWidget {
   const MapPage({super.key});
+
+  static const _kGooglePlex =  LatLng(37.4223, -122.08);
+
+  @override
+  State<MapPage> createState() => _MapPageState();
+}
+
+class _MapPageState extends State<MapPage> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
 
-    List<Beach> beaches = context.watch<BeachesProvider>().getBeaches;
-
-    return Column(
-      children: [
-        Text(beaches.first.name)
-      ],
-    );
+    return SizedBox(height:300, width: 300, child: const GoogleMap(initialCameraPosition: CameraPosition(target: MapPage._kGooglePlex, zoom: 13)));
   }
 }
 
