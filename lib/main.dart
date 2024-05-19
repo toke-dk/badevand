@@ -4,11 +4,14 @@ import 'package:badevand/enums/water_quality.dart';
 import 'package:badevand/enums/weather_types.dart';
 import 'package:badevand/models/beach.dart';
 import 'package:badevand/providers/beaches_provider.dart';
+import 'package:badevand/widgets/widget_to_map_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'dart:ui' as ui;
+
 
 void main() {
   runApp(const MyApp());
@@ -136,37 +139,52 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
+
+  Set<Marker> markerList = {};
+
+  Future<void> _createMarkers(List<Beach> beaches) async {
+
+    for (Beach indexBeach in beaches) {
+      final view = ui.PlatformDispatcher.instance.views.first;
+      final icon = await indexBeach.getSpecsOfToday.waterQualityType.flag.toBitmapDescriptor(imageSize: view.physicalSize*1.3);
+
+      setState(() {
+        markerList.add(Marker(
+            markerId: MarkerId(indexBeach.name),
+            position: indexBeach.position,
+
+            icon: icon,
+            infoWindow: InfoWindow(
+                title: indexBeach.name, snippet: indexBeach.comments != "" ? indexBeach.comments : null)
+        ));
+      });
+    }
+  }
+
+  List<Beach> get _beaches => context.watch<BeachesProvider>().getBeaches;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    _createMarkers(_beaches);
+    super.didChangeDependencies();
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
-    List<Beach> _beaches = context.watch<BeachesProvider>().getBeaches;
-    Beach _firstBeach = _beaches.first;
 
-    double getHueFromBeachQuality(Beach beach) {
-      double hue() {
-        switch (beach.getSpecsOfToday.waterQualityType) {
-          case WaterQualityTypes.goodQuality:
-            return 120;
-          case WaterQualityTypes.badQuality:
-            return 0;
-          case WaterQualityTypes.closed:
-            return 50;
-          case WaterQualityTypes.noWarning:
-            return 60;
-        }
-      }
-      return hue();
-    }
 
     return GoogleMap(
       initialCameraPosition: CameraPosition(
-          target: _firstBeach.position,
+          target: _beaches.first.position,
           zoom: 13),
-      markers: _beaches.map((e) => Marker(
-          markerId: MarkerId(e.name),
-          position: e.position,
-          icon: BitmapDescriptor.defaultMarkerWithHue(getHueFromBeachQuality(e)),
-          infoWindow: InfoWindow(title: e.name, snippet: e.comments != "" ? e.comments : null)
-      ),).toSet()
+      markers: markerList,
     );
   }
 }
