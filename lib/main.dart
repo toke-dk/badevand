@@ -22,9 +22,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
-
-
   int _selectedMenuIndex = 0;
 
   @override
@@ -43,24 +40,22 @@ class _MyAppState extends State<MyApp> {
           useMaterial3: true,
         ),
         home: Scaffold(
-          appBar: AppBar(
-            title: const Text("Badevand"),
-            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          ),
-          bottomNavigationBar: BottomNavigationBar(
-            items: const [
-              BottomNavigationBarItem(icon: Icon(Icons.water), label: "Hjem"),
-              BottomNavigationBarItem(icon: Icon(Icons.map), label: "Kort"),
-            ],
-            currentIndex: _selectedMenuIndex,
-            onTap: (int newIndex) => setState(() {
-              _selectedMenuIndex = newIndex;
-            }),
-          ),
-          body: _pages.elementAt(_selectedMenuIndex)
-          ),
-        ),
-
+            appBar: AppBar(
+              title: const Text("Badevand"),
+              backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+            ),
+            bottomNavigationBar: BottomNavigationBar(
+              items: const [
+                BottomNavigationBarItem(icon: Icon(Icons.water), label: "Hjem"),
+                BottomNavigationBarItem(icon: Icon(Icons.map), label: "Kort"),
+              ],
+              currentIndex: _selectedMenuIndex,
+              onTap: (int newIndex) => setState(() {
+                _selectedMenuIndex = newIndex;
+              }),
+            ),
+            body: _pages.elementAt(_selectedMenuIndex)),
+      ),
     );
   }
 }
@@ -85,7 +80,6 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     List<Beach> beaches = context.watch<BeachesProvider>().getBeaches;
 
     return SingleChildScrollView(
@@ -95,9 +89,10 @@ class Home extends StatelessWidget {
           OutlinedButton(
               onPressed: () async {
                 List<dynamic> result = await getBeachData();
-      
-                context.read<BeachesProvider>().setBeaches(result.map((e) => Beach.fromMap(e)).toList());
-      
+
+                context
+                    .read<BeachesProvider>()
+                    .setBeaches(result.map((e) => Beach.fromMap(e)).toList());
               },
               child: Text(
                   "Get data (${beaches.isNotEmpty ? 'hasData' : "hasNotData"})")),
@@ -121,8 +116,7 @@ class Home extends StatelessWidget {
                     const Gap(10),
                     indexBeach.getSpecsOfToday.weatherType.icon,
                     const Gap(4),
-                    Text(
-                        "${indexBeach.getSpecsOfToday.airTemperature} \u2103")
+                    Text("${indexBeach.getSpecsOfToday.airTemperature} \u2103")
                   ],
                 ),
               );
@@ -137,24 +131,25 @@ class Home extends StatelessWidget {
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
 
-  static const _kGooglePlex =  LatLng(37.4223, -122.08);
-
   @override
   State<MapPage> createState() => _MapPageState();
 }
 
 class _MapPageState extends State<MapPage> {
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
+    List<Beach> _beaches = context.watch<BeachesProvider>().getBeaches;
+    Beach _firstBeach = _beaches.first;
 
-    return const GoogleMap(initialCameraPosition: CameraPosition(target: MapPage._kGooglePlex, zoom: 13));
+    return GoogleMap(
+      initialCameraPosition: CameraPosition(
+          target: _firstBeach.position,
+          zoom: 13),
+      markers: _beaches.map((e) => Marker(
+          markerId: MarkerId(e.name),
+          position: e.position,
+          infoWindow: InfoWindow(title: e.name, snippet: e.comments != "" ? e.comments : null)
+      ),).toSet()
+    );
   }
 }
-

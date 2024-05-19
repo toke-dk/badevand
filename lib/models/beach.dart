@@ -1,5 +1,6 @@
 import 'package:badevand/enums/weather_types.dart';
 import 'package:badevand/extenstions/date_extensions.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../enums/water_quality.dart';
 
@@ -9,23 +10,29 @@ class Beach {
   String? description;
   String? comments;
   List<BeachSpecifications> beachSpecifications;
+  LatLng position;
 
-  Beach(
-      {required this.id,
-      required this.name,
-      required this.description,
-      required this.comments,
-      required this.beachSpecifications});
+  Beach({
+    required this.id,
+    required this.name,
+    required this.description,
+    required this.comments,
+    required this.beachSpecifications,
+    required this.position,
+  });
 
   factory Beach.fromMap(Map<String, dynamic> map) {
     return Beach(
-        id: int.parse(map["id"].toString()),
-        name: map["name"] as String,
-        description: map["description"] as String?,
-        comments: map["comments"]?.toString(),
-        beachSpecifications: (map["data"] as List<dynamic>)
-            .map((dataMap) => BeachSpecifications.fromMap(dataMap))
-            .toList());
+      id: int.parse(map["id"].toString()),
+      name: map["name"] as String,
+      description: map["description"] as String?,
+      comments: map["comments"]?.toString(),
+      beachSpecifications: (map["data"] as List<dynamic>)
+          .map((dataMap) => BeachSpecifications.fromMap(dataMap))
+          .toList(),
+      position: LatLng(double.parse(map["latitude"].toString()),
+          double.parse(map["longitude"].toString())),
+    );
   }
 
   BeachSpecifications get getSpecsOfToday =>
