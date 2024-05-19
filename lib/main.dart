@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:badevand/enums/water_quality.dart';
 import 'package:badevand/enums/weather_types.dart';
+import 'package:badevand/extenstions/postion_extension.dart';
 import 'package:badevand/models/beach.dart';
 import 'package:badevand/providers/beaches_provider.dart';
 import 'package:badevand/providers/google_markers_provider.dart';
+import 'package:badevand/providers/user_position_provider.dart';
 import 'package:badevand/widgets/widget_to_map_icon.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +24,8 @@ void main() {
           create: (BuildContext context) => BeachesProvider()),
       ChangeNotifierProvider(
           create: (BuildContext context) => GoogleMarkersProvider()),
+      ChangeNotifierProvider(
+          create: (BuildContext context) => UserPositionProvider()),
     ],
     child: const MyApp(),
   ));
@@ -37,9 +41,10 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   int _selectedMenuIndex = 0;
 
-  Position? position;
 
   Future<void> _determinePosition() async {
+    Position? position;
+
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -74,7 +79,8 @@ class _MyAppState extends State<MyApp> {
     // When we reach here, permissions are granted and we can
     // continue accessing the position of the device.
     position = await Geolocator.getCurrentPosition();
-    print("new position");
+
+    context.read<UserPositionProvider>().setPosition = position;
   }
 
   Future<void> _initializeMarkers(List<Beach> beaches) async {
@@ -221,6 +227,7 @@ class MapPage extends StatefulWidget {
 
 class _MapPageState extends State<MapPage> {
   List<Beach> get _beaches => context.watch<BeachesProvider>().getBeaches;
+  Position? get _userPosition => context.watch<UserPositionProvider>().getPosition;
 
   @override
   void initState() {
@@ -230,8 +237,10 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     return GoogleMap(
+      myLocationButtonEnabled: _userPosition != null,
+      myLocationEnabled: _userPosition != null,
       initialCameraPosition:
-          CameraPosition(target: _beaches.first.position, zoom: 13),
+          CameraPosition(target: _userPosition?.toLatLng ?? _beaches.first.position, zoom: 13),
       markers: context.watch<GoogleMarkersProvider>().getMarkers,
     );
   }
