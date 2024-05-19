@@ -4,7 +4,9 @@ import 'package:badevand/enums/water_quality.dart';
 import 'package:badevand/enums/weather_types.dart';
 import 'package:badevand/models/beach.dart';
 import 'package:badevand/providers/beaches_provider.dart';
+import 'package:badevand/providers/google_markers_provider.dart';
 import 'package:badevand/widgets/widget_to_map_icon.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -13,7 +15,15 @@ import 'package:provider/provider.dart';
 import 'dart:ui' as ui;
 
 void main() {
-  runApp(const MyApp());
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(
+          create: (BuildContext context) => BeachesProvider()),
+      ChangeNotifierProvider(
+          create: (BuildContext context) => GoogleMarkersProvider()),
+    ],
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatefulWidget {
@@ -26,38 +36,63 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   int _selectedMenuIndex = 0;
 
+  Future<void> _initializeMarkers(List<Beach> beaches) async {
+    Set<Marker> markerList = {};
+
+    for (Beach indexBeach in beaches) {
+      final view = ui.PlatformDispatcher.instance.views.first;
+      final icon = await indexBeach.getSpecsOfToday.waterQualityType.flag
+          .toBitmapDescriptor(
+              imageSize: view.physicalSize * 1.3, waitToRender: Duration.zero);
+
+      markerList.add(Marker(
+          markerId: MarkerId(indexBeach.name),
+          position: indexBeach.position,
+          icon: icon,
+          infoWindow: InfoWindow(
+              title: indexBeach.name,
+              snippet:
+                  indexBeach.comments != "" ? indexBeach.comments : null)));
+    }
+    context.read<GoogleMarkersProvider>().setMarkers(markerList);
+  }
+
   @override
   Widget build(BuildContext context) {
+
+    List<Beach> beaches = context.watch<BeachesProvider>().getBeaches;
+
+    // initializing the google maps markers
+    if (beaches.isNotEmpty) _initializeMarkers(context.watch<BeachesProvider>().getBeaches);
+
+
     List<Widget> _pages = [
       const Home(),
       const MapPage(),
     ];
 
-    return ChangeNotifierProvider(
-      create: (BuildContext context) => BeachesProvider(),
-      child: MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
-        home: Scaffold(
-            appBar: AppBar(
-              title: const Text("Badevand"),
-              backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-            ),
-            bottomNavigationBar: BottomNavigationBar(
-              items: const [
-                BottomNavigationBarItem(icon: Icon(Icons.water), label: "Hjem"),
-                BottomNavigationBarItem(icon: Icon(Icons.map), label: "Kort"),
-              ],
-              currentIndex: _selectedMenuIndex,
-              onTap: (int newIndex) => setState(() {
-                _selectedMenuIndex = newIndex;
-              }),
-            ),
-            body: _pages.elementAt(_selectedMenuIndex)),
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
       ),
+      home: Scaffold(
+          appBar: AppBar(
+            title: const Text("Badevand"),
+            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            items: const [
+              BottomNavigationBarItem(icon: Icon(Icons.water), label: "Hjem"),
+              BottomNavigationBarItem(icon: Icon(Icons.map), label: "Kort"),
+            ],
+            currentIndex: _selectedMenuIndex,
+            onTap: (int newIndex) => setState(() {
+              _selectedMenuIndex = newIndex;
+            }),
+          ),
+          body: _pages.elementAt(_selectedMenuIndex)),
     );
   }
 }
@@ -138,28 +173,6 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
-  Set<Marker> markerList = {};
-
-  Future<void> _createMarkers(List<Beach> beaches) async {
-    for (Beach indexBeach in beaches) {
-      final view = ui.PlatformDispatcher.instance.views.first;
-      final icon = await indexBeach.getSpecsOfToday.waterQualityType.flag
-          .toBitmapDescriptor(
-              imageSize: view.physicalSize * 1.3, waitToRender: Duration.zero);
-
-      setState(() {
-        markerList.add(Marker(
-            markerId: MarkerId(indexBeach.name),
-            position: indexBeach.position,
-            icon: icon,
-            infoWindow: InfoWindow(
-                title: indexBeach.name,
-                snippet:
-                    indexBeach.comments != "" ? indexBeach.comments : null)));
-      });
-    }
-  }
-
   List<Beach> get _beaches => context.watch<BeachesProvider>().getBeaches;
 
   @override
@@ -168,17 +181,11 @@ class _MapPageState extends State<MapPage> {
   }
 
   @override
-  void didChangeDependencies() {
-    _createMarkers(_beaches);
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return GoogleMap(
       initialCameraPosition:
           CameraPosition(target: _beaches.first.position, zoom: 13),
-      markers: markerList,
+      markers: context.watch<GoogleMarkersProvider>().getMarkers,
     );
   }
 }
