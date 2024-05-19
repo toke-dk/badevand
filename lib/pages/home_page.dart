@@ -53,7 +53,7 @@ class Home extends StatelessWidget {
                     Text(
                         "${indexBeach.getSpecsOfToday.waterTemperature} \u2103"),
                     const Gap(10),
-                    indexBeach.getSpecsOfToday.weatherType.icon,
+                    indexBeach.getSpecsOfToday.weatherType?.icon ?? const SizedBox.shrink(),
                     const Gap(4),
                     Text("${indexBeach.getSpecsOfToday.airTemperature} \u2103")
                   ],

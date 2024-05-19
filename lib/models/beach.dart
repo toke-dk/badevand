@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:badevand/enums/weather_types.dart';
 import 'package:badevand/extenstions/date_extensions.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -44,7 +46,10 @@ class BeachSpecifications {
   WaterQualityTypes waterQualityType;
   double waterTemperature;
   double airTemperature;
-  WeatherTypes weatherType;
+  WeatherTypes? weatherType;
+  double? windSpeed;
+  double? windDirection;
+  double? precipitation;
 
   BeachSpecifications({
     required this.dataDate,
@@ -52,16 +57,23 @@ class BeachSpecifications {
     required this.waterTemperature,
     required this.airTemperature,
     required this.weatherType,
+    required this.windSpeed,
+    required this.windDirection,
+    required this.precipitation,
   });
 
   factory BeachSpecifications.fromMap(Map<String, dynamic> map) {
+    print('hastighed: ${map["wind_speed"]}');
     return BeachSpecifications(
         dataDate: DateTime.parse(map["date"].toString()),
         waterQualityType: convertIntToQualityType(
             int.parse(map["water_quality"].toString()))!,
         waterTemperature: double.parse(map["water_temperature"].toString()),
         airTemperature: double.parse(map["air_temperature"].toString()),
-        weatherType: convertIntToWeatherType(
-            int.parse(map["weather_type"].toString()))!);
+        weatherType:
+            convertIntToWeatherType(int.parse(map["weather_type"].toString()))!,
+        windSpeed: map["wind_speed"].toString() == "" ? null : double.parse(map["wind_speed"].toString()),
+        windDirection:  map["wind_direction"].toString() == "" ? null : double.parse(map["wind_direction"].toString()),
+        precipitation:  map["precipitation"].toString() == "" ? null : double.parse(map["precipitation"].toString()));
   }
 }
