@@ -35,7 +35,6 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     return GoogleMap(
-      myLocationButtonEnabled: _userPosition != null,
       myLocationEnabled: _userPosition != null,
       initialCameraPosition: CameraPosition(
           target: _userPosition?.toLatLng ?? _beaches.first.position, zoom: 13),
