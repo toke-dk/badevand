@@ -41,7 +41,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   int _selectedMenuIndex = 0;
 
-
   Future<void> _determinePosition() async {
     Position? position;
 
@@ -112,12 +111,11 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-
     List<Beach> beaches = context.watch<BeachesProvider>().getBeaches;
 
     // initializing the google maps markers
-    if (beaches.isNotEmpty) _initializeMarkers(context.watch<BeachesProvider>().getBeaches);
-
+    if (beaches.isNotEmpty)
+      _initializeMarkers(context.watch<BeachesProvider>().getBeaches);
 
     List<Widget> _pages = [
       const Home(),
@@ -227,11 +225,18 @@ class MapPage extends StatefulWidget {
 
 class _MapPageState extends State<MapPage> {
   List<Beach> get _beaches => context.watch<BeachesProvider>().getBeaches;
-  Position? get _userPosition => context.watch<UserPositionProvider>().getPosition;
+
+  Position? get _userPosition =>
+      context.watch<UserPositionProvider>().getPosition;
+
+  GoogleMapController? _mapController;
 
   @override
-  void initState() {
-    super.initState();
+  void dispose() {
+    _mapController
+        ?.dispose(); // If using Completer (replace with your disposal logic)
+    _mapController = null; // If storing directly from onMapCreated
+    super.dispose();
   }
 
   @override
@@ -239,9 +244,10 @@ class _MapPageState extends State<MapPage> {
     return GoogleMap(
       myLocationButtonEnabled: _userPosition != null,
       myLocationEnabled: _userPosition != null,
-      initialCameraPosition:
-          CameraPosition(target: _userPosition?.toLatLng ?? _beaches.first.position, zoom: 13),
+      initialCameraPosition: CameraPosition(
+          target: _userPosition?.toLatLng ?? _beaches.first.position, zoom: 13),
       markers: context.watch<GoogleMarkersProvider>().getMarkers,
+      onMapCreated: (controller) => _mapController = controller,
     );
   }
 }
