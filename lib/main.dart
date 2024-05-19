@@ -12,7 +12,6 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'dart:ui' as ui;
 
-
 void main() {
   runApp(const MyApp());
 }
@@ -139,24 +138,24 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
-
   Set<Marker> markerList = {};
 
   Future<void> _createMarkers(List<Beach> beaches) async {
-
     for (Beach indexBeach in beaches) {
       final view = ui.PlatformDispatcher.instance.views.first;
-      final icon = await indexBeach.getSpecsOfToday.waterQualityType.flag.toBitmapDescriptor(imageSize: view.physicalSize*1.3);
+      final icon = await indexBeach.getSpecsOfToday.waterQualityType.flag
+          .toBitmapDescriptor(
+              imageSize: view.physicalSize * 1.3, waitToRender: Duration.zero);
 
       setState(() {
         markerList.add(Marker(
             markerId: MarkerId(indexBeach.name),
             position: indexBeach.position,
-
             icon: icon,
             infoWindow: InfoWindow(
-                title: indexBeach.name, snippet: indexBeach.comments != "" ? indexBeach.comments : null)
-        ));
+                title: indexBeach.name,
+                snippet:
+                    indexBeach.comments != "" ? indexBeach.comments : null)));
       });
     }
   }
@@ -174,16 +173,11 @@ class _MapPageState extends State<MapPage> {
     super.didChangeDependencies();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
-
-
     return GoogleMap(
-      initialCameraPosition: CameraPosition(
-          target: _beaches.first.position,
-          zoom: 13),
+      initialCameraPosition:
+          CameraPosition(target: _beaches.first.position, zoom: 13),
       markers: markerList,
     );
   }
