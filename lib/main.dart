@@ -141,6 +141,22 @@ class _MapPageState extends State<MapPage> {
     List<Beach> _beaches = context.watch<BeachesProvider>().getBeaches;
     Beach _firstBeach = _beaches.first;
 
+    double getHueFromBeachQuality(Beach beach) {
+      double hue() {
+        switch (beach.getSpecsOfToday.waterQualityType) {
+          case WaterQualityTypes.goodQuality:
+            return 120;
+          case WaterQualityTypes.badQuality:
+            return 0;
+          case WaterQualityTypes.closed:
+            return 50;
+          case WaterQualityTypes.noWarning:
+            return 60;
+        }
+      }
+      return hue();
+    }
+
     return GoogleMap(
       initialCameraPosition: CameraPosition(
           target: _firstBeach.position,
@@ -148,6 +164,7 @@ class _MapPageState extends State<MapPage> {
       markers: _beaches.map((e) => Marker(
           markerId: MarkerId(e.name),
           position: e.position,
+          icon: BitmapDescriptor.defaultMarkerWithHue(getHueFromBeachQuality(e)),
           infoWindow: InfoWindow(title: e.name, snippet: e.comments != "" ? e.comments : null)
       ),).toSet()
     );
