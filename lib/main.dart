@@ -4,6 +4,7 @@ import 'package:badevand/enums/water_quality.dart';
 import 'package:badevand/enums/weather_types.dart';
 import 'package:badevand/extenstions/postion_extension.dart';
 import 'package:badevand/models/beach.dart';
+import 'package:badevand/pages/beach_info_page.dart';
 import 'package:badevand/providers/beaches_provider.dart';
 import 'package:badevand/providers/google_markers_provider.dart';
 import 'package:badevand/providers/user_position_provider.dart';
@@ -193,6 +194,9 @@ class Home extends StatelessWidget {
             children: List.generate(beaches.length, (index) {
               final Beach indexBeach = beaches[index];
               return ListTile(
+                onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) =>
+                        BeachInfoPage(selectedBeach: indexBeach))),
                 title: Text(indexBeach.name),
                 leading: indexBeach.getSpecsOfToday.waterQualityType.flag,
                 subtitle: Row(
