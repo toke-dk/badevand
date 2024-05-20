@@ -163,6 +163,11 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
               ),
               Divider(),
               ListTile(
+                leading: specificationForSelectedIndex.waterQualityType.flag,
+                title: Text(specificationForSelectedIndex.waterQualityType.description),
+                subtitle: Text("Vandkvalitet"),
+              ),
+              ListTile(
                 leading: specificationForSelectedIndex.weatherType?.icon ??
                     Icon(Icons.question_mark),
                 title: Text(
