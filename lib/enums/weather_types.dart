@@ -21,6 +21,43 @@ enum WeatherTypes {
 }
 
 extension WeatherTypesExtension on WeatherTypes {
+  String get displayedText {
+    switch (this) {
+      case WeatherTypes.sunny:
+        return "Solskin";
+      case WeatherTypes.lightSun:
+        return "Let skyet";
+      case WeatherTypes.partlyCloudy:
+        return "Halvskyet";
+      case WeatherTypes.cloudy:
+        return "Skyet";
+      case WeatherTypes.partlyRainPeriodsWithSun:
+        return "Enkelte regnbyer, perioder med sol";
+      case WeatherTypes.partlyThunderPeriodsWithSun:
+        return "Enkelte tordenbyger, perioder med sol";
+      case WeatherTypes.someRainOrSleetPeriodsWithSun:
+        return "Nogen regn eller slud, perioder med sol";
+      case WeatherTypes.someSnowPeriodsWithSun:
+        return "Nogen sne, perioder med sol";
+      case WeatherTypes.lightRain:
+        return "Let regn";
+      case WeatherTypes.rain:
+        return "Regn";
+      case WeatherTypes.thunderAndRain:
+        return "Torden og regn";
+      case WeatherTypes.sleet:
+        return "Slud";
+      case WeatherTypes.snow:
+        return "Sne";
+      case WeatherTypes.thunderAndSnow:
+        return "Torden og sne";
+      case WeatherTypes.fog:
+        return "Toget";
+      case WeatherTypes.unknown:
+        return "Ukendt vejr";
+    }
+  }
+
   Widget get icon {
     switch (this) {
       case WeatherTypes.sunny:
