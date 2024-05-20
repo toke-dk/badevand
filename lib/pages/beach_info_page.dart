@@ -1,6 +1,7 @@
 import 'package:badevand/enums/water_quality.dart';
 import 'package:badevand/extenstions/date_extensions.dart';
 import 'package:badevand/extenstions/numbers_extension.dart';
+import 'package:badevand/providers/beaches_provider.dart';
 import 'package:badevand/providers/user_position_provider.dart';
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
 import 'package:flutter/cupertino.dart';
@@ -27,6 +28,11 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
 
   int _selectedDateIndex = 0;
 
+  Beach get beach => context
+      .watch<BeachesProvider>()
+      .getBeaches
+      .firstWhere((element) => element == widget.selectedBeach);
+
   @override
   Widget build(BuildContext context) {
     final Position? userPosition =
@@ -34,11 +40,10 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
 
     final TextTheme textTheme = Theme.of(context).textTheme;
 
-    final List<BeachSpecifications> specifications =
-        widget.selectedBeach.beachSpecifications;
+    final List<BeachSpecifications> specifications = beach.beachSpecifications;
 
     final BeachSpecifications specificationForSelectedIndex =
-        widget.selectedBeach.beachSpecifications[_selectedDateIndex];
+        beach.beachSpecifications[_selectedDateIndex];
 
     return Scaffold(
       appBar: AppBar(),
@@ -50,17 +55,17 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
             children: [
               Row(
                 children: [
-                  widget.selectedBeach.getSpecsOfToday.waterQualityType.flag,
+                  beach.getSpecsOfToday.waterQualityType.flag,
                   Gap(8),
                   Text(
-                    widget.selectedBeach.name,
+                    beach.name,
                     style: textTheme.titleMedium,
                   ),
                   Spacer(),
-                  widget.selectedBeach.createFavoriteIcon(context),
+                  beach.createFavoriteIcon(context),
                 ],
               ),
-              widget.selectedBeach.description == null
+              beach.description == null
                   ? const SizedBox.shrink()
                   : GestureDetector(
                       onTap: () {
@@ -69,7 +74,7 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
                         });
                       },
                       child: Text(
-                        widget.selectedBeach.description!,
+                        beach.description!,
                         style: textTheme.bodySmall!
                             .copyWith(color: Colors.grey[700]),
                         maxLines: maxLines,
@@ -80,7 +85,7 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
                 children: [
                   Expanded(
                     child: ListTile(
-                      title: Text(widget.selectedBeach.municipality),
+                      title: Text(beach.municipality),
                       subtitle: Text("Kommune"),
                     ),
                   ),
@@ -98,14 +103,12 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
               Gap(20),
               Row(
                 children: [
-                  widget.selectedBeach.getSpecsOfToday.weatherType?.icon ??
-                      SizedBox.shrink(),
+                  beach.getSpecsOfToday.weatherType?.icon ?? SizedBox.shrink(),
                   Gap(30),
                   Expanded(
                     child: Text(
                       overflow: TextOverflow.visible,
-                      widget.selectedBeach.getSpecsOfToday.weatherType
-                              ?.displayedText ??
+                      beach.getSpecsOfToday.weatherType?.displayedText ??
                           "Ukendt vejr",
                       style: textTheme.titleLarge,
                     ),

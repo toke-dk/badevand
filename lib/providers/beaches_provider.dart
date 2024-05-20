@@ -26,5 +26,8 @@ class BeachesProvider extends ChangeNotifier {
     _beaches[index].isFavourite = !_beaches[index].isFavourite;
     notifyListeners();
   }
+
+
+
 }
 
