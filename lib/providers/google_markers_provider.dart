@@ -36,16 +36,37 @@ Future<Set<Marker>> _initializeMarkers(
     BuildContext context, List<Beach> beaches) async {
   Set<Marker> markerList = {};
 
-  final Uint8List markerIcon = await getBytesFromAsset('assets/green_flag.png', 150);
+  final Uint8List greenFlag = await getBytesFromAsset('assets/green_flag.png', 150);
+  final Uint8List redFlag = await getBytesFromAsset('assets/red_flag.png', 150);
+  final Uint8List yellowFlag = await getBytesFromAsset('assets/yellow_flag.png', 150);
+  final Uint8List greyFlag = await getBytesFromAsset('assets/grey_flag.png', 150);
 
-  final BitmapDescriptor icon = BitmapDescriptor.fromBytes(markerIcon);
+
+  final BitmapDescriptor greenIcon = BitmapDescriptor.fromBytes(greenFlag);
+  final BitmapDescriptor redIcon = BitmapDescriptor.fromBytes(redFlag);
+  final BitmapDescriptor yellowIcon = BitmapDescriptor.fromBytes(yellowFlag);
+  final BitmapDescriptor greyIcon = BitmapDescriptor.fromBytes(greyFlag);
+
 
   for (Beach indexBeach in beaches) {
+
+    BitmapDescriptor iconToUse() {
+      switch (indexBeach.getSpecsOfToday.waterQualityType) {
+        case WaterQualityTypes.goodQuality:
+          return greenIcon;
+        case WaterQualityTypes.badQuality:
+          return redIcon;
+        case WaterQualityTypes.noWarning:
+          return yellowIcon;
+        case WaterQualityTypes.closed:
+          return greyIcon;
+      }
+    }
 
     markerList.add(Marker(
         markerId: MarkerId(indexBeach.name),
         position: indexBeach.position,
-        icon: icon,
+        icon: iconToUse(),
         infoWindow: InfoWindow(
             title: indexBeach.name,
             snippet: indexBeach.comments != "" ? indexBeach.comments : null)));
