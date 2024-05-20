@@ -17,20 +17,8 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
-  List<Beach> get _beaches => context.watch<BeachesProvider>().getBeaches;
-
   Position? get _userPosition =>
       context.watch<UserPositionProvider>().getPosition;
-
-  GoogleMapController? _mapController;
-
-  @override
-  void dispose() {
-    _mapController
-        ?.dispose(); // If using Completer (replace with your disposal logic)
-    _mapController = null; // If storing directly from onMapCreated
-    super.dispose();
-  }
 
   static const LatLng centerOfDenmark = LatLng(56.000, 11.100);
   
@@ -40,8 +28,7 @@ class _MapPageState extends State<MapPage> {
       myLocationEnabled: _userPosition != null,
       initialCameraPosition: CameraPosition(
           target: _userPosition?.toLatLng ?? centerOfDenmark, zoom: 7),
-      markers: context.watch<GoogleMarkersProvider>().getMarkers,
-      onMapCreated: (controller) => _mapController = controller,
+      markers: context.read<GoogleMarkersProvider>().getMarkers,
     );
   }
 }

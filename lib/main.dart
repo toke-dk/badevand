@@ -79,26 +79,7 @@ class _MyAppState extends State<MyApp> {
     context.read<UserPositionProvider>().setPosition = position;
   }
 
-  Future<void> _initializeMarkers(List<Beach> beaches) async {
-    Set<Marker> markerList = {};
-
-    for (Beach indexBeach in beaches) {
-      final view = ui.PlatformDispatcher.instance.views.first;
-      final icon = await indexBeach.getSpecsOfToday.waterQualityType.flag
-          .toBitmapDescriptor(
-              imageSize: view.physicalSize * 1.3, waitToRender: Duration.zero);
-
-      markerList.add(Marker(
-          markerId: MarkerId(indexBeach.name),
-          position: indexBeach.position,
-          icon: icon,
-          infoWindow: InfoWindow(
-              title: indexBeach.name,
-              snippet:
-                  indexBeach.comments != "" ? indexBeach.comments : null)));
-    }
-    context.read<GoogleMarkersProvider>().setMarkers(markerList);
-  }
+  List<Beach> get beaches => context.read<BeachesProvider>().getBeaches;
 
   @override
   void initState() {
@@ -111,11 +92,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    List<Beach> beaches = context.watch<BeachesProvider>().getBeaches;
-
-    // initializing the google maps markers
-    if (beaches.isNotEmpty)
-      _initializeMarkers(context.watch<BeachesProvider>().getBeaches);
 
     List<Widget> _pages = [
       const Home(),

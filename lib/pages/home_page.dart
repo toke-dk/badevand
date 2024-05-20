@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 
 import '../models/beach.dart';
 import '../providers/beaches_provider.dart';
+import '../providers/google_markers_provider.dart';
 import 'beach_info_page.dart';
 
 class Home extends StatelessWidget {
@@ -29,6 +30,7 @@ class Home extends StatelessWidget {
 
                 context.read<BeachesProvider>().setBeaches =
                     result.map((e) => Beach.fromMap(e)).toList();
+                await context.read<GoogleMarkersProvider>().initMarkers(context);
               },
               child: Text(
                   "Get data (${beaches.isNotEmpty ? 'hasData' : "hasNotData"})")),
