@@ -9,12 +9,8 @@ class WindDirection {
 
   WindDirection({required this.angle});
 
-  Widget get getChildWidget {
-    print(angle);
-    print((angle % 360 + 180)*(pi/180));
-    return Transform.rotate(
-      angle: (angle % 360 + 180).toRadiansFromDegree,
-      child: const Icon(Icons.arrow_upward),
-    );
-  }
+  Widget get getChildWidget => Transform.rotate(
+        angle: angle.toRadiansFromDegree,
+        child: const Icon(Icons.arrow_downward),
+      );
 }
