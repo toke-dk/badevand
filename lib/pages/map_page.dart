@@ -32,12 +32,14 @@ class _MapPageState extends State<MapPage> {
     super.dispose();
   }
 
+  static const LatLng centerOfDenmark = LatLng(56.000, 11.100);
+  
   @override
   Widget build(BuildContext context) {
     return GoogleMap(
       myLocationEnabled: _userPosition != null,
       initialCameraPosition: CameraPosition(
-          target: _userPosition?.toLatLng ?? _beaches.first.position, zoom: 13),
+          target: _userPosition?.toLatLng ?? centerOfDenmark, zoom: 7),
       markers: context.watch<GoogleMarkersProvider>().getMarkers,
       onMapCreated: (controller) => _mapController = controller,
     );
