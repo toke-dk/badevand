@@ -1,5 +1,6 @@
 import 'package:badevand/enums/water_quality.dart';
 import 'package:badevand/models/beach.dart';
+import 'package:badevand/models/navigator_service.dart';
 import 'package:badevand/pages/home_page.dart';
 import 'package:badevand/pages/map_page.dart';
 import 'package:badevand/providers/beaches_provider.dart';
@@ -100,6 +101,7 @@ class _MyAppState extends State<MyApp> {
 
     return MaterialApp(
       title: 'Flutter Demo',
+      navigatorKey: NavigationService.instance.navigatorKey,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,

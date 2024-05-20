@@ -2,9 +2,12 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:badevand/enums/water_quality.dart';
+import 'package:badevand/models/navigator_service.dart';
+import 'package:badevand/pages/beach_info_page.dart';
 import 'package:badevand/providers/beaches_provider.dart';
 import 'package:badevand/widgets/widget_to_map_icon.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -68,6 +71,7 @@ Future<Set<Marker>> _initializeMarkers(
         position: indexBeach.position,
         icon: iconToUse(),
         infoWindow: InfoWindow(
+          onTap: () => NavigationService.instance.push(BeachInfoPage(selectedBeach: indexBeach)),
             title: indexBeach.name,
             snippet: indexBeach.comments != "" ? indexBeach.comments : null)));
   }
