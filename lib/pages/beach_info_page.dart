@@ -7,43 +7,86 @@ import 'package:provider/provider.dart';
 
 import '../models/beach.dart';
 
-class BeachInfoPage extends StatelessWidget {
+class BeachInfoPage extends StatefulWidget {
   const BeachInfoPage({super.key, required this.selectedBeach});
 
   final Beach selectedBeach;
 
   @override
+  State<BeachInfoPage> createState() => _BeachInfoPageState();
+}
+
+class _BeachInfoPageState extends State<BeachInfoPage> {
+  int? maxLines = 3;
+
+  @override
   Widget build(BuildContext context) {
     final Position? userPosition =
-        context.watch<UserPositionProvider>().getPosition;
+        context
+            .watch<UserPositionProvider>()
+            .getPosition;
+
+    final TextTheme textTheme = Theme
+        .of(context)
+        .textTheme;
 
     return Scaffold(
       appBar: AppBar(),
-      body: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Sidst ${selectedBeach.getSpecsOfToday.dataDate}"),
-              Text(
-                  "Afstand: ${userPosition == null ? '??' : (Geolocator.distanceBetween(userPosition.latitude, userPosition.longitude, selectedBeach.position.latitude, selectedBeach.position.longitude) / 1000).toInt()}km")
-            ],
-          ),
-          Container(
-            color: Colors.grey,
-            child: Column(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              widget.selectedBeach.name,
+              style: textTheme.titleMedium,
+            ),
+            widget.selectedBeach.description == null
+                ? const SizedBox.shrink()
+                : GestureDetector(
+                onTap: () {
+                  setState(() {
+                    maxLines = maxLines != null ? null : 3;
+                  });},
+                child: Text(
+                  widget.selectedBeach.description!,
+                  style: textTheme.bodySmall!
+                      .copyWith(color: Colors.grey[700]),
+                  maxLines: maxLines,
+                  overflow: maxLines == null ? null : TextOverflow.ellipsis,
+                )),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(selectedBeach.getSpecsOfToday.dataDate.toString()),
-                selectedBeach.getSpecsOfToday.waterQualityType.flag,
-                Text("${selectedBeach.getSpecsOfToday.airTemperature}\u2103")
+                Text("Sidst ${widget.selectedBeach.getSpecsOfToday.dataDate}"),
+                Text(
+                    "Afstand: ${userPosition == null ? '??' : (Geolocator
+                        .distanceBetween(
+                        userPosition.latitude, userPosition.longitude,
+                        widget.selectedBeach.position.latitude,
+                        widget.selectedBeach.position.longitude) / 1000)
+                        .toInt()}km")
               ],
             ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text("Kommune"), Text("????")],
-          )
-        ],
+            Container(
+              color: Colors.grey,
+              child: Column(
+                children: [
+                  Text(
+                      widget.selectedBeach.getSpecsOfToday.dataDate.toString()),
+                  widget.selectedBeach.getSpecsOfToday.waterQualityType.flag,
+                  Text(
+                      "${widget.selectedBeach.getSpecsOfToday
+                          .airTemperature}\u2103")
+                ],
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [Text("Kommune"), Text("????")],
+            )
+          ],
+        ),
       ),
     );
   }
