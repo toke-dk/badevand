@@ -71,9 +71,12 @@ class BeachSpecifications {
         waterTemperature: double.parse(map["water_temperature"].toString()),
         airTemperature: double.parse(map["air_temperature"].toString()),
         weatherType:
-            convertIntToWeatherType(int.parse(map["weather_type"].toString()))!,
-        windSpeed: map["wind_speed"].toString() == "" ? null : double.parse(map["wind_speed"].toString()),
-        windDirection:  map["wind_direction"].toString() == "" ? null : double.parse(map["wind_direction"].toString()),
-        precipitation:  map["precipitation"].toString() == "" ? null : double.parse(map["precipitation"].toString()));
+        convertIntToWeatherType(int.parse(map["weather_type"].toString()))!,
+        windSpeed: map["wind_speed"].toString() == "" ? null : double.parse(
+            map["wind_speed"].toString()),
+        windDirection: map["wind_direction"].toString() == "" ? null : double
+            .parse(map["wind_direction"].toString()),
+        precipitation: map["precipitation"].toString() == "" ? null : double
+            .parse(map["precipitation"].toString()));
   }
 }

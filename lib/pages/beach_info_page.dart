@@ -1,5 +1,6 @@
 import 'package:badevand/enums/water_quality.dart';
 import 'package:badevand/extenstions/date_extensions.dart';
+import 'package:badevand/extenstions/numbers_extension.dart';
 import 'package:badevand/providers/user_position_provider.dart';
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,7 +10,7 @@ import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:badevand/enums/weather_types.dart';
-
+import 'package:weather_icons/weather_icons.dart';
 import '../models/beach.dart';
 
 class BeachInfoPage extends StatefulWidget {
@@ -23,6 +24,8 @@ class BeachInfoPage extends StatefulWidget {
 
 class _BeachInfoPageState extends State<BeachInfoPage> {
   int? maxLines = 3;
+
+  int _selectedDateIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -73,13 +76,16 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
             const Gap(10),
             Center(
               child: CustomSlidingSegmentedControl(
-                innerPadding: const EdgeInsets.all(8),
+                  innerPadding: const EdgeInsets.all(8),
                   customSegmentSettings: CustomSegmentSettings(
                       splashColor: Colors.transparent,
                       hoverColor: Colors.transparent),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(40),
-                      color: Theme.of(context).colorScheme.inversePrimary.withAlpha(100)),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .inversePrimary
+                          .withAlpha(100)),
                   thumbDecoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(40),
                     color: Colors.white,
@@ -100,7 +106,44 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
                       .entries
                       .map((e) => MapEntry(
                           e.key, Text(e.value.dataDate.dateAsRelativeString)))),
-                  onValueChanged: (newVal) {}),
+                  onValueChanged: (newVal) {
+                    setState(() {
+                      _selectedDateIndex = newVal;
+                    });
+                  }),
+            ),
+            ListTile(
+              leading: Icon(Icons.date_range),
+              title: Text(widget
+                  .selectedBeach
+                  .beachSpecifications[_selectedDateIndex].dataDate.myDateFormat),
+              subtitle: Text("Dato"),
+            ),
+            ListTile(
+              leading: Icon(Icons.water_drop_outlined),
+              title: Text(widget
+                  .selectedBeach
+                  .beachSpecifications[_selectedDateIndex]
+                  .waterTemperature
+                  .asCelsiusTemperature),
+              subtitle: Text("Vandtemperatur"),
+            ),
+            ListTile(
+              leading: Icon(Icons.thermostat),
+              title: Text(widget
+                  .selectedBeach
+                  .beachSpecifications[_selectedDateIndex]
+                  .airTemperature
+                  .asCelsiusTemperature),
+              subtitle: Text("Lufttemperatur"),
+            ),
+            ListTile(
+              leading: Icon(Icons.air),
+              title: Text(widget
+                  .selectedBeach
+                  .beachSpecifications[_selectedDateIndex]
+                  .windSpeed?.asMeterPerSecond ?? "ingen informationer"),
+              subtitle: Text("Vindhastighed"),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

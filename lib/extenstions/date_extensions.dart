@@ -11,6 +11,8 @@ extension DateExtension on DateTime {
 
   DateTime get onlyYearMonthDay => DateTime(year, month, day);
 
+  String get myDateFormat => DateFormat("dd-MM-yyyy").format(this);
+
   String get stringAsDayName => DateFormat.E("da").format(this);
 
   String get dateAsRelativeString {
