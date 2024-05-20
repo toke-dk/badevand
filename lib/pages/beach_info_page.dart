@@ -31,7 +31,8 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
 
     final TextTheme textTheme = Theme.of(context).textTheme;
 
-    final List<BeachSpecifications> specifications = widget.selectedBeach.beachSpecifications;
+    final List<BeachSpecifications> specifications =
+        widget.selectedBeach.beachSpecifications;
 
     return Scaffold(
       appBar: AppBar(),
@@ -80,7 +81,11 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
                   borderRadius: BorderRadius.circular(40),
                   color: Colors.white,
                 ),
-                children: Map<int, Widget>.fromEntries(specifications.asMap().entries.map((e) => MapEntry(e.key, Text(e.value.dataDate.dateAsRelativeString)))),
+                children: Map<int, Widget>.fromEntries(specifications
+                    .asMap()
+                    .entries
+                    .map((e) => MapEntry(
+                        e.key, Text(e.value.dataDate.dateAsRelativeString)))),
                 onValueChanged: (newVal) {}),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
