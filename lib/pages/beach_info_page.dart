@@ -80,7 +80,7 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
                   borderRadius: BorderRadius.circular(40),
                   color: Colors.white,
                 ),
-                children: Map<int, Widget>.fromEntries(specifications.asMap().entries.map((e) => MapEntry(e.key, Text(e.value.dataDate.stringAsDayName)))),
+                children: Map<int, Widget>.fromEntries(specifications.asMap().entries.map((e) => MapEntry(e.key, Text(e.value.dataDate.dateAsRelativeString)))),
                 onValueChanged: (newVal) {}),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

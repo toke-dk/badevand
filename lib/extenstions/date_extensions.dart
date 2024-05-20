@@ -13,4 +13,15 @@ extension DateExtension on DateTime {
   DateTime get onlyYearMonthDay => DateTime(year, month, day);
 
   String get stringAsDayName => DateFormat.E("da").format(this);
+
+  String get dateAsRelativeString {
+    final now = DateTime.now();
+    if (isSameDate(now)) {
+      return 'I dag';
+    } else if (difference(now.onlyYearMonthDay).inDays == 1) {
+      return 'I morgen';
+    } else {
+      return stringAsDayName;
+    }
+  }
 }
