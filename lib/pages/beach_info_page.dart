@@ -60,7 +60,7 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
                       maxLines: maxLines,
                       overflow: maxLines == null ? null : TextOverflow.ellipsis,
                     )),
-            Gap(30),
+            const Gap(30),
             Center(
               child: Text(
                 widget.selectedBeach.getSpecsOfToday.weatherType
@@ -70,23 +70,38 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
                 textAlign: TextAlign.center,
               ),
             ),
-            CustomSlidingSegmentedControl(
-                customSegmentSettings: CustomSegmentSettings(
-                    splashColor: Colors.transparent,
-                    hoverColor: Colors.transparent),
-                decoration: BoxDecoration(
+            const Gap(10),
+            Center(
+              child: CustomSlidingSegmentedControl(
+                innerPadding: const EdgeInsets.all(8),
+                  customSegmentSettings: CustomSegmentSettings(
+                      splashColor: Colors.transparent,
+                      hoverColor: Colors.transparent),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(40),
+                      color: Theme.of(context).colorScheme.inversePrimary.withAlpha(100)),
+                  thumbDecoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(40),
-                    color: Colors.grey[300]),
-                thumbDecoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(40),
-                  color: Colors.white,
-                ),
-                children: Map<int, Widget>.fromEntries(specifications
-                    .asMap()
-                    .entries
-                    .map((e) => MapEntry(
-                        e.key, Text(e.value.dataDate.dateAsRelativeString)))),
-                onValueChanged: (newVal) {}),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(.3),
+                        blurRadius: 4.0,
+                        spreadRadius: 1.0,
+                        offset: const Offset(
+                          0.0,
+                          2.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                  children: Map<int, Widget>.fromEntries(specifications
+                      .asMap()
+                      .entries
+                      .map((e) => MapEntry(
+                          e.key, Text(e.value.dataDate.dateAsRelativeString)))),
+                  onValueChanged: (newVal) {}),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -107,7 +122,7 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
                 ],
               ),
             ),
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [Text("Kommune"), Text("????")],
             )
