@@ -2,7 +2,10 @@ import 'dart:convert';
 
 import 'package:badevand/enums/weather_types.dart';
 import 'package:badevand/extenstions/date_extensions.dart';
+import 'package:badevand/extenstions/numbers_extension.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:weather_icons/weather_icons.dart';
 
 import '../enums/water_quality.dart';
 
@@ -49,7 +52,7 @@ class BeachSpecifications {
   double airTemperature;
   WeatherTypes? weatherType;
   double? windSpeed;
-  double? windDirection;
+  WindDirection? windDirection;
   double? precipitation;
 
   BeachSpecifications({
@@ -75,8 +78,75 @@ class BeachSpecifications {
         windSpeed: map["wind_speed"].toString() == "" ? null : double.parse(
             map["wind_speed"].toString()),
         windDirection: map["wind_direction"].toString() == "" ? null : double
-            .parse(map["wind_direction"].toString()),
+            .parse(map["wind_direction"].toString()).getClosestWindDirection,
         precipitation: map["precipitation"].toString() == "" ? null : double
             .parse(map["precipitation"].toString()));
   }
+}
+
+enum WindDirection {
+  north,
+  northEast,
+  east,
+  southEast,
+  south,
+  southWest,
+  west,
+  northWest,
+}
+
+extension WindDirectionExtension on WindDirection {
+  String get windDirectionToString {
+    switch (this) {
+      case WindDirection.north:
+        return 'N';
+      case WindDirection.northEast:
+        return 'NE';
+      case WindDirection.east:
+        return 'E';
+      case WindDirection.southEast:
+        return 'SE';
+      case WindDirection.south:
+        return 'S';
+      case WindDirection.southWest:
+        return 'SW';
+      case WindDirection.west:
+        return 'W';
+      case WindDirection.northWest:
+        return 'NW';
+    }
+    return ''; // Shouldn't be reached
+  }
+
+  IconData get windDirectionArrow {
+    switch (this) {
+      case WindDirection.north:
+        return WeatherIcons.direction_up;
+      case WindDirection.northEast:
+        return WeatherIcons.direction_up_right;
+      case WindDirection.east:
+        return WeatherIcons.direction_right;
+      case WindDirection.southEast:
+        return WeatherIcons.direction_down_right;
+      case WindDirection.south:
+        return WeatherIcons.direction_down;
+      case WindDirection.southWest:
+        return WeatherIcons.direction_down_left;
+      case WindDirection.west:
+        return WeatherIcons.direction_left;
+      case WindDirection.northWest:
+        return WeatherIcons.direction_up_left;
+    }
+  }
+}
+
+
+
+class Range {
+  final double start;
+  final double end;
+
+  const Range(this.start, this.end);
+
+  bool contains(double value) => value >= start && value < end;
 }

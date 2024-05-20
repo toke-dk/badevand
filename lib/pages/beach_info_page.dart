@@ -138,7 +138,9 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
               subtitle: Text("Lufttemperatur"),
             ),
             ListTile(
-              leading: Icon(Icons.air),
+              leading: Icon(widget
+                  .selectedBeach
+                  .beachSpecifications[_selectedDateIndex].windDirection?.windDirectionArrow),
               title: Text(widget
                   .selectedBeach
                   .beachSpecifications[_selectedDateIndex]
