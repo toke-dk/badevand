@@ -24,6 +24,7 @@ class Beach {
   });
 
   factory Beach.fromMap(Map<String, dynamic> map) {
+    print("beachname: ${map["name"] as String}");
     return Beach(
       id: int.parse(map["id"].toString()),
       name: map["name"] as String,
@@ -63,7 +64,6 @@ class BeachSpecifications {
   });
 
   factory BeachSpecifications.fromMap(Map<String, dynamic> map) {
-    print('hastighed: ${map["wind_speed"]}');
     return BeachSpecifications(
         dataDate: DateTime.parse(map["date"].toString()),
         waterQualityType: convertIntToQualityType(

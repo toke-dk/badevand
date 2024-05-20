@@ -18,11 +18,9 @@ class BeachInfoPage extends StatelessWidget {
         context.watch<UserPositionProvider>().getPosition;
 
     return Scaffold(
+      appBar: AppBar(),
       body: Column(
         children: [
-          AppBar(
-            title: Text(selectedBeach.name),
-          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

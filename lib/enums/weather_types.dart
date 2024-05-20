@@ -16,7 +16,8 @@ enum WeatherTypes {
   sleet,
   snow,
   thunderAndSnow,
-  fog
+  fog,
+  unknown,
 }
 
 extension WeatherTypesExtension on WeatherTypes {
@@ -63,14 +64,20 @@ extension WeatherTypesExtension on WeatherTypes {
 
       case WeatherTypes.fog:
         return const Icon(WeatherIcons.fog);
+      case WeatherTypes.unknown:
+        return const Icon(Icons.question_mark);
+
     }
   }
 }
 
 WeatherTypes? convertIntToWeatherType(int value) {
-  if (value < 1 || value > WeatherTypes.values.length) {
+  if (value < 1) {
     throw ArgumentError(
         'Number must be between 1 and ${WeatherTypes.values.length}');
+  }
+  else if (value > WeatherTypes.values.length) {
+    return WeatherTypes.unknown;
   }
   return WeatherTypes.values[value - 1];
 }
