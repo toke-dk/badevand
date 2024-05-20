@@ -57,11 +57,7 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
                     style: textTheme.titleMedium,
                   ),
                   Spacer(),
-                  Icon(
-                    Icons.star_border,
-                    color: Colors.yellow[600],
-                    size: 30,
-                  ),
+                  widget.selectedBeach.createFavoriteIcon(context),
                 ],
               ),
               widget.selectedBeach.description == null

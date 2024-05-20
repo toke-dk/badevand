@@ -5,10 +5,13 @@ import 'package:badevand/extenstions/date_extensions.dart';
 import 'package:badevand/extenstions/numbers_extension.dart';
 import 'package:badevand/models/wind_direction.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:weather_icons/weather_icons.dart';
 
 import '../enums/water_quality.dart';
+import '../providers/beaches_provider.dart';
 
 class Beach {
   int id;
@@ -18,6 +21,7 @@ class Beach {
   List<BeachSpecifications> beachSpecifications;
   LatLng position;
   String municipality;
+  bool isFavourite = false;
 
   Beach({
     required this.id,
@@ -40,12 +44,25 @@ class Beach {
           .map((dataMap) => BeachSpecifications.fromMap(dataMap))
           .toList(),
       position: LatLng(double.parse(map["latitude"].toString()),
-          double.parse(map["longitude"].toString())), municipality: map["municipality"].toString(),
+          double.parse(map["longitude"].toString())),
+      municipality: map["municipality"].toString(),
     );
   }
 
   BeachSpecifications get getSpecsOfToday =>
       beachSpecifications.firstWhere((element) => element.dataDate.isToday);
+
+  Widget createFavoriteIcon(BuildContext context) => IconButton(
+    onPressed: () {
+      context.read<BeachesProvider>().changeValueFavoriteBeach =
+          this;
+    },
+    icon: Icon(
+          isFavourite ? Icons.star : Icons.star_outline,
+          color: Colors.yellow[600],
+          size: 30,
+        ),
+  );
 }
 
 class BeachSpecifications {

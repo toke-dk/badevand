@@ -27,9 +27,8 @@ class Home extends StatelessWidget {
               onPressed: () async {
                 List<dynamic> result = await getBeachData();
 
-                context
-                    .read<BeachesProvider>()
-                    .setBeaches(result.map((e) => Beach.fromMap(e)).toList());
+                context.read<BeachesProvider>().setBeaches =
+                    result.map((e) => Beach.fromMap(e)).toList();
               },
               child: Text(
                   "Get data (${beaches.isNotEmpty ? 'hasData' : "hasNotData"})")),
@@ -42,7 +41,7 @@ class Home extends StatelessWidget {
             children: List.generate(beaches.length, (index) {
               final Beach indexBeach = beaches[index];
               return ListTile(
-                trailing: Icon(Icons.star_border,color: Colors.yellow[600],size: 30,),
+                trailing: indexBeach.createFavoriteIcon(context),
                 onTap: () => Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) =>
                         BeachInfoPage(selectedBeach: indexBeach))),
@@ -50,14 +49,19 @@ class Home extends StatelessWidget {
                 leading: indexBeach.getSpecsOfToday.waterQualityType.flag,
                 subtitle: Row(
                   children: [
-                    Icon(Icons.water_drop_outlined,color: Colors.blue[800],),
+                    Icon(
+                      Icons.water_drop_outlined,
+                      color: Colors.blue[800],
+                    ),
                     const Gap(4),
-                    Text(
-                        indexBeach.getSpecsOfToday.waterTemperature.asCelsiusTemperature),
+                    Text(indexBeach
+                        .getSpecsOfToday.waterTemperature.asCelsiusTemperature),
                     const Gap(10),
-                    indexBeach.getSpecsOfToday.weatherType?.icon ?? const SizedBox.shrink(),
+                    indexBeach.getSpecsOfToday.weatherType?.icon ??
+                        const SizedBox.shrink(),
                     const Gap(8),
-                    Text(indexBeach.getSpecsOfToday.airTemperature.asCelsiusTemperature)
+                    Text(indexBeach
+                        .getSpecsOfToday.airTemperature.asCelsiusTemperature)
                   ],
                 ),
               );
