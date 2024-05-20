@@ -26,12 +26,10 @@ class GoogleMarkersProvider extends ChangeNotifier {
 Future<Set<Marker>> _initializeMarkers(
     BuildContext context, List<Beach> beaches) async {
   Set<Marker> markerList = {};
-  final view = ui.PlatformDispatcher.instance.views.first;
+
+  final icon = await BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(32, 32)), 'assets/red_flag.png');
 
   for (Beach indexBeach in beaches) {
-    final icon = await indexBeach.getSpecsOfToday.waterQualityType.flag
-        .toBitmapDescriptor(
-            imageSize: view.physicalSize * 1.3, waitToRender: Duration.zero);
 
     markerList.add(Marker(
         markerId: MarkerId(indexBeach.name),
