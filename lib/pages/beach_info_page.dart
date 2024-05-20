@@ -1,4 +1,5 @@
 import 'package:badevand/enums/water_quality.dart';
+import 'package:badevand/extenstions/date_extensions.dart';
 import 'package:badevand/providers/user_position_provider.dart';
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
 import 'package:flutter/cupertino.dart';
@@ -79,7 +80,7 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
                   borderRadius: BorderRadius.circular(40),
                   color: Colors.white,
                 ),
-                children: Map<int, Widget>.fromEntries(specifications.asMap().entries.map((e) => MapEntry(e.key, Text(e.value.dataDate.day.toString())))),
+                children: Map<int, Widget>.fromEntries(specifications.asMap().entries.map((e) => MapEntry(e.key, Text(e.value.dataDate.stringAsDayName)))),
                 onValueChanged: (newVal) {}),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -10,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 import 'dart:ui' as ui;
 
@@ -102,6 +103,9 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     _determinePosition();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      initializeDateFormatting("da", "DA");
+    });
     super.initState();
   }
 
@@ -143,4 +147,3 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
-
