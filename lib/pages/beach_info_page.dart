@@ -1,7 +1,9 @@
 import 'package:badevand/enums/water_quality.dart';
 import 'package:badevand/providers/user_position_provider.dart';
+import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
@@ -27,6 +29,8 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
         context.watch<UserPositionProvider>().getPosition;
 
     final TextTheme textTheme = Theme.of(context).textTheme;
+
+    final List<BeachSpecifications> specifications = widget.selectedBeach.beachSpecifications;
 
     return Scaffold(
       appBar: AppBar(),
@@ -64,6 +68,19 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
                 textAlign: TextAlign.center,
               ),
             ),
+            CustomSlidingSegmentedControl(
+                customSegmentSettings: CustomSegmentSettings(
+                    splashColor: Colors.transparent,
+                    hoverColor: Colors.transparent),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(40),
+                    color: Colors.grey[300]),
+                thumbDecoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(40),
+                  color: Colors.white,
+                ),
+                children: Map<int, Widget>.fromEntries(specifications.asMap().entries.map((e) => MapEntry(e.key, Text(e.value.dataDate.day.toString())))),
+                onValueChanged: (newVal) {}),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
