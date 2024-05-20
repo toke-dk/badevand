@@ -17,6 +17,7 @@ class Beach {
   String? comments;
   List<BeachSpecifications> beachSpecifications;
   LatLng position;
+  String municipality;
 
   Beach({
     required this.id,
@@ -25,6 +26,7 @@ class Beach {
     required this.comments,
     required this.beachSpecifications,
     required this.position,
+    required this.municipality,
   });
 
   factory Beach.fromMap(Map<String, dynamic> map) {
@@ -38,7 +40,7 @@ class Beach {
           .map((dataMap) => BeachSpecifications.fromMap(dataMap))
           .toList(),
       position: LatLng(double.parse(map["latitude"].toString()),
-          double.parse(map["longitude"].toString())),
+          double.parse(map["longitude"].toString())), municipality: map["municipality"].toString(),
     );
   }
 

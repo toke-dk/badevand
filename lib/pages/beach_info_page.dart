@@ -46,12 +46,14 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  widget.selectedBeach.getSpecsOfToday.waterQualityType.flag,
+                  Gap(8),
                   Text(
                     widget.selectedBeach.name,
                     style: textTheme.titleMedium,
                   ),
+                  Spacer(),
                   Icon(
                     Icons.star_border,
                     color: Colors.yellow[600],
@@ -75,13 +77,30 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
                         overflow:
                             maxLines == null ? null : TextOverflow.ellipsis,
                       )),
-              const Gap(35),
+              Row(
+                children: [
+                  Expanded(
+                    child: ListTile(
+                      title: Text(widget.selectedBeach.municipality),
+                      subtitle: Text("Kommune"),
+                    ),
+                  ),
+                  Expanded(
+                    child: ListTile(
+                      title: Text(
+                          "${userPosition == null ? '???' : (Geolocator.distanceBetween(userPosition.latitude, userPosition.longitude, widget.selectedBeach.position.latitude, widget.selectedBeach.position.longitude) / 1000).toInt()}km"),
+                      subtitle: Text("Afstand"),
+                    ),
+                  ),
+                ],
+              ),
+              Gap(20),
               Row(
                 children: [
                   widget.selectedBeach.getSpecsOfToday.weatherType?.icon ??
                       SizedBox.shrink(),
                   Gap(30),
-                  Flexible(
+                  Expanded(
                     child: Text(
                       overflow: TextOverflow.visible,
                       widget.selectedBeach.getSpecsOfToday.weatherType
@@ -199,31 +218,6 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
                     "ingen informationer"),
                 subtitle: Text("Nedbør"),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                      "Sidst ${widget.selectedBeach.getSpecsOfToday.dataDate}"),
-                  Text(
-                      "Afstand: ${userPosition == null ? '??' : (Geolocator.distanceBetween(userPosition.latitude, userPosition.longitude, widget.selectedBeach.position.latitude, widget.selectedBeach.position.longitude) / 1000).toInt()}km")
-                ],
-              ),
-              Container(
-                color: Colors.grey,
-                child: Column(
-                  children: [
-                    Text(widget.selectedBeach.getSpecsOfToday.dataDate
-                        .toString()),
-                    widget.selectedBeach.getSpecsOfToday.waterQualityType.flag,
-                    Text(
-                        "${widget.selectedBeach.getSpecsOfToday.airTemperature}\u2103")
-                  ],
-                ),
-              ),
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [Text("Kommune"), Text("????")],
-              )
             ],
           ),
         ),
