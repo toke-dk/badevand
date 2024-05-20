@@ -39,146 +39,193 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
 
     return Scaffold(
       appBar: AppBar(),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              widget.selectedBeach.name,
-              style: textTheme.titleMedium,
-            ),
-            widget.selectedBeach.description == null
-                ? const SizedBox.shrink()
-                : GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        maxLines = maxLines != null ? null : 3;
-                      });
-                    },
-                    child: Text(
-                      widget.selectedBeach.description!,
-                      style: textTheme.bodySmall!
-                          .copyWith(color: Colors.grey[700]),
-                      maxLines: maxLines,
-                      overflow: maxLines == null ? null : TextOverflow.ellipsis,
-                    )),
-            const Gap(30),
-            Center(
-              child: Text(
-                widget.selectedBeach.getSpecsOfToday.weatherType
-                        ?.displayedText ??
-                    "Ukendt vejr",
-                style: textTheme.displaySmall,
-                textAlign: TextAlign.center,
-              ),
-            ),
-            const Gap(10),
-            Center(
-              child: CustomSlidingSegmentedControl(
-                  innerPadding: const EdgeInsets.all(8),
-                  customSegmentSettings: CustomSegmentSettings(
-                      splashColor: Colors.transparent,
-                      hoverColor: Colors.transparent),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(40),
-                      color: Theme.of(context)
-                          .colorScheme
-                          .inversePrimary
-                          .withAlpha(100)),
-                  thumbDecoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(40),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(.3),
-                        blurRadius: 4.0,
-                        spreadRadius: 1.0,
-                        offset: const Offset(
-                          0.0,
-                          2.0,
-                        ),
-                      ),
-                    ],
-                  ),
-                  children: Map<int, Widget>.fromEntries(specifications
-                      .asMap()
-                      .entries
-                      .map((e) => MapEntry(
-                          e.key, Text(e.value.dataDate.dateAsRelativeString)))),
-                  onValueChanged: (newVal) {
-                    setState(() {
-                      _selectedDateIndex = newVal;
-                    });
-                  }),
-            ),
-            ListTile(
-              leading: Icon(Icons.date_range),
-              title: Text(widget
-                  .selectedBeach
-                  .beachSpecifications[_selectedDateIndex]
-                  .dataDate
-                  .myDateFormat),
-              subtitle: Text("Dato"),
-            ),
-            ListTile(
-              leading: Icon(Icons.water_drop_outlined),
-              title: Text(widget
-                  .selectedBeach
-                  .beachSpecifications[_selectedDateIndex]
-                  .waterTemperature
-                  .asCelsiusTemperature),
-              subtitle: Text("Vandtemperatur"),
-            ),
-            ListTile(
-              leading: Icon(Icons.thermostat),
-              title: Text(widget
-                  .selectedBeach
-                  .beachSpecifications[_selectedDateIndex]
-                  .airTemperature
-                  .asCelsiusTemperature),
-              subtitle: Text("Lufttemperatur"),
-            ),
-            ListTile(
-              leading: widget
-                      .selectedBeach
-                      .beachSpecifications[_selectedDateIndex]
-                      .windDirection
-                      ?.getChildWidget ??
-                  const Icon(Icons.question_mark),
-              title: Text(widget
-                      .selectedBeach
-                      .beachSpecifications[_selectedDateIndex]
-                      .windSpeed
-                      ?.asMeterPerSecond ??
-                  "ingen informationer"),
-              subtitle: Text("Vind"),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Sidst ${widget.selectedBeach.getSpecsOfToday.dataDate}"),
-                Text(
-                    "Afstand: ${userPosition == null ? '??' : (Geolocator.distanceBetween(userPosition.latitude, userPosition.longitude, widget.selectedBeach.position.latitude, widget.selectedBeach.position.longitude) / 1000).toInt()}km")
-              ],
-            ),
-            Container(
-              color: Colors.grey,
-              child: Column(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                      widget.selectedBeach.getSpecsOfToday.dataDate.toString()),
-                  widget.selectedBeach.getSpecsOfToday.waterQualityType.flag,
-                  Text(
-                      "${widget.selectedBeach.getSpecsOfToday.airTemperature}\u2103")
+                    widget.selectedBeach.name,
+                    style: textTheme.titleMedium,
+                  ),
+                  Icon(
+                    Icons.star_border,
+                    color: Colors.yellow[600],
+                    size: 30,
+                  ),
                 ],
               ),
-            ),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [Text("Kommune"), Text("????")],
-            )
-          ],
+              widget.selectedBeach.description == null
+                  ? const SizedBox.shrink()
+                  : GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          maxLines = maxLines != null ? null : 3;
+                        });
+                      },
+                      child: Text(
+                        widget.selectedBeach.description!,
+                        style: textTheme.bodySmall!
+                            .copyWith(color: Colors.grey[700]),
+                        maxLines: maxLines,
+                        overflow:
+                            maxLines == null ? null : TextOverflow.ellipsis,
+                      )),
+              const Gap(35),
+              Row(
+                children: [
+                  widget.selectedBeach.getSpecsOfToday.weatherType?.icon ??
+                      SizedBox.shrink(),
+                  Gap(30),
+                  Flexible(
+                    child: Text(
+                      overflow: TextOverflow.visible,
+                      widget.selectedBeach.getSpecsOfToday.weatherType
+                              ?.displayedText ??
+                          "Ukendt vejr",
+                      style: textTheme.titleLarge,
+                    ),
+                  ),
+                ],
+              ),
+              const Gap(35),
+              Center(
+                child: CustomSlidingSegmentedControl(
+                    innerPadding: const EdgeInsets.all(8),
+                    customSegmentSettings: CustomSegmentSettings(
+                        splashColor: Colors.transparent,
+                        hoverColor: Colors.transparent),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(40),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .inversePrimary
+                            .withAlpha(100)),
+                    thumbDecoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(40),
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(.3),
+                          blurRadius: 4.0,
+                          spreadRadius: 1.0,
+                          offset: const Offset(
+                            0.0,
+                            2.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                    children: Map<int, Widget>.fromEntries(specifications
+                        .asMap()
+                        .entries
+                        .map((e) => MapEntry(e.key,
+                            Text(e.value.dataDate.dateAsRelativeString)))),
+                    onValueChanged: (newVal) {
+                      setState(() {
+                        _selectedDateIndex = newVal;
+                      });
+                    }),
+              ),
+              Gap(10),
+              ListTile(
+                leading: Icon(Icons.date_range),
+                title: Text(widget
+                    .selectedBeach
+                    .beachSpecifications[_selectedDateIndex]
+                    .dataDate
+                    .myDateFormat),
+                subtitle: Text("Dato"),
+              ),
+              Divider(),
+              ListTile(
+                leading: widget
+                        .selectedBeach
+                        .beachSpecifications[_selectedDateIndex]
+                        .weatherType
+                        ?.icon ??
+                    Icon(Icons.question_mark),
+                title: Text(widget
+                        .selectedBeach
+                        .beachSpecifications[_selectedDateIndex]
+                        .weatherType
+                        ?.displayedText ??
+                    "Ukendt vejrtype"),
+              ),
+              ListTile(
+                leading: Icon(Icons.water_drop_outlined),
+                title: Text(widget
+                    .selectedBeach
+                    .beachSpecifications[_selectedDateIndex]
+                    .waterTemperature
+                    .asCelsiusTemperature),
+                subtitle: Text("Vandtemperatur"),
+              ),
+              ListTile(
+                leading: Icon(Icons.thermostat),
+                title: Text(widget
+                    .selectedBeach
+                    .beachSpecifications[_selectedDateIndex]
+                    .airTemperature
+                    .asCelsiusTemperature),
+                subtitle: Text("Lufttemperatur"),
+              ),
+              ListTile(
+                leading: widget
+                        .selectedBeach
+                        .beachSpecifications[_selectedDateIndex]
+                        .windDirection
+                        ?.getChildWidget ??
+                    const Icon(Icons.question_mark),
+                title: Text(widget
+                        .selectedBeach
+                        .beachSpecifications[_selectedDateIndex]
+                        .windSpeed
+                        ?.asMeterPerSecond ??
+                    "ingen informationer"),
+                subtitle: Text("Vind"),
+              ),
+              ListTile(
+                leading: Icon(WeatherIcons.rain),
+                title: Text(widget
+                        .selectedBeach
+                        .beachSpecifications[_selectedDateIndex]
+                        .precipitation
+                        ?.asMillimetersString ??
+                    "ingen informationer"),
+                subtitle: Text("Nedbør"),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                      "Sidst ${widget.selectedBeach.getSpecsOfToday.dataDate}"),
+                  Text(
+                      "Afstand: ${userPosition == null ? '??' : (Geolocator.distanceBetween(userPosition.latitude, userPosition.longitude, widget.selectedBeach.position.latitude, widget.selectedBeach.position.longitude) / 1000).toInt()}km")
+                ],
+              ),
+              Container(
+                color: Colors.grey,
+                child: Column(
+                  children: [
+                    Text(widget.selectedBeach.getSpecsOfToday.dataDate
+                        .toString()),
+                    widget.selectedBeach.getSpecsOfToday.waterQualityType.flag,
+                    Text(
+                        "${widget.selectedBeach.getSpecsOfToday.airTemperature}\u2103")
+                  ],
+                ),
+              ),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [Text("Kommune"), Text("????")],
+              )
+            ],
+          ),
         ),
       ),
     );

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:badevand/enums/water_quality.dart';
 import 'package:badevand/enums/weather_types.dart';
+import 'package:badevand/extenstions/numbers_extension.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
@@ -49,14 +50,14 @@ class Home extends StatelessWidget {
                 leading: indexBeach.getSpecsOfToday.waterQualityType.flag,
                 subtitle: Row(
                   children: [
-                    const Icon(Icons.water_drop_outlined),
+                    Icon(Icons.water_drop_outlined,color: Colors.blue[800],),
                     const Gap(4),
                     Text(
-                        "${indexBeach.getSpecsOfToday.waterTemperature} \u2103"),
+                        indexBeach.getSpecsOfToday.waterTemperature.asCelsiusTemperature),
                     const Gap(10),
                     indexBeach.getSpecsOfToday.weatherType?.icon ?? const SizedBox.shrink(),
-                    const Gap(4),
-                    Text("${indexBeach.getSpecsOfToday.airTemperature} \u2103")
+                    const Gap(8),
+                    Text(indexBeach.getSpecsOfToday.airTemperature.asCelsiusTemperature)
                   ],
                 ),
               );

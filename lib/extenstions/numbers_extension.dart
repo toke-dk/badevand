@@ -9,5 +9,7 @@ extension NumerExtension on num {
 
   String get asMeterPerSecond => "$myDoubleToString m/s";
 
+  String get asMillimetersString => "$myDoubleToString mm";
+
   double get toRadiansFromDegree => this*pi/180;
 }
