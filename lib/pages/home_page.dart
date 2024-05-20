@@ -41,6 +41,7 @@ class Home extends StatelessWidget {
             children: List.generate(beaches.length, (index) {
               final Beach indexBeach = beaches[index];
               return ListTile(
+                trailing: Icon(Icons.star_border,color: Colors.yellow[600],size: 30,),
                 onTap: () => Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) =>
                         BeachInfoPage(selectedBeach: indexBeach))),
