@@ -88,13 +88,15 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
                       subtitle: Text("Kommune"),
                     ),
                   ),
-                  Expanded(
-                    child: ListTile(
-                      title: Text(
-                          "${userPosition == null ? '???' : (Geolocator.distanceBetween(userPosition.latitude, userPosition.longitude, widget.selectedBeach.position.latitude, widget.selectedBeach.position.longitude) / 1000).toInt()}km"),
-                      subtitle: Text("Afstand"),
-                    ),
-                  ),
+                  userPosition == null
+                      ? SizedBox.shrink()
+                      : Expanded(
+                          child: ListTile(
+                            title: Text(
+                                "${userPosition == null ? '???' : (Geolocator.distanceBetween(userPosition.latitude, userPosition.longitude, widget.selectedBeach.position.latitude, widget.selectedBeach.position.longitude) / 1000).toInt()}km"),
+                            subtitle: Text("Afstand"),
+                          ),
+                        ),
                 ],
               ),
               Gap(20),
