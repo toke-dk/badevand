@@ -116,7 +116,9 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
               leading: Icon(Icons.date_range),
               title: Text(widget
                   .selectedBeach
-                  .beachSpecifications[_selectedDateIndex].dataDate.myDateFormat),
+                  .beachSpecifications[_selectedDateIndex]
+                  .dataDate
+                  .myDateFormat),
               subtitle: Text("Dato"),
             ),
             ListTile(
@@ -138,14 +140,19 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
               subtitle: Text("Lufttemperatur"),
             ),
             ListTile(
-              leading: Icon(widget
-                  .selectedBeach
-                  .beachSpecifications[_selectedDateIndex].windDirection?.windDirectionArrow),
+              leading: widget
+                      .selectedBeach
+                      .beachSpecifications[_selectedDateIndex]
+                      .windDirection
+                      ?.getChildWidget ??
+                  const Icon(Icons.question_mark),
               title: Text(widget
-                  .selectedBeach
-                  .beachSpecifications[_selectedDateIndex]
-                  .windSpeed?.asMeterPerSecond ?? "ingen informationer"),
-              subtitle: Text("Vindhastighed"),
+                      .selectedBeach
+                      .beachSpecifications[_selectedDateIndex]
+                      .windSpeed
+                      ?.asMeterPerSecond ??
+                  "ingen informationer"),
+              subtitle: Text("Vind"),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
