@@ -37,6 +37,9 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
     final List<BeachSpecifications> specifications =
         widget.selectedBeach.beachSpecifications;
 
+    final BeachSpecifications specificationForSelectedIndex =
+        widget.selectedBeach.beachSpecifications[_selectedDateIndex];
+
     return Scaffold(
       appBar: AppBar(),
       body: SingleChildScrollView(
@@ -153,68 +156,43 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
               Gap(10),
               ListTile(
                 leading: Icon(Icons.date_range),
-                title: Text(widget
-                    .selectedBeach
-                    .beachSpecifications[_selectedDateIndex]
-                    .dataDate
-                    .myDateFormat),
+                title:
+                    Text(specificationForSelectedIndex.dataDate.myDateFormat),
                 subtitle: Text("Dato"),
               ),
               Divider(),
               ListTile(
-                leading: widget
-                        .selectedBeach
-                        .beachSpecifications[_selectedDateIndex]
-                        .weatherType
-                        ?.icon ??
+                leading: specificationForSelectedIndex.weatherType?.icon ??
                     Icon(Icons.question_mark),
-                title: Text(widget
-                        .selectedBeach
-                        .beachSpecifications[_selectedDateIndex]
-                        .weatherType
-                        ?.displayedText ??
-                    "Ukendt vejrtype"),
+                title: Text(
+                    specificationForSelectedIndex.weatherType?.displayedText ??
+                        "Ukendt vejrtype"),
               ),
               ListTile(
                 leading: Icon(Icons.water_drop_outlined),
-                title: Text(widget
-                    .selectedBeach
-                    .beachSpecifications[_selectedDateIndex]
-                    .waterTemperature
-                    .asCelsiusTemperature),
+                title: Text(specificationForSelectedIndex
+                    .waterTemperature.asCelsiusTemperature),
                 subtitle: Text("Vandtemperatur"),
               ),
               ListTile(
                 leading: Icon(Icons.thermostat),
-                title: Text(widget
-                    .selectedBeach
-                    .beachSpecifications[_selectedDateIndex]
-                    .airTemperature
-                    .asCelsiusTemperature),
+                title: Text(specificationForSelectedIndex
+                    .airTemperature.asCelsiusTemperature),
                 subtitle: Text("Lufttemperatur"),
               ),
               ListTile(
-                leading: widget
-                        .selectedBeach
-                        .beachSpecifications[_selectedDateIndex]
-                        .windDirection
-                        ?.getChildWidget ??
+                leading: specificationForSelectedIndex
+                        .windDirection?.getChildWidget ??
                     const Icon(Icons.question_mark),
-                title: Text(widget
-                        .selectedBeach
-                        .beachSpecifications[_selectedDateIndex]
-                        .windSpeed
-                        ?.asMeterPerSecond ??
-                    "ingen informationer"),
+                title: Text(
+                    specificationForSelectedIndex.windSpeed?.asMeterPerSecond ??
+                        "ingen informationer"),
                 subtitle: Text("Vind"),
               ),
               ListTile(
                 leading: Icon(WeatherIcons.rain),
-                title: Text(widget
-                        .selectedBeach
-                        .beachSpecifications[_selectedDateIndex]
-                        .precipitation
-                        ?.asMillimetersString ??
+                title: Text(specificationForSelectedIndex
+                        .precipitation?.asMillimetersString ??
                     "ingen informationer"),
                 subtitle: Text("Nedbør"),
               ),
