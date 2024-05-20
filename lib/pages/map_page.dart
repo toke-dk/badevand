@@ -21,16 +21,6 @@ class _MapPageState extends State<MapPage> {
       context.watch<UserPositionProvider>().getPosition;
 
   static const LatLng centerOfDenmark = LatLng(56.000, 11.100);
-  Set<Marker> markers = {};
-
-  @override
-  void initState() {
-    _initializeMarkers(context, context.read<BeachesProvider>().getBeaches)
-        .then((value) => setState(() {
-              markers = value;
-            }));
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,23 +31,4 @@ class _MapPageState extends State<MapPage> {
       markers: context.read<GoogleMarkersProvider>().getMarkers,
     );
   }
-}
-
-Future<Set<Marker>> _initializeMarkers(
-    BuildContext context, List<Beach> beaches) async {
-  Set<Marker> markerList = {};
-
-  final icon = await BitmapDescriptor.fromAssetImage(
-      ImageConfiguration(size: Size(32, 32)), 'assets/red_flag.png');
-
-  for (Beach indexBeach in beaches) {
-    markerList.add(Marker(
-        markerId: MarkerId(indexBeach.name),
-        position: indexBeach.position,
-        icon: icon,
-        infoWindow: InfoWindow(
-            title: indexBeach.name,
-            snippet: indexBeach.comments != "" ? indexBeach.comments : null)));
-  }
-  return markerList;
 }
