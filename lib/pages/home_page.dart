@@ -13,12 +13,31 @@ import '../providers/beaches_provider.dart';
 import '../providers/google_markers_provider.dart';
 import 'beach_info_page.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   const Home({super.key});
 
   @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  List<Beach> get beaches => context.watch<BeachesProvider>().getBeaches;
+
+  void _filterBeaches(String value) {
+    setState(() {
+      _filteredBeaches = context.read<BeachesProvider>().getBeaches
+          .where(
+              (item) => item.name.toLowerCase().contains(value.toLowerCase()))
+          .toList();
+    });
+  }
+
+  List<Beach> _filteredBeaches = [];
+
+  @override
   Widget build(BuildContext context) {
-    List<Beach> beaches = context.watch<BeachesProvider>().getBeaches;
+
+    _filteredBeaches = _filteredBeaches.isNotEmpty ? _filteredBeaches : context.read<BeachesProvider>().getBeaches;
 
     return SingleChildScrollView(
       child: Column(
@@ -30,7 +49,9 @@ class Home extends StatelessWidget {
 
                 context.read<BeachesProvider>().setBeaches =
                     result.map((e) => Beach.fromMap(e)).toList();
-                await context.read<GoogleMarkersProvider>().initMarkers(context);
+                await context
+                    .read<GoogleMarkersProvider>()
+                    .initMarkers(context);
               },
               child: Text(
                   "Get data (${beaches.isNotEmpty ? 'hasData' : "hasNotData"})")),
@@ -39,9 +60,18 @@ class Home extends StatelessWidget {
                 print(beaches);
               },
               child: const Text("Convert to dart class")),
+          TextField(
+            decoration: const InputDecoration(
+              labelText: 'Search',
+              prefixIcon: Icon(Icons.search),
+            ),
+            onChanged: (value) {
+              _filterBeaches(value);
+            },
+          ),
           Column(
-            children: List.generate(beaches.length, (index) {
-              final Beach indexBeach = beaches[index];
+            children: List.generate(_filteredBeaches.length, (index) {
+              final Beach indexBeach = _filteredBeaches[index];
               return ListTile(
                 trailing: indexBeach.createFavoriteIcon(context),
                 onTap: () => Navigator.of(context).push(MaterialPageRoute(
