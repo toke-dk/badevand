@@ -27,7 +27,9 @@ class _HomeState extends State<Home> {
 
   void _filterBeaches(String value) {
     setState(() {
-      _filteredBeaches = context.read<BeachesProvider>().getBeaches
+      _filteredBeaches = context
+          .read<BeachesProvider>()
+          .getBeaches
           .where(
               (item) => item.name.toLowerCase().contains(value.toLowerCase()))
           .toList();
@@ -38,8 +40,9 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-
-    _filteredBeaches = _filteredBeaches.isNotEmpty ? _filteredBeaches : context.read<BeachesProvider>().getBeaches;
+    _filteredBeaches = _filteredBeaches.isNotEmpty
+        ? _filteredBeaches
+        : context.read<BeachesProvider>().getBeaches;
 
     return SingleChildScrollView(
       child: Column(
@@ -68,8 +71,21 @@ class _HomeState extends State<Home> {
               decoration: InputDecoration(
                 labelText: 'Search',
                 prefixIcon: const Icon(Icons.search),
-                suffixIcon: Container(alignment: Alignment.centerRight, padding: const EdgeInsets.only(right: 30), child: badges.Badge(child: const Icon(Icons.tune), badgeContent: Text("0",style: TextStyle(color: Colors.white),),position: badges.BadgePosition.topStart(top: -12, start: 12),)),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+                suffixIcon: Container(
+                    padding: const EdgeInsets.only(
+                        top: 20, bottom: 20, right: 20, left: 8),
+                    child: FittedBox(
+                        child: badges.Badge(
+                      child: const Icon(Icons.tune),
+                      badgeContent: Text(
+                        "0",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      position:
+                          badges.BadgePosition.topStart(top: -12, start: 12),
+                    ))),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
               ),
               onChanged: (value) {
                 _filterBeaches(value);
