@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:badevand/enums/water_quality.dart';
 import 'package:badevand/enums/weather_types.dart';
 import 'package:badevand/extenstions/numbers_extension.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
@@ -60,15 +61,21 @@ class _HomeState extends State<Home> {
                 print(beaches);
               },
               child: const Text("Convert to dart class")),
-          TextField(
-            decoration: const InputDecoration(
-              labelText: 'Search',
-              prefixIcon: Icon(Icons.search),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: TextField(
+              decoration: InputDecoration(
+                labelText: 'Search',
+                prefixIcon: const Icon(Icons.search),
+                suffixIcon: const Icon(Icons.tune),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+              ),
+              onChanged: (value) {
+                _filterBeaches(value);
+              },
             ),
-            onChanged: (value) {
-              _filterBeaches(value);
-            },
           ),
+          Gap(10),
           Column(
             children: List.generate(_filteredBeaches.length, (index) {
               final Beach indexBeach = _filteredBeaches[index];
