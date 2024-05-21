@@ -69,30 +69,30 @@ class _HomeState extends State<Home> {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: TextField(
               decoration: InputDecoration(
-                labelText: 'Search',
+                hintText: 'Søg',
                 prefixIcon: const Icon(Icons.search),
                 suffixIcon: Container(
                     padding: const EdgeInsets.only(
                         top: 20, bottom: 20, right: 20, left: 8),
                     child: FittedBox(
                         child: badges.Badge(
-                      child: const Icon(Icons.tune),
-                      badgeContent: Text(
+                      badgeContent: const Text(
                         "0",
                         style: TextStyle(color: Colors.white),
                       ),
                       position:
                           badges.BadgePosition.topStart(top: -12, start: 12),
+                      child: const Icon(Icons.tune),
                     ))),
                 border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(50)),
               ),
               onChanged: (value) {
                 _filterBeaches(value);
               },
             ),
           ),
-          Gap(10),
+          const Gap(10),
           Column(
             children: List.generate(_filteredBeaches.length, (index) {
               final Beach indexBeach = _filteredBeaches[index];
