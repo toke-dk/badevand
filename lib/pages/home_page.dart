@@ -13,6 +13,7 @@ import '../models/beach.dart';
 import '../providers/beaches_provider.dart';
 import '../providers/google_markers_provider.dart';
 import 'beach_info_page.dart';
+import 'package:badges/badges.dart' as badges;
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -67,7 +68,7 @@ class _HomeState extends State<Home> {
               decoration: InputDecoration(
                 labelText: 'Search',
                 prefixIcon: const Icon(Icons.search),
-                suffixIcon: const Icon(Icons.tune),
+                suffixIcon: Container(alignment: Alignment.centerRight, padding: const EdgeInsets.only(right: 30), child: badges.Badge(child: const Icon(Icons.tune), badgeContent: Text("0",style: TextStyle(color: Colors.white),),position: badges.BadgePosition.topStart(top: -12, start: 12),)),
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
               ),
               onChanged: (value) {
