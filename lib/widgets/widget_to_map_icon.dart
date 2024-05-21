@@ -32,8 +32,7 @@ Future<Uint8List> createImageFromWidget(Widget widget, {Size? logicalSize, requi
   final RenderView renderView = RenderView(
     view: view,
     child: RenderPositionedBox(alignment: Alignment.center, child: repaintBoundary),
-    configuration: ViewConfiguration(
-      size: logicalSize,
+    configuration: const ViewConfiguration(
       devicePixelRatio: 1.0,
     ),
   );
