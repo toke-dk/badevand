@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:badevand/enums/water_quality.dart';
 import 'package:badevand/enums/weather_types.dart';
 import 'package:badevand/extenstions/numbers_extension.dart';
+import 'package:badevand/widgets/filter_bottom_sheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
@@ -92,6 +93,8 @@ class _HomeState extends State<Home> {
               },
             ),
           ),
+          const Gap(10),
+          beaches.isEmpty ? const SizedBox.shrink() : const FilterBottomSheet(),
           const Gap(10),
           Column(
             children: List.generate(_filteredBeaches.length, (index) {

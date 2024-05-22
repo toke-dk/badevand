@@ -63,6 +63,7 @@ class Beach {
           size: 30,
         ),
   );
+
 }
 
 class BeachSpecifications {
@@ -106,4 +107,8 @@ class BeachSpecifications {
             ? null
             : double.parse(map["precipitation"].toString()));
   }
+}
+
+extension ListOfBeachExtension on List<Beach> {
+  List<String> get getBeachesMunicipalityStrings => map((Beach beach) => beach.municipality).toSet().toList();
 }
