@@ -1,6 +1,7 @@
 import 'dart:ui' as ui;
 
 import 'package:badevand/enums/water_quality.dart';
+import 'package:badevand/widgets/filter_bottom_sheet.dart';
 import 'package:badevand/widgets/widget_to_map_icon.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -25,6 +26,10 @@ class BeachesProvider extends ChangeNotifier {
     final int index = _beaches.indexOf(beachChange);
     _beaches[index].isFavourite = !_beaches[index].isFavourite;
     notifyListeners();
+  }
+
+  void sortBeaches(SortingOption option, LatLng userPosition) {
+    _beaches = option.sortBeach(_beaches, option, userPosition);
   }
 
 
