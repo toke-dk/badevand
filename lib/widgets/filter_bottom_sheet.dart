@@ -16,7 +16,10 @@ class FilterBottomSheet extends StatefulWidget {
 }
 
 class _FilterBottomSheetState extends State<FilterBottomSheet> {
-  List<Beach> get _beaches => context.watch<BeachesProvider>().getBeaches;
+  List<Beach> get _beaches =>
+      context
+          .watch<BeachesProvider>()
+          .getBeaches;
 
   List<String> get _beachesMunicipalityStrings =>
       _beaches.getBeachesMunicipalityStrings;
@@ -25,19 +28,22 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
   late List<SortingOption> _sortingOptions;
   late SortingOption _selectedSortingOption;
+
   Position? get userPosition =>
-      context.read<UserPositionProvider>().getPosition;
+      context
+          .read<UserPositionProvider>()
+          .getPosition;
 
   @override
   void didChangeDependencies() {
     _sortingOptions = [
-      SortingOption(value: SortingValues.name, isAscending: true),
-      SortingOption(value: SortingValues.municipalityName, isAscending: null),
-      SortingOption(value: SortingValues.waterQuality, isAscending: null),
+      SortingOption(value: SortingValues.name),
+      SortingOption(value: SortingValues.municipalityName),
+      SortingOption(value: SortingValues.waterQuality),
     ];
     if (userPosition != null) {
-      _sortingOptions.add(
-          SortingOption(value: SortingValues.distance, isAscending: null));
+      _sortingOptions
+          .add(SortingOption(value: SortingValues.distance));
     }
 
     _selectedSortingOption = _sortingOptions.first;
@@ -63,10 +69,11 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
               DropdownButton<String>(
                 menuMaxHeight: 350,
                 items: _beachesMunicipalityStrings
-                    .map((e) => DropdownMenuItem<String>(
-                          value: e,
-                          child: Text(e),
-                        ))
+                    .map((e) =>
+                    DropdownMenuItem<String>(
+                      value: e,
+                      child: Text(e),
+                    ))
                     .toList(),
                 onChanged: (newVal) {
                   if (newVal == null) return;
@@ -84,40 +91,33 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
               const Gap(15),
               DropdownButton<SortingOption>(
                 menuMaxHeight: 350,
+                icon: IconButton(
+                  icon: Icon(_selectedSortingOption.isAscending
+                      ? Icons.arrow_upward
+                      : Icons.arrow_downward),
+                  onPressed: () =>
+                      setState(() {
+                        _selectedSortingOption.toggleAscend;
+                      }),
+                ),
                 items: _sortingOptions
-                    .map((e) => DropdownMenuItem<SortingOption>(
-                          value: e,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0, vertical: 8.0),
-                            // Adjust padding as needed
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(e.value.name),
-                                Gap(20),
-                                e.isAscending == true
-                                    ? const Icon(Icons.arrow_upward)
-                                    : const SizedBox.shrink(),
-                                e.isAscending == false
-                                    ? const Icon(Icons.arrow_downward)
-                                    : const SizedBox.shrink()
-                                // Trailing icon (optional)
-                              ],
-                            ),
-                          ),
-                        ))
+                    .map((e) =>
+                    DropdownMenuItem<SortingOption>(
+                      value: e,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16.0, vertical: 8.0),
+                        // Adjust padding as needed
+                        child: Text(e.value.name),
+                      ),
+                    ))
                     .toList(),
                 onChanged: (newOption) {
-                  if (newOption == null) return;
+                  if (newOption == null ||
+                      newOption.value == _selectedSortingOption.value) return;
                   setState(() {
-                    if (_selectedSortingOption.value == newOption.value) {
-                      _selectedSortingOption.toggleAscend;
-                    } else {
-                      _selectedSortingOption.removeAscend;
-                      _selectedSortingOption = newOption;
-                      _selectedSortingOption.toggleAscend;
-                    }
+                    _selectedSortingOption.defaultAscend;
+                    _selectedSortingOption = newOption;
                   });
                 },
                 value: _selectedSortingOption,
@@ -134,12 +134,12 @@ enum SortingValues { name, distance, waterQuality, municipalityName }
 
 class SortingOption {
   SortingValues value;
-  bool? isAscending;
+  bool isAscending;
 
-  SortingOption({required this.value, required this.isAscending});
+  SortingOption({required this.value, this.isAscending = true});
 
-  List<Beach> sortBeach(
-      List<Beach> beaches, SortingOption option, LatLng? userPosition) {
+  List<Beach> sortBeach(List<Beach> beaches, SortingOption option,
+      LatLng? userPosition) {
     List<Beach> beachesToReturn = beaches;
     switch (option.value) {
       case SortingValues.name:
@@ -147,9 +147,10 @@ class SortingOption {
       case SortingValues.distance:
         if (userPosition == null) return beaches;
         beachesToReturn = beaches
-          ..sort((a, b) => a
-              .distanceInKm(userPosition)!
-              .compareTo(b.distanceInKm(userPosition)!));
+          ..sort((a, b) =>
+              a
+                  .distanceInKm(userPosition)!
+                  .compareTo(b.distanceInKm(userPosition)!));
       case SortingValues.waterQuality:
       // TODO: make this sort from bad to good and vise versa;
       case SortingValues.municipalityName:
@@ -162,15 +163,11 @@ class SortingOption {
     return beachesToReturn;
   }
 
-  get removeAscend {
-    isAscending = null;
+  get defaultAscend {
+    isAscending = true;
   }
 
   get toggleAscend {
-    if (isAscending == null) {
-      isAscending = true;
-      return;
-    }
-    isAscending = !isAscending!;
+    isAscending = !isAscending;
   }
 }
