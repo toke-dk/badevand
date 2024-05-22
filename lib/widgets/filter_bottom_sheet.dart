@@ -6,6 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
+import '../enums/sorting_values.dart';
 import '../providers/user_position_provider.dart';
 
 class FilterBottomSheet extends StatefulWidget {
@@ -129,8 +130,6 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
     );
   }
 }
-
-enum SortingValues { name, distance, waterQuality, municipalityName }
 
 class SortingOption {
   SortingValues value;
