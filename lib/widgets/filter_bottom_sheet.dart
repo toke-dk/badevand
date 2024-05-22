@@ -22,8 +22,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
           .watch<BeachesProvider>()
           .getBeaches;
 
-  List<String> get _beachesMunicipalityStrings =>
-      _beaches.getBeachesMunicipalityStrings;
+  List<String> get _beachesMunicipalityStrings =>["Alle", ..._beaches.getBeachesMunicipalityStrings];
 
   String? _selectedMunicipality;
 
