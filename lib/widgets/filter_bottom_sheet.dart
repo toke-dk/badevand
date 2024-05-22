@@ -2,8 +2,11 @@ import 'package:badevand/models/beach.dart';
 import 'package:badevand/providers/beaches_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+
+import '../providers/user_position_provider.dart';
 
 class FilterBottomSheet extends StatefulWidget {
   const FilterBottomSheet({super.key});
@@ -20,18 +23,25 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
   String? _selectedMunicipality;
 
-  final List<SortingOption> _sortingOptions = [
-    SortingOption(value: SortingValues.name, isAscending: true),
-    SortingOption(value: SortingValues.distance, isAscending: null),
-    SortingOption(value: SortingValues.municipalityName, isAscending: null),
-    SortingOption(value: SortingValues.waterQuality, isAscending: null),
-  ];
+  late List<SortingOption> _sortingOptions;
   late SortingOption _selectedSortingOption;
+  Position? get userPosition =>
+      context.read<UserPositionProvider>().getPosition;
 
   @override
-  void initState() {
+  void didChangeDependencies() {
+    _sortingOptions = [
+      SortingOption(value: SortingValues.name, isAscending: true),
+      SortingOption(value: SortingValues.municipalityName, isAscending: null),
+      SortingOption(value: SortingValues.waterQuality, isAscending: null),
+    ];
+    if (userPosition != null) {
+      _sortingOptions.add(
+          SortingOption(value: SortingValues.distance, isAscending: null));
+    }
+
     _selectedSortingOption = _sortingOptions.first;
-    super.initState();
+    super.didChangeDependencies();
   }
 
   @override
@@ -84,7 +94,8 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(e.value.name), // Main text
+                                Text(e.value.name),
+                                Gap(20),
                                 e.isAscending == true
                                     ? const Icon(Icons.arrow_upward)
                                     : const SizedBox.shrink(),
