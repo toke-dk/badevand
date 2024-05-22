@@ -6,6 +6,7 @@ import 'package:badevand/extenstions/numbers_extension.dart';
 import 'package:badevand/models/wind_direction.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:weather_icons/weather_icons.dart';
@@ -53,17 +54,23 @@ class Beach {
       beachSpecifications.firstWhere((element) => element.dataDate.isToday);
 
   Widget createFavoriteIcon(BuildContext context) => IconButton(
-    onPressed: () {
-      context.read<BeachesProvider>().changeValueFavoriteBeach =
-          this;
-    },
-    icon: Icon(
+        onPressed: () {
+          context.read<BeachesProvider>().changeValueFavoriteBeach = this;
+        },
+        icon: Icon(
           isFavourite ? Icons.star : Icons.star_outline,
           color: Colors.yellow[600],
           size: 30,
         ),
-  );
+      );
 
+  int? distanceInKm(LatLng? userPosition) {
+    if (userPosition == null) return null;
+    return (Geolocator.distanceBetween(userPosition.latitude,
+                userPosition.longitude, position.latitude, position.longitude) /
+            1000)
+        .toInt();
+  }
 }
 
 class BeachSpecifications {
@@ -110,5 +117,6 @@ class BeachSpecifications {
 }
 
 extension ListOfBeachExtension on List<Beach> {
-  List<String> get getBeachesMunicipalityStrings => map((Beach beach) => beach.municipality).toSet().toList();
+  List<String> get getBeachesMunicipalityStrings =>
+      map((Beach beach) => beach.municipality).toSet().toList();
 }
