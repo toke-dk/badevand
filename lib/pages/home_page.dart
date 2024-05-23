@@ -159,15 +159,6 @@ class _HomeState extends State<Home> {
                       )),
                 )),
           const Gap(10),
-          _beachesToDisplay.getFavouriteBeaches.isEmpty
-              ? const SizedBox.shrink()
-              : ExpansionPanelList(
-                  children: [
-                    ExpansionPanel(
-                        headerBuilder: (context, _) => const Text("Favoritter"),
-                        body: const Text("fe"))
-                  ],
-                ),
           Column(
             children: List.generate(_beachesToDisplay.length, (index) {
               final Beach indexBeach = _beachesToDisplay[index];
