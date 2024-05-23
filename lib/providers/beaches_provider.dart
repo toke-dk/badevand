@@ -33,10 +33,16 @@ class BeachesProvider extends ChangeNotifier {
 
   void sortBeaches(SortingOption option, LatLng? userPosition) {
     _allBeaches = _allBeaches.sortBeach(option, userPosition);
+
+    // sorting first and then filtering
     _filterByMunicipality(_municipalityFilter);
     notifyListeners();
   }
 
+  /// I always keep the [_municipalityFilter] so to know what filter is being
+  /// used. Then when the beaches are sorted, it sorts all beaches and filter
+  /// them afterwards. If it turns out that there is no filter, it does not
+  /// filter them
   String _municipalityFilter = "alle";
 
   set setMunicipalityFilter(String municipality) {
