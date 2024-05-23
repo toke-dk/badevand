@@ -55,18 +55,6 @@ class _HomeState extends State<Home> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          const Text("Den bedste badevandsapp"),
-          OutlinedButton(
-              onPressed: () async {
-                await getBeachData().then((result) => handleBeachData(context, beachDataResults: result));
-              },
-              child: Text(
-                  "Get data (${beaches.isNotEmpty ? 'hasData' : "hasNotData"})")),
-          OutlinedButton(
-              onPressed: () async {
-                print(beaches);
-              },
-              child: const Text("Convert to dart class")),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: TextField(
@@ -183,53 +171,5 @@ class _HomeState extends State<Home> {
         ],
       ),
     );
-  }
-}
-
-Future<void> handleBeachData(BuildContext context,
-    {required List<dynamic> beachDataResults}) async {
-
-  bool getIsFavourite(List<String> favouriteBeaches, String beachName) {
-    if (favouriteBeaches.contains(beachName.toLowerCase())) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  List<dynamic> result = [];
-  context.read<LoadingProvider>().toggleAppLoadingState(true);
-  await getBeachData().then((List<dynamic> value) {
-    result = value;
-    context.read<LoadingProvider>().toggleAppLoadingState(false);
-  });
-
-  final SharedPreferences prefs =
-      await SharedPreferences.getInstance();
-  final List<String> favouriteBeaches =
-      prefs.getStringList('favourites') ?? [];
-
-  context.read<BeachesProvider>().setBeaches = result
-      .map((e) => Beach.fromMap(e,
-      getIsFavourite(favouriteBeaches, e["name"].toString())))
-      .toList()
-      .sortBeach(SortingOption(value: SortingValues.name));
-  await context
-      .read<GoogleMarkersProvider>()
-      .initMarkers(context);
-}
-
-Future<List<dynamic>> getBeachData() async {
-  final url = Uri.parse('http://api.vandudsigten.dk/beaches');
-
-  final response = await http.get(url);
-
-  if (response.statusCode == 200) {
-    final List<dynamic> data = jsonDecode(response.body);
-    print(data[1]["name"]);
-    return data;
-  } else {
-    // Handle error scenario
-    throw Exception('Could not find the data from the vandusigt link:(');
   }
 }

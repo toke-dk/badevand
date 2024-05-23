@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:badevand/enums/water_quality.dart';
+import 'package:badevand/extenstions/beaches_extension.dart';
 import 'package:badevand/models/beach.dart';
 import 'package:badevand/models/navigator_service.dart';
 import 'package:badevand/pages/all_pages.dart';
@@ -17,8 +20,12 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 import 'dart:ui' as ui;
+import 'package:http/http.dart' as http;
 
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'enums/sorting_values.dart';
+import 'models/sorting_option.dart';
 
 void main() {
   runApp(MultiProvider(
@@ -102,9 +109,9 @@ class _MyAppState extends State<MyApp> {
     _determinePosition();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       initializeDateFormatting("da", "DA");
-      getBeachData().then((List<dynamic> result) => handleBeachData(context, beachDataResults: result));
+      getBeachData().then((List<dynamic> result) =>
+          handleBeachData(context, beachDataResults: result));
     });
-
 
     super.initState();
   }
@@ -140,5 +147,48 @@ class _MyAppState extends State<MyApp> {
               }),
           body: kAllScreens.elementAt(_selectedMenuIndex)(context)),
     );
+  }
+}
+
+Future<void> handleBeachData(BuildContext context,
+    {required List<dynamic> beachDataResults}) async {
+  bool getIsFavourite(List<String> favouriteBeaches, String beachName) {
+    if (favouriteBeaches.contains(beachName.toLowerCase())) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  List<dynamic> result = [];
+  context.read<LoadingProvider>().toggleAppLoadingState(true);
+  await getBeachData().then((List<dynamic> value) {
+    result = value;
+    context.read<LoadingProvider>().toggleAppLoadingState(false);
+  });
+
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  final List<String> favouriteBeaches = prefs.getStringList('favourites') ?? [];
+
+  context.read<BeachesProvider>().setBeaches = result
+      .map((e) => Beach.fromMap(
+          e, getIsFavourite(favouriteBeaches, e["name"].toString())))
+      .toList()
+      .sortBeach(SortingOption(value: SortingValues.name));
+  await context.read<GoogleMarkersProvider>().initMarkers(context);
+}
+
+Future<List<dynamic>> getBeachData() async {
+  final url = Uri.parse('http://api.vandudsigten.dk/beaches');
+
+  final response = await http.get(url);
+
+  if (response.statusCode == 200) {
+    final List<dynamic> data = jsonDecode(response.body);
+    print(data[1]["name"]);
+    return data;
+  } else {
+    // Handle error scenario
+    throw Exception('Could not find the data from the vandusigt link:(');
   }
 }
