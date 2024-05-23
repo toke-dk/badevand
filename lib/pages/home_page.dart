@@ -4,6 +4,7 @@ import 'package:badevand/enums/weather_types.dart';
 import 'package:badevand/extenstions/numbers_extension.dart';
 import 'package:badevand/models/navigator_service.dart';
 import 'package:badevand/pages/map_page.dart';
+import 'package:badevand/providers/home_menu_index.dart';
 import 'package:badevand/widgets/filter_bottom_sheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
@@ -123,7 +124,16 @@ class _HomeState extends State<Home> {
                     Text(indexBeach
                         .getSpecsOfToday.airTemperature.asCelsiusTemperature),
                     Spacer(),
-                    IconButton(onPressed: (){NavigationService.instance.push(MapPage(preLocatedPosition: indexBeach.position,));}, icon: Icon(Icons.pin_drop_outlined))
+                    IconButton(
+                        onPressed: () {
+                          context
+                              .read<HomeMenuIndexProvider>()
+                              .setMapPageStartLocation(indexBeach.position);
+                          context
+                              .read<HomeMenuIndexProvider>()
+                              .changeSelectedIndex(1);
+                        },
+                        icon: Icon(Icons.pin_drop_outlined))
                   ],
                 ),
               );

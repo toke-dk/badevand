@@ -1,10 +1,12 @@
 import 'package:badevand/enums/water_quality.dart';
 import 'package:badevand/models/beach.dart';
 import 'package:badevand/models/navigator_service.dart';
+import 'package:badevand/pages/all_pages.dart';
 import 'package:badevand/pages/home_page.dart';
 import 'package:badevand/pages/map_page.dart';
 import 'package:badevand/providers/beaches_provider.dart';
 import 'package:badevand/providers/google_markers_provider.dart';
+import 'package:badevand/providers/home_menu_index.dart';
 import 'package:badevand/providers/user_position_provider.dart';
 import 'package:badevand/widgets/widget_to_map_icon.dart';
 import 'package:flutter/cupertino.dart';
@@ -24,6 +26,8 @@ void main() {
           create: (BuildContext context) => GoogleMarkersProvider()),
       ChangeNotifierProvider(
           create: (BuildContext context) => UserPositionProvider()),
+      ChangeNotifierProvider(
+          create: (BuildContext context) => HomeMenuIndexProvider()),
     ],
     child: const MyApp(),
   ));
@@ -37,7 +41,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  int _selectedMenuIndex = 0;
+  int get _selectedMenuIndex =>
+      context.watch<HomeMenuIndexProvider>().getSelectedIndex;
 
   Future<void> _determinePosition() async {
     Position? position;
@@ -93,12 +98,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-
-    List<Widget> _pages = [
-      const Home(),
-      const MapPage(),
-    ];
-
     return MaterialApp(
       title: 'Flutter Demo',
       navigatorKey: NavigationService.instance.navigatorKey,
@@ -112,16 +111,15 @@ class _MyAppState extends State<MyApp> {
             backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           ),
           bottomNavigationBar: BottomNavigationBar(
-            items: const [
-              BottomNavigationBarItem(icon: Icon(Icons.water), label: "Hjem"),
-              BottomNavigationBarItem(icon: Icon(Icons.map), label: "Kort"),
-            ],
-            currentIndex: _selectedMenuIndex,
-            onTap: (int newIndex) => setState(() {
-              _selectedMenuIndex = newIndex;
-            }),
-          ),
-          body: _pages.elementAt(_selectedMenuIndex)),
+              items: const [
+                BottomNavigationBarItem(icon: Icon(Icons.water), label: "Hjem"),
+                BottomNavigationBarItem(icon: Icon(Icons.map), label: "Kort"),
+              ],
+              currentIndex: _selectedMenuIndex,
+              onTap: (int newIndex) => context
+                  .read<HomeMenuIndexProvider>()
+                  .changeSelectedIndex(newIndex)),
+          body: kAllScreens.elementAt(_selectedMenuIndex)(context)),
     );
   }
 }
