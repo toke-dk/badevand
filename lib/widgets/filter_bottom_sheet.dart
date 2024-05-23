@@ -38,7 +38,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
   @override
   void didChangeDependencies() {
     if (userPosition != null) {
-      _sortingOptions.add(SortingOption(value: SortingValues.distance));
+      _sortingOptions.add(SortingOption(value: SortingValues.distance, userPosition: userPosition!.toLatLng));
     }
     super.didChangeDependencies();
   }
@@ -146,7 +146,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                         print(_selectedMunicipality);
                         context.read<BeachesProvider>().setMunicipalityFilter = _selectedMunicipality;
                         context.read<BeachesProvider>().sortBeaches(
-                            _selectedSortingOption, userPosition?.toLatLng);
+                            _selectedSortingOption);
                         Navigator.of(context).pop();
                       },
                       child: Text("Tilføj"))),
@@ -161,8 +161,9 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 class SortingOption {
   SortingValues value;
   bool isAscending;
+  LatLng? userPosition;
 
-  SortingOption({required this.value, this.isAscending = true});
+  SortingOption({required this.value, this.isAscending = true, this.userPosition});
 
   get defaultAscend {
     isAscending = true;

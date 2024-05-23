@@ -47,8 +47,8 @@ class BeachesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void sortBeaches(SortingOption option, LatLng? userPosition) {
-    _allBeaches = _allBeaches.sortBeach(option, userPosition);
+  void sortBeaches(SortingOption option) {
+    _allBeaches = _allBeaches.sortBeach(option);
 
     // sorting first and then filtering
     _filterByMunicipality(_municipalityFilter);

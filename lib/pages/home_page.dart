@@ -70,7 +70,7 @@ class _HomeState extends State<Home> {
                 context.read<BeachesProvider>().setBeaches = result
                     .map((e) => Beach.fromMap(e,
                         getIsFavourite(favouriteBeaches, e["name"].toString())))
-                    .toList().sortBeach(SortingOption(value: SortingValues.name), _userPosition?.toLatLng);
+                    .toList().sortBeach(SortingOption(value: SortingValues.name));
                 await context
                     .read<GoogleMarkersProvider>()
                     .initMarkers(context);

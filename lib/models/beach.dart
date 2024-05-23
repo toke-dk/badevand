@@ -127,7 +127,8 @@ extension ListOfBeachExtension on List<Beach> {
   List<String> get getBeachesMunicipalityStrings =>
       map((Beach beach) => beach.municipality).toSet().toList();
 
-  List<Beach> sortBeach(SortingOption option, LatLng? userPosition) {
+  List<Beach> sortBeach(SortingOption option) {
+    LatLng? userPosition = option.userPosition;
     List<Beach> beachesToReturn = this;
     switch (option.value) {
       case SortingValues.name:
