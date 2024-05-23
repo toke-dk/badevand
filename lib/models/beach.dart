@@ -39,9 +39,6 @@ class Beach {
   });
 
   factory Beach.fromMap(Map<String, dynamic> map, bool isBeachFavourite) {
-
-
-    print("beachname: ${map["name"] as String}");
     return Beach(
       id: int.parse(map["id"].toString()),
       name: map["name"] as String,
