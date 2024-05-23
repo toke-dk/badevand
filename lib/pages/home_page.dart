@@ -55,6 +55,8 @@ class _HomeState extends State<Home> {
     }
   }
 
+  bool _isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -63,7 +65,16 @@ class _HomeState extends State<Home> {
           const Text("Den bedste badevandsapp"),
           OutlinedButton(
               onPressed: () async {
-                List<dynamic> result = await getBeachData();
+                List<dynamic> result = [];
+                setState(() {
+                  _isLoading = true;
+                });
+                await getBeachData().then((List<dynamic> value) {
+                  result = value;
+                  setState(() {
+                    _isLoading = false;
+                  });
+                });
 
                 final SharedPreferences prefs =
                     await SharedPreferences.getInstance();
@@ -102,7 +113,7 @@ class _HomeState extends State<Home> {
                         onPressed: () {
                           showModalBottomSheet(
                               context: context,
-                              builder: (context) => FilterBottomSheet());
+                              builder: (context) => const FilterBottomSheet());
                         },
                       ),
                     ))),
@@ -115,33 +126,46 @@ class _HomeState extends State<Home> {
             ),
           ),
           const Gap(10),
-          Shimmer.fromColors(
-              baseColor: Colors.grey.shade300,
-              highlightColor: Colors.grey.shade100,
-              enabled: true,
-              child: ListTile(
-                leading: Icon(Icons.flag),
-                trailing: Icon(Icons.star),
-                subtitle: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Flexible(child: Container(height: 12, color: Colors.black,)),
-                    Spacer(flex: 4,)
-                  ],
-                ),
-                title:
-                  Container(height: 16.0, color: Colors.black,),
-
-              )),
+          _isLoading == false
+              ? const SizedBox.shrink()
+              : Column(
+                  children: List.generate(
+                  4,
+                  (int index) => Shimmer.fromColors(
+                      baseColor: Colors.grey.shade300,
+                      highlightColor: Colors.grey.shade100,
+                      enabled: true,
+                      child: ListTile(
+                        leading: const Icon(Icons.flag),
+                        trailing: const Icon(Icons.star),
+                        subtitle: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Flexible(
+                                child: Container(
+                              height: 12,
+                              color: Colors.black,
+                            )),
+                            const Spacer(
+                              flex: 4,
+                            )
+                          ],
+                        ),
+                        title: Container(
+                          height: 16.0,
+                          color: Colors.black,
+                        ),
+                      )),
+                )),
           const Gap(10),
           _beachesToDisplay.getFavouriteBeaches.isEmpty
-              ? SizedBox.shrink()
+              ? const SizedBox.shrink()
               : ExpansionPanelList(
                   children: [
                     ExpansionPanel(
-                        headerBuilder: (context, _) => Text("Favoritter"),
-                        body: Text("fe"))
+                        headerBuilder: (context, _) => const Text("Favoritter"),
+                        body: const Text("fe"))
                   ],
                 ),
           Column(
@@ -156,7 +180,7 @@ class _HomeState extends State<Home> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Flexible(child: Text(indexBeach.name)),
-                    Gap(6),
+                    const Gap(6),
                     Text(
                       indexBeach.municipality,
                       style: TextStyle(fontSize: 11, color: Colors.grey[700]),
@@ -179,7 +203,7 @@ class _HomeState extends State<Home> {
                     const Gap(8),
                     Text(indexBeach
                         .getSpecsOfToday.airTemperature.asCelsiusTemperature),
-                    Spacer(),
+                    const Spacer(),
                     IconButton(
                         onPressed: () {
                           context
@@ -189,7 +213,7 @@ class _HomeState extends State<Home> {
                               .read<HomeMenuIndexProvider>()
                               .changeSelectedIndex(1);
                         },
-                        icon: Icon(Icons.pin_drop_outlined))
+                        icon: const Icon(Icons.pin_drop_outlined))
                   ],
                 ),
               );
