@@ -126,13 +126,9 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
       home: Scaffold(
-          appBar: AppBar(
-            title: const Text("Badevand"),
-            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          ),
           bottomNavigationBar: BottomNavigationBar(
               items: const [
-                BottomNavigationBarItem(icon: Icon(Icons.water), label: "Hjem"),
+                BottomNavigationBarItem(icon: Icon(Icons.water), label: "Liste"),
                 BottomNavigationBarItem(icon: Icon(Icons.map), label: "Kort"),
               ],
               currentIndex: _selectedMenuIndex,
