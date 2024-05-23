@@ -10,7 +10,9 @@ import '../providers/google_markers_provider.dart';
 import '../providers/user_position_provider.dart';
 
 class MapPage extends StatefulWidget {
-  const MapPage({super.key});
+  const MapPage({super.key, this.preLocatedPosition});
+
+  final LatLng? preLocatedPosition;
 
   @override
   State<MapPage> createState() => _MapPageState();
@@ -24,6 +26,17 @@ class _MapPageState extends State<MapPage> {
 
   MapType _currentMapType = MapType.normal;
 
+  LatLng get _getStartPosition {
+    if (widget.preLocatedPosition != null) return widget.preLocatedPosition!;
+    if (_userPosition != null) return _userPosition!.toLatLng;
+    return centerOfDenmark;
+  }
+
+  double get _getStartZoom {
+    if (widget.preLocatedPosition != null) return 12;
+    return 7;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -32,7 +45,7 @@ class _MapPageState extends State<MapPage> {
           mapType: _currentMapType,
           myLocationEnabled: _userPosition != null,
           initialCameraPosition: CameraPosition(
-              target: _userPosition?.toLatLng ?? centerOfDenmark, zoom: 7),
+              target: _getStartPosition, zoom: _getStartZoom),
           markers: context.read<GoogleMarkersProvider>().getMarkers,
         ),
         Positioned(bottom: 5, left: 5,child: FloatingActionButton(onPressed: (){
