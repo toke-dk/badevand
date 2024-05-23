@@ -23,7 +23,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
   List<String> get _beachesMunicipalityStrings =>
       ["Alle", ..._beaches.getBeachesMunicipalityStrings];
 
-  String? _selectedMunicipality;
+  String _selectedMunicipality = "Alle";
 
   final List<SortingOption> _sortingOptions = [
     SortingOption(value: SortingValues.name),
@@ -45,79 +45,110 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    if (_selectedMunicipality == null) {
+    if (_selectedMunicipality.toLowerCase() == "alle") {
       setState(() {
         _selectedMunicipality = _beachesMunicipalityStrings.first;
       });
     }
 
     return Container(
+      padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Text("Kommune"),
-              const Gap(15),
-              DropdownButton<String>(
-                menuMaxHeight: 350,
-                items: _beachesMunicipalityStrings
-                    .map((e) => DropdownMenuItem<String>(
-                          value: e,
-                          child: Text(e),
-                        ))
-                    .toList(),
-                onChanged: (newVal) {
-                  if (newVal == null) return;
-                  setState(() {
-                    _selectedMunicipality = newVal;
-                  });
-                  context.read<BeachesProvider>().setMunicipalityFilter = _selectedMunicipality!;
+              Icon(Icons.filter_alt_outlined),
+              Gap(10),
+              Text(
+                "Filtrer og sorter",
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              Spacer(),
+              IconButton(
+                icon: Icon(Icons.close),
+                onPressed: () {
+                  Navigator.of(context).pop();
                 },
-                value: _selectedMunicipality,
-              )
+              ),
             ],
+          ),
+          Divider(),
+          ListTile(
+            leading: Icon(Icons.filter_list),
+            title: Row(
+              children: [
+                const Text("Kommune"),
+                const Gap(15),
+                DropdownButton<String>(
+                  menuMaxHeight: 350,
+                  items: _beachesMunicipalityStrings
+                      .map((e) => DropdownMenuItem<String>(
+                            value: e,
+                            child: Text(e),
+                          ))
+                      .toList(),
+                  onChanged: (newVal) {
+                    if (newVal == null) return;
+                    setState(() {
+                      _selectedMunicipality = newVal;
+                    });
+                  },
+                  value: _selectedMunicipality,
+                )
+              ],
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.sort),
+            title: Row(
+              children: [
+                const Text("Sorter"),
+                const Gap(15),
+                DropdownButton<SortingOption>(
+                  menuMaxHeight: 350,
+                  icon: IconButton(
+                      icon: Icon(_selectedSortingOption.isAscending
+                          ? Icons.arrow_upward
+                          : Icons.arrow_downward),
+                      onPressed: () {
+                        setState(() {
+                          _selectedSortingOption.toggleAscend;
+                        });
+                      }),
+                  items: _sortingOptions
+                      .map((e) => DropdownMenuItem<SortingOption>(
+                            value: e,
+                            child: Container(
+                              child: Text(e.value.name),
+                            ),
+                          ))
+                      .toList(),
+                  onChanged: (newOption) {
+                    if (newOption == null ||
+                        newOption.value == _selectedSortingOption.value) return;
+                    setState(() {
+                      _selectedSortingOption.defaultAscend;
+                      _selectedSortingOption = newOption;
+                    });
+                  },
+                  value: _selectedSortingOption,
+                )
+              ],
+            ),
           ),
           Row(
             children: [
-              const Text("Sorter efter"),
-              const Gap(15),
-              DropdownButton<SortingOption>(
-                menuMaxHeight: 350,
-                icon: IconButton(
-                    icon: Icon(_selectedSortingOption.isAscending
-                        ? Icons.arrow_upward
-                        : Icons.arrow_downward),
-                    onPressed: () {
-                      setState(() {
-                        _selectedSortingOption.toggleAscend;
-                      });
-
-
-                      context.read<BeachesProvider>().sortBeaches(
-                          _selectedSortingOption, userPosition?.toLatLng);
-                    }),
-                items: _sortingOptions
-                    .map((e) => DropdownMenuItem<SortingOption>(
-                          value: e,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0, vertical: 8.0),
-                            // Adjust padding as needed
-                            child: Text(e.value.name),
-                          ),
-                        ))
-                    .toList(),
-                onChanged: (newOption) {
-                  if (newOption == null ||
-                      newOption.value == _selectedSortingOption.value) return;
-                  setState(() {
-                    _selectedSortingOption.defaultAscend;
-                    _selectedSortingOption = newOption;
-                  });
-                  context.read<BeachesProvider>().sortBeaches(_selectedSortingOption, userPosition?.toLatLng);
-                },
-                value: _selectedSortingOption,
-              )
+              Expanded(
+                  child: FilledButton(
+                      onPressed: () {
+                        context.read<BeachesProvider>().setMunicipalityFilter = _selectedMunicipality;
+                        context.read<BeachesProvider>().sortBeaches(
+                            _selectedSortingOption, userPosition?.toLatLng);
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("Tilføj"))),
             ],
           )
         ],

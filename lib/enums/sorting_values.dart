@@ -10,7 +10,7 @@ extension SortingValuesExtension on SortingValues {
       case SortingValues.waterQuality:
         return "Vandkvalitet";
       case SortingValues.municipalityName:
-        return "Kommunenavn";
+        return "Kommune";
     }
   }
 }

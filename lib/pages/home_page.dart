@@ -26,11 +26,11 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   List<Beach> get beaches => context.watch<BeachesProvider>().getBeaches;
 
-  List<Beach> get _filteredBeaches => context.watch<BeachesProvider>().getFilteredBeaches;
+  List<Beach> get _filteredBeaches =>
+      context.watch<BeachesProvider>().getFilteredBeaches;
 
   @override
   Widget build(BuildContext context) {
-
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -60,26 +60,27 @@ class _HomeState extends State<Home> {
                 prefixIcon: const Icon(Icons.search),
                 suffixIcon: Container(
                     padding: const EdgeInsets.only(
-                        top: 20, bottom: 20, right: 20, left: 8),
+                        right: 10, left: 8),
                     child: FittedBox(
                         child: badges.Badge(
-                      badgeContent: const Text(
-                        "0",
-                        style: TextStyle(color: Colors.white),
-                      ),
+
                       position:
-                          badges.BadgePosition.topStart(top: -12, start: 12),
-                      child: const Icon(Icons.tune),
+                          badges.BadgePosition.topEnd(top: 6, end: 6),
+                      child: IconButton(
+                        icon: const Icon(Icons.tune),
+                        onPressed: () {
+                          showModalBottomSheet(
+                              context: context,
+                              builder: (context) => FilterBottomSheet());
+                        },
+                      ),
                     ))),
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(50)),
               ),
-              onChanged: (value) {
-              },
+              onChanged: (value) {},
             ),
           ),
-          const Gap(10),
-          beaches.isEmpty ? const SizedBox.shrink() : const FilterBottomSheet(),
           const Gap(10),
           Column(
             children: List.generate(_filteredBeaches.length, (index) {
@@ -94,7 +95,10 @@ class _HomeState extends State<Home> {
                   children: [
                     Flexible(child: Text(indexBeach.name)),
                     Gap(6),
-                    Text(indexBeach.municipality, style: TextStyle(fontSize: 11, color: Colors.grey[700]),),
+                    Text(
+                      indexBeach.municipality,
+                      style: TextStyle(fontSize: 11, color: Colors.grey[700]),
+                    ),
                   ],
                 ),
                 leading: indexBeach.getSpecsOfToday.waterQualityType.flag,
