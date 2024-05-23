@@ -11,8 +11,10 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:weather_icons/weather_icons.dart';
 
+import '../enums/sorting_values.dart';
 import '../enums/water_quality.dart';
 import '../providers/beaches_provider.dart';
+import '../widgets/filter_bottom_sheet.dart';
 
 class Beach {
   int id;
@@ -119,4 +121,29 @@ class BeachSpecifications {
 extension ListOfBeachExtension on List<Beach> {
   List<String> get getBeachesMunicipalityStrings =>
       map((Beach beach) => beach.municipality).toSet().toList();
+
+  List<Beach> sortBeach(SortingOption option,
+      LatLng? userPosition) {
+    List<Beach> beachesToReturn = this;
+    switch (option.value) {
+      case SortingValues.name:
+        beachesToReturn = this..sort((a, b) => a.name.compareTo(b.name));
+      case SortingValues.distance:
+        if (userPosition == null) return this;
+        beachesToReturn = this
+          ..sort((a, b) =>
+              a
+                  .distanceInKm(userPosition)!
+                  .compareTo(b.distanceInKm(userPosition)!));
+      case SortingValues.waterQuality:
+      // TODO: make this sort from bad to good and vise versa;
+      case SortingValues.municipalityName:
+        beachesToReturn = this
+          ..sort((a, b) => a.municipality.compareTo(b.municipality));
+    }
+    if (option.isAscending == false) {
+      beachesToReturn = beachesToReturn.reversed.toList();
+    }
+    return beachesToReturn;
+  }
 }

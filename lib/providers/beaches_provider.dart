@@ -11,26 +11,42 @@ import '../models/beach.dart';
 import 'google_markers_provider.dart';
 
 class BeachesProvider extends ChangeNotifier {
-  List<Beach> _beaches = [];
+  List<Beach> _allBeaches = [];
 
-  List<Beach> get getBeaches => _beaches;
+  List<Beach> get getBeaches {
+    print(_allBeaches.map((e) => e.name));
+    return _allBeaches;
+  }
 
   set setBeaches(List<Beach> newBeaches) {
-    _beaches = newBeaches;
+    _allBeaches = newBeaches;
     notifyListeners();
   }
 
   set changeValueFavoriteBeach(Beach beachChange) {
-    if (!_beaches.contains(beachChange)) return;
+    if (!_allBeaches.contains(beachChange)) return;
 
-    final int index = _beaches.indexOf(beachChange);
-    _beaches[index].isFavourite = !_beaches[index].isFavourite;
+    final int index = _allBeaches.indexOf(beachChange);
+    _allBeaches[index].isFavourite = !_allBeaches[index].isFavourite;
     notifyListeners();
   }
 
-  void sortBeaches(SortingOption option, LatLng userPosition) {
-    _beaches = option.sortBeach(_beaches, option, userPosition);
+  List<Beach> _filteredBeaches = [];
+
+  List<Beach> get getFilteredBeaches {
+    if (_filteredBeaches.isEmpty) {
+      _filteredBeaches = _allBeaches;
+      return _filteredBeaches;
+    }
+    print("no");
+    return _filteredBeaches;
   }
+
+  void sortBeaches(SortingOption option, LatLng? userPosition) {
+    _filteredBeaches = _filteredBeaches.sortBeach(option, userPosition);
+    notifyListeners();
+  }
+
 
 
 

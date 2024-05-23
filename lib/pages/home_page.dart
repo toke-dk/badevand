@@ -26,24 +26,10 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   List<Beach> get beaches => context.watch<BeachesProvider>().getBeaches;
 
-  void _filterBeaches(String value) {
-    setState(() {
-      _filteredBeaches = context
-          .read<BeachesProvider>()
-          .getBeaches
-          .where(
-              (item) => item.name.toLowerCase().contains(value.toLowerCase()))
-          .toList();
-    });
-  }
-
-  List<Beach> _filteredBeaches = [];
+  List<Beach> get _filteredBeaches => context.watch<BeachesProvider>().getFilteredBeaches;
 
   @override
   Widget build(BuildContext context) {
-    _filteredBeaches = _filteredBeaches.isNotEmpty
-        ? _filteredBeaches
-        : context.read<BeachesProvider>().getBeaches;
 
     return SingleChildScrollView(
       child: Column(
@@ -89,7 +75,6 @@ class _HomeState extends State<Home> {
                     OutlineInputBorder(borderRadius: BorderRadius.circular(50)),
               ),
               onChanged: (value) {
-                _filterBeaches(value);
               },
             ),
           ),
