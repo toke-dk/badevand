@@ -29,8 +29,8 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
 
   int _selectedDateIndex = 0;
 
-  Beach get beach => context
-      .read<BeachesProvider>()
+  Beach get _beach => context
+      .watch<BeachesProvider>()
       .getBeaches
       .firstWhere((element) => element == widget.selectedBeach);
 
@@ -41,10 +41,10 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
 
     final TextTheme textTheme = Theme.of(context).textTheme;
 
-    final List<BeachSpecifications> specifications = beach.beachSpecifications;
+    final List<BeachSpecifications> specifications = _beach.beachSpecifications;
 
     final BeachSpecifications specificationForSelectedIndex =
-        beach.beachSpecifications[_selectedDateIndex];
+        _beach.beachSpecifications[_selectedDateIndex];
 
     return Scaffold(
       appBar: AppBar(),
@@ -56,24 +56,24 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
             children: [
               Row(
                 children: [
-                  beach.getSpecsOfToday.waterQualityType.flag,
+                  _beach.getSpecsOfToday.waterQualityType.flag,
                   Gap(8),
                   Text(
-                    beach.name,
+                    _beach.name,
                     style: textTheme.titleMedium,
                   ),
                   Spacer(),
                   IconButton(icon: Icon(Icons.pin_drop_outlined), onPressed: () {
                     final provider = context.read<HomeMenuIndexProvider>();
-                    provider.setMapPageStartLocation(beach.position);
+                    provider.setMapPageStartLocation(_beach.position);
                     provider.changeSelectedIndex(1);
                     Navigator.of(context).pop();
                   },),
                   Gap(6),
-                  beach.createFavoriteIcon(context),
+                  _beach.createFavoriteIcon(context),
                 ],
               ),
-              beach.description == "" || beach.description == null
+              _beach.description == "" || _beach.description == null
                   ? const SizedBox.shrink()
                   : GestureDetector(
                       onTap: () {
@@ -82,14 +82,14 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
                         });
                       },
                       child: Text(
-                        beach.description!,
+                        _beach.description!,
                         style: textTheme.bodySmall!
                             .copyWith(color: Colors.grey[700]),
                         maxLines: maxLines,
                         overflow:
                             maxLines == null ? null : TextOverflow.ellipsis,
                       )),
-              beach.comments == "" || beach.comments == null
+              _beach.comments == "" || _beach.comments == null
                   ? const SizedBox.shrink()
                   : GestureDetector(
                   onTap: () {
@@ -100,7 +100,7 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
                   child: Padding(
                     padding: const EdgeInsets.only(top: 9),
                     child: Text(
-                      beach.comments!,
+                      _beach.comments!,
                       style: textTheme.bodySmall!
                           .copyWith(color: Colors.grey[700]),
                       maxLines: maxLines,
@@ -112,7 +112,7 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
                 children: [
                   Expanded(
                     child: ListTile(
-                      title: Text(beach.municipality),
+                      title: Text(_beach.municipality),
                       subtitle: Text("Kommune"),
                     ),
                   ),
@@ -130,12 +130,12 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
               Gap(20),
               Row(
                 children: [
-                  beach.getSpecsOfToday.weatherType?.icon ?? SizedBox.shrink(),
+                  _beach.getSpecsOfToday.weatherType?.icon ?? SizedBox.shrink(),
                   Gap(30),
                   Expanded(
                     child: Text(
                       overflow: TextOverflow.visible,
-                      beach.getSpecsOfToday.weatherType?.displayedText ??
+                      _beach.getSpecsOfToday.weatherType?.displayedText ??
                           "Ukendt vejr",
                       style: textTheme.titleLarge,
                     ),
