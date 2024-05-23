@@ -31,22 +31,32 @@ class BeachesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<Beach> _filteredBeaches = [];
-
-  List<Beach> get getFilteredBeaches {
-    if (_filteredBeaches.isEmpty) {
-      _filteredBeaches = _allBeaches;
-      return _filteredBeaches;
-    }
-    return _filteredBeaches;
-  }
-
   void sortBeaches(SortingOption option, LatLng? userPosition) {
     _allBeaches = _allBeaches.sortBeach(option, userPosition);
+    _filterByMunicipality(_municipalityFilter);
     notifyListeners();
   }
 
-  void filterByMunicipality(String municipality) {
+  String _municipalityFilter = "alle";
+
+  set setMunicipalityFilter(String municipality) {
+    _municipalityFilter = municipality;
+    _filterByMunicipality(_municipalityFilter);
+    notifyListeners();
+  }
+
+  List<Beach> _filteredBeaches = [];
+
+  List<Beach> get getFilteredBeaches {
+    // Initialize
+    if (_filteredBeaches.isEmpty) {
+      _filteredBeaches = _allBeaches;
+    }
+
+    return _filteredBeaches;
+  }
+
+  void _filterByMunicipality(String municipality) {
     if (municipality.toLowerCase() == "alle") {
       _filteredBeaches = _allBeaches;
     } else {
