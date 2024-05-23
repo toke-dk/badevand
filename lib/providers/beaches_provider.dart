@@ -1,6 +1,7 @@
 import 'dart:ui' as ui;
 
 import 'package:badevand/enums/water_quality.dart';
+import 'package:badevand/extenstions/beaches_extension.dart';
 import 'package:badevand/widgets/filter_bottom_sheet.dart';
 import 'package:badevand/widgets/widget_to_map_icon.dart';
 import 'package:flutter/cupertino.dart';

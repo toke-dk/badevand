@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:badevand/enums/sorting_values.dart';
 import 'package:badevand/enums/water_quality.dart';
 import 'package:badevand/enums/weather_types.dart';
+import 'package:badevand/extenstions/beaches_extension.dart';
 import 'package:badevand/extenstions/numbers_extension.dart';
 import 'package:badevand/extenstions/postion_extension.dart';
 import 'package:badevand/models/navigator_service.dart';

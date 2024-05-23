@@ -1,3 +1,4 @@
+import 'package:badevand/extenstions/beaches_extension.dart';
 import 'package:badevand/extenstions/postion_extension.dart';
 import 'package:badevand/models/beach.dart';
 import 'package:badevand/providers/beaches_provider.dart';
