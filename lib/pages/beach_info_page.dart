@@ -2,6 +2,7 @@ import 'package:badevand/enums/water_quality.dart';
 import 'package:badevand/extenstions/date_extensions.dart';
 import 'package:badevand/extenstions/numbers_extension.dart';
 import 'package:badevand/providers/beaches_provider.dart';
+import 'package:badevand/providers/home_menu_index.dart';
 import 'package:badevand/providers/user_position_provider.dart';
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
 import 'package:flutter/cupertino.dart';
@@ -29,7 +30,7 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
   int _selectedDateIndex = 0;
 
   Beach get beach => context
-      .watch<BeachesProvider>()
+      .read<BeachesProvider>()
       .getBeaches
       .firstWhere((element) => element == widget.selectedBeach);
 
@@ -62,6 +63,13 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
                     style: textTheme.titleMedium,
                   ),
                   Spacer(),
+                  IconButton(icon: Icon(Icons.pin_drop_outlined), onPressed: () {
+                    final provider = context.read<HomeMenuIndexProvider>();
+                    provider.setMapPageStartLocation(beach.position);
+                    provider.changeSelectedIndex(1);
+                    Navigator.of(context).pop();
+                  },),
+                  Gap(6),
                   beach.createFavoriteIcon(context),
                 ],
               ),
