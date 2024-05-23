@@ -8,6 +8,7 @@ import 'package:badevand/extenstions/postion_extension.dart';
 import 'package:badevand/models/navigator_service.dart';
 import 'package:badevand/pages/map_page.dart';
 import 'package:badevand/providers/home_menu_index.dart';
+import 'package:badevand/providers/loading_provider.dart';
 import 'package:badevand/widgets/filter_bottom_sheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
@@ -55,7 +56,7 @@ class _HomeState extends State<Home> {
     }
   }
 
-  bool _isLoading = false;
+  bool get _isLoading => context.watch<LoadingProvider>().getIsAppLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -66,14 +67,10 @@ class _HomeState extends State<Home> {
           OutlinedButton(
               onPressed: () async {
                 List<dynamic> result = [];
-                setState(() {
-                  _isLoading = true;
-                });
+                context.read<LoadingProvider>().toggleAppLoadingState(true);
                 await getBeachData().then((List<dynamic> value) {
                   result = value;
-                  setState(() {
-                    _isLoading = false;
-                  });
+                  context.read<LoadingProvider>().toggleAppLoadingState(false);
                 });
 
                 final SharedPreferences prefs =

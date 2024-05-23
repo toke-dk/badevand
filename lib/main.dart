@@ -7,6 +7,7 @@ import 'package:badevand/pages/map_page.dart';
 import 'package:badevand/providers/beaches_provider.dart';
 import 'package:badevand/providers/google_markers_provider.dart';
 import 'package:badevand/providers/home_menu_index.dart';
+import 'package:badevand/providers/loading_provider.dart';
 import 'package:badevand/providers/user_position_provider.dart';
 import 'package:badevand/widgets/widget_to_map_icon.dart';
 import 'package:flutter/cupertino.dart';
@@ -30,6 +31,8 @@ void main() {
           create: (BuildContext context) => UserPositionProvider()),
       ChangeNotifierProvider(
           create: (BuildContext context) => HomeMenuIndexProvider()),
+      ChangeNotifierProvider(
+          create: (BuildContext context) => LoadingProvider()),
     ],
     child: const MyApp(),
   ));
@@ -100,6 +103,7 @@ class _MyAppState extends State<MyApp> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       initializeDateFormatting("da", "DA");
     });
+
     super.initState();
   }
 
