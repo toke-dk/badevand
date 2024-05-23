@@ -6,6 +6,7 @@ import 'package:badevand/widgets/widget_to_map_icon.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/beach.dart';
 import 'google_markers_provider.dart';
@@ -23,11 +24,27 @@ class BeachesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  set changeValueFavoriteBeach(Beach beachChange) {
+  Future<void> changeValueFavoriteBeach(Beach beachChange) async {
     if (!_allBeaches.contains(beachChange)) return;
 
     final int index = _allBeaches.indexOf(beachChange);
+    final Beach beachToChange = _allBeaches[index];
+    final bool previousValue = beachToChange.isFavourite;
+
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final List<String> favouriteBeaches = prefs.getStringList('favourites') ?? [];
+
+    if (previousValue) {
+      prefs.setStringList(
+          "favourites", favouriteBeaches..remove(beachChange.name.toLowerCase()));
+    } else if (!previousValue) {
+      prefs.setStringList(
+          'favourites', favouriteBeaches..add(beachChange.name.toLowerCase()));
+    }
+    print("prefs ${prefs.getStringList('favourites')}");
+
     _allBeaches[index].isFavourite = !_allBeaches[index].isFavourite;
+
     notifyListeners();
   }
 

@@ -12,6 +12,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/beach.dart';
 import '../providers/beaches_provider.dart';
@@ -36,6 +37,15 @@ class _HomeState extends State<Home> {
     context.read<BeachesProvider>().setSearchedValue(value);
   }
 
+  bool getIsFavourite(
+      List<String> favouriteBeaches, String beachName) {
+    if (favouriteBeaches.contains(beachName.toLowerCase())) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -46,8 +56,17 @@ class _HomeState extends State<Home> {
               onPressed: () async {
                 List<dynamic> result = await getBeachData();
 
-                context.read<BeachesProvider>().setBeaches =
-                    result.map((e) => Beach.fromMap(e)).toList();
+                final SharedPreferences prefs =
+                    await SharedPreferences.getInstance();
+                final List<String> favouriteBeaches =
+                    prefs.getStringList('favourites') ?? [];
+
+                context.read<BeachesProvider>().setBeaches = result
+                    .map((e) => Beach.fromMap(
+                        e,
+                        getIsFavourite(
+                            favouriteBeaches, e["name"].toString())))
+                    .toList();
                 await context
                     .read<GoogleMarkersProvider>()
                     .initMarkers(context);

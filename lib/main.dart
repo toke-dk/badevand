@@ -17,6 +17,8 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 import 'dart:ui' as ui;
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 void main() {
   runApp(MultiProvider(
     providers: [
@@ -86,6 +88,9 @@ class _MyAppState extends State<MyApp> {
   }
 
   List<Beach> get beaches => context.read<BeachesProvider>().getBeaches;
+
+  late SharedPreferences prefs;
+  Future<SharedPreferences> get setPrefs async => prefs = await SharedPreferences.getInstance();
 
   @override
   void initState() {

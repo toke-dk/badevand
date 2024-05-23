@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_icons/weather_icons.dart';
 
 import '../enums/sorting_values.dart';
@@ -34,9 +35,12 @@ class Beach {
     required this.beachSpecifications,
     required this.position,
     required this.municipality,
+    required this.isFavourite,
   });
 
-  factory Beach.fromMap(Map<String, dynamic> map) {
+  factory Beach.fromMap(Map<String, dynamic> map, bool isBeachFavourite) {
+
+
     print("beachname: ${map["name"] as String}");
     return Beach(
       id: int.parse(map["id"].toString()),
@@ -49,6 +53,7 @@ class Beach {
       position: LatLng(double.parse(map["latitude"].toString()),
           double.parse(map["longitude"].toString())),
       municipality: map["municipality"].toString(),
+      isFavourite: isBeachFavourite,
     );
   }
 
@@ -57,7 +62,7 @@ class Beach {
 
   Widget createFavoriteIcon(BuildContext context) => IconButton(
         onPressed: () {
-          context.read<BeachesProvider>().changeValueFavoriteBeach = this;
+          context.read<BeachesProvider>().changeValueFavoriteBeach(this);
         },
         icon: Icon(
           isFavourite ? Icons.star : Icons.star_outline,
