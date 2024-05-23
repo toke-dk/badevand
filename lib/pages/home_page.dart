@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../models/beach.dart';
 import '../models/sorting_option.dart';
@@ -72,7 +73,8 @@ class _HomeState extends State<Home> {
                 context.read<BeachesProvider>().setBeaches = result
                     .map((e) => Beach.fromMap(e,
                         getIsFavourite(favouriteBeaches, e["name"].toString())))
-                    .toList().sortBeach(SortingOption(value: SortingValues.name));
+                    .toList()
+                    .sortBeach(SortingOption(value: SortingValues.name));
                 await context
                     .read<GoogleMarkersProvider>()
                     .initMarkers(context);
@@ -112,6 +114,26 @@ class _HomeState extends State<Home> {
               },
             ),
           ),
+          const Gap(10),
+          Shimmer.fromColors(
+              baseColor: Colors.grey.shade300,
+              highlightColor: Colors.grey.shade100,
+              enabled: true,
+              child: ListTile(
+                leading: Icon(Icons.flag),
+                trailing: Icon(Icons.star),
+                subtitle: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Flexible(child: Container(height: 12, color: Colors.black,)),
+                    Spacer(flex: 4,)
+                  ],
+                ),
+                title:
+                  Container(height: 16.0, color: Colors.black,),
+
+              )),
           const Gap(10),
           _beachesToDisplay.getFavouriteBeaches.isEmpty
               ? SizedBox.shrink()
