@@ -26,8 +26,12 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   List<Beach> get beaches => context.watch<BeachesProvider>().getBeaches;
 
-  List<Beach> get _filteredBeaches =>
-      context.watch<BeachesProvider>().getFilteredBeaches;
+  List<Beach> get _beachesToDisplay =>
+      context.watch<BeachesProvider>().getSearchedBeaches;
+
+  void _filterSearchedBeaches(String value) {
+    context.read<BeachesProvider>().setSearchedValue(value);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,13 +63,10 @@ class _HomeState extends State<Home> {
                 hintText: 'Søg',
                 prefixIcon: const Icon(Icons.search),
                 suffixIcon: Container(
-                    padding: const EdgeInsets.only(
-                        right: 10, left: 8),
+                    padding: const EdgeInsets.only(right: 10, left: 8),
                     child: FittedBox(
                         child: badges.Badge(
-
-                      position:
-                          badges.BadgePosition.topEnd(top: 6, end: 6),
+                      position: badges.BadgePosition.topEnd(top: 6, end: 6),
                       child: IconButton(
                         icon: const Icon(Icons.tune),
                         onPressed: () {
@@ -78,13 +79,15 @@ class _HomeState extends State<Home> {
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(50)),
               ),
-              onChanged: (value) {},
+              onChanged: (value) {
+                _filterSearchedBeaches(value);
+              },
             ),
           ),
           const Gap(10),
           Column(
-            children: List.generate(_filteredBeaches.length, (index) {
-              final Beach indexBeach = _filteredBeaches[index];
+            children: List.generate(_beachesToDisplay.length, (index) {
+              final Beach indexBeach = _beachesToDisplay[index];
               return ListTile(
                 trailing: indexBeach.createFavoriteIcon(context),
                 onTap: () => Navigator.of(context).push(MaterialPageRoute(

@@ -161,4 +161,10 @@ extension ListOfBeachExtension on List<Beach> {
     print("those to filter ${beachesToReturn.map((e) => e.municipality)}");
     return beachesToReturn;
   }
+
+  List<Beach> filterBySearch(String searchValue) {
+    return where(
+            (item) => item.name.toLowerCase().contains(searchValue.toLowerCase()))
+        .toList();
+  }
 }

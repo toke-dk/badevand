@@ -53,7 +53,7 @@ class BeachesProvider extends ChangeNotifier {
 
   List<Beach> _filteredBeaches = [];
 
-  List<Beach> get getFilteredBeaches {
+  List<Beach> get _getFilteredBeaches {
     // Initialize
     if (_filteredBeaches.isEmpty) {
       _filteredBeaches = _allBeaches;
@@ -71,6 +71,23 @@ class BeachesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  String _searchedValue = "";
 
+  void setSearchedValue(String value) {
+    _searchedValue = value;
+    _filterBySearch(value);
+    notifyListeners();
+  }
+
+  List<Beach> get getSearchedBeaches {
+    return _filterBySearch(_searchedValue);
+  }
+
+  List<Beach> _filterBySearch(String searchValue) {
+    if (searchValue == "") {
+      return _getFilteredBeaches;
+    } else {
+      return _getFilteredBeaches.filterBySearch(searchValue);
+    }
+  }
 }
-

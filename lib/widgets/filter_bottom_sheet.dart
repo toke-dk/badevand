@@ -143,6 +143,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
               Expanded(
                   child: FilledButton(
                       onPressed: () {
+                        print(_selectedMunicipality);
                         context.read<BeachesProvider>().setMunicipalityFilter = _selectedMunicipality;
                         context.read<BeachesProvider>().sortBeaches(
                             _selectedSortingOption, userPosition?.toLatLng);
