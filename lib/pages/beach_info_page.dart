@@ -73,7 +73,7 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
                   beach.createFavoriteIcon(context),
                 ],
               ),
-              beach.description == null
+              beach.description == "" || beach.description == null
                   ? const SizedBox.shrink()
                   : GestureDetector(
                       onTap: () {
@@ -89,6 +89,25 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
                         overflow:
                             maxLines == null ? null : TextOverflow.ellipsis,
                       )),
+              beach.comments == "" || beach.comments == null
+                  ? const SizedBox.shrink()
+                  : GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      maxLines = maxLines != null ? null : 3;
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 9),
+                    child: Text(
+                      beach.comments!,
+                      style: textTheme.bodySmall!
+                          .copyWith(color: Colors.grey[700]),
+                      maxLines: maxLines,
+                      overflow:
+                      maxLines == null ? null : TextOverflow.ellipsis,
+                    ),
+                  )),
               Row(
                 children: [
                   Expanded(
