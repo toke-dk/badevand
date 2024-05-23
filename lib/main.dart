@@ -122,7 +122,7 @@ class _MyAppState extends State<MyApp> {
       title: 'Flutter Demo',
       navigatorKey: NavigationService.instance.navigatorKey,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
       home: Scaffold(
