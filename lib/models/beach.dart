@@ -122,8 +122,7 @@ extension ListOfBeachExtension on List<Beach> {
   List<String> get getBeachesMunicipalityStrings =>
       map((Beach beach) => beach.municipality).toSet().toList();
 
-  List<Beach> sortBeach(SortingOption option,
-      LatLng? userPosition) {
+  List<Beach> sortBeach(SortingOption option, LatLng? userPosition) {
     List<Beach> beachesToReturn = this;
     switch (option.value) {
       case SortingValues.name:
@@ -131,12 +130,17 @@ extension ListOfBeachExtension on List<Beach> {
       case SortingValues.distance:
         if (userPosition == null) return this;
         beachesToReturn = this
-          ..sort((a, b) =>
-              a
-                  .distanceInKm(userPosition)!
-                  .compareTo(b.distanceInKm(userPosition)!));
+          ..sort((a, b) => a
+              .distanceInKm(userPosition)!
+              .compareTo(b.distanceInKm(userPosition)!));
       case SortingValues.waterQuality:
-      // TODO: make this sort from bad to good and vise versa;
+        List<Beach> goodQual =
+            getBeachesFromQuality(WaterQualityTypes.goodQuality);
+        List<Beach> badQual =
+            getBeachesFromQuality(WaterQualityTypes.badQuality);
+        List<Beach> noWarn = getBeachesFromQuality(WaterQualityTypes.noWarning);
+        List<Beach> closed = getBeachesFromQuality(WaterQualityTypes.closed);
+        beachesToReturn = [...goodQual, ...badQual, ...noWarn, ...closed];
       case SortingValues.municipalityName:
         beachesToReturn = this
           ..sort((a, b) => a.municipality.compareTo(b.municipality));
@@ -145,5 +149,10 @@ extension ListOfBeachExtension on List<Beach> {
       beachesToReturn = beachesToReturn.reversed.toList();
     }
     return beachesToReturn;
+  }
+
+  List<Beach> getBeachesFromQuality(WaterQualityTypes quality) {
+    return where((beach) => beach.getSpecsOfToday.waterQualityType == quality)
+        .toList();
   }
 }
