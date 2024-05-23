@@ -102,9 +102,9 @@ class _MyAppState extends State<MyApp> {
     _determinePosition();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       initializeDateFormatting("da", "DA");
+      getBeachData().then((List<dynamic> result) => handleBeachData(context, beachDataResults: result));
     });
 
-    // getBeachData().then((List<dynamic>))
 
     super.initState();
   }
