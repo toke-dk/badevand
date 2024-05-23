@@ -113,6 +113,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                     _selectedSortingOption.defaultAscend;
                     _selectedSortingOption = newOption;
                   });
+                  context.read<BeachesProvider>().sortBeaches(_selectedSortingOption, userPosition?.toLatLng);
                 },
                 value: _selectedSortingOption,
               )

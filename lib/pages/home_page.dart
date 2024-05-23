@@ -89,7 +89,14 @@ class _HomeState extends State<Home> {
                 onTap: () => Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) =>
                         BeachInfoPage(selectedBeach: indexBeach))),
-                title: Text(indexBeach.name),
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(child: Text(indexBeach.name)),
+                    Gap(6),
+                    Text(indexBeach.municipality, style: TextStyle(fontSize: 11, color: Colors.grey[700]),),
+                  ],
+                ),
                 leading: indexBeach.getSpecsOfToday.waterQualityType.flag,
                 subtitle: Row(
                   children: [
