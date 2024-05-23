@@ -75,7 +75,6 @@ class BeachesProvider extends ChangeNotifier {
 
   void setSearchedValue(String value) {
     _searchedValue = value;
-    _filterBySearch(value);
     notifyListeners();
   }
 
