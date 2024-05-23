@@ -15,7 +15,6 @@ class BeachesProvider extends ChangeNotifier {
   List<Beach> _allBeaches = [];
 
   List<Beach> get getBeaches {
-    print(_allBeaches.map((e) => e.name));
     return _allBeaches;
   }
 
