@@ -37,8 +37,7 @@ class _HomeState extends State<Home> {
     context.read<BeachesProvider>().setSearchedValue(value);
   }
 
-  bool getIsFavourite(
-      List<String> favouriteBeaches, String beachName) {
+  bool getIsFavourite(List<String> favouriteBeaches, String beachName) {
     if (favouriteBeaches.contains(beachName.toLowerCase())) {
       return true;
     } else {
@@ -62,10 +61,8 @@ class _HomeState extends State<Home> {
                     prefs.getStringList('favourites') ?? [];
 
                 context.read<BeachesProvider>().setBeaches = result
-                    .map((e) => Beach.fromMap(
-                        e,
-                        getIsFavourite(
-                            favouriteBeaches, e["name"].toString())))
+                    .map((e) => Beach.fromMap(e,
+                        getIsFavourite(favouriteBeaches, e["name"].toString())))
                     .toList();
                 await context
                     .read<GoogleMarkersProvider>()
@@ -107,6 +104,15 @@ class _HomeState extends State<Home> {
             ),
           ),
           const Gap(10),
+          _beachesToDisplay.getFavouriteBeaches.isEmpty
+              ? SizedBox.shrink()
+              : ExpansionPanelList(
+                  children: [
+                    ExpansionPanel(
+                        headerBuilder: (context, _) => Text("Favoritter"),
+                        body: Text("fe"))
+                  ],
+                ),
           Column(
             children: List.generate(_beachesToDisplay.length, (index) {
               final Beach indexBeach = _beachesToDisplay[index];

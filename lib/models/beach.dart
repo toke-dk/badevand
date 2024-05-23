@@ -172,4 +172,6 @@ extension ListOfBeachExtension on List<Beach> {
             (item) => item.name.toLowerCase().contains(searchValue.toLowerCase()))
         .toList();
   }
+
+  List<Beach> get getFavouriteBeaches => where((e) => e.isFavourite).toList();
 }
