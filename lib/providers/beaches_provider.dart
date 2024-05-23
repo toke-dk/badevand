@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/beach.dart';
+import '../models/sorting_option.dart';
 import 'google_markers_provider.dart';
 
 class BeachesProvider extends ChangeNotifier {

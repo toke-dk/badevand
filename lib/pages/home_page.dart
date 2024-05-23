@@ -19,6 +19,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/beach.dart';
+import '../models/sorting_option.dart';
 import '../providers/beaches_provider.dart';
 import '../providers/google_markers_provider.dart';
 import '../providers/user_position_provider.dart';

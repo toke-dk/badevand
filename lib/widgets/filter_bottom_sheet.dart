@@ -9,6 +9,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../enums/sorting_values.dart';
+import '../models/sorting_option.dart';
 import '../providers/user_position_provider.dart';
 
 class FilterBottomSheet extends StatefulWidget {
@@ -156,21 +157,5 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
         ],
       ),
     );
-  }
-}
-
-class SortingOption {
-  SortingValues value;
-  bool isAscending;
-  LatLng? userPosition;
-
-  SortingOption({required this.value, this.isAscending = true, this.userPosition});
-
-  get defaultAscend {
-    isAscending = true;
-  }
-
-  get toggleAscend {
-    isAscending = !isAscending;
   }
 }

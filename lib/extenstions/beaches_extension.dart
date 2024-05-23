@@ -3,6 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../enums/sorting_values.dart';
 import '../enums/water_quality.dart';
 import '../models/beach.dart';
+import '../models/sorting_option.dart';
 import '../widgets/filter_bottom_sheet.dart';
 
 extension ListOfBeachExtension on List<Beach> {
