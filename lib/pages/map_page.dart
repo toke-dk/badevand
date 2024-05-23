@@ -22,13 +22,25 @@ class _MapPageState extends State<MapPage> {
 
   static const LatLng centerOfDenmark = LatLng(56.000, 11.100);
 
+  MapType _currentMapType = MapType.normal;
+
   @override
   Widget build(BuildContext context) {
-    return GoogleMap(
-      myLocationEnabled: _userPosition != null,
-      initialCameraPosition: CameraPosition(
-          target: _userPosition?.toLatLng ?? centerOfDenmark, zoom: 7),
-      markers: context.read<GoogleMarkersProvider>().getMarkers,
+    return Stack(
+      children: [
+        GoogleMap(
+          mapType: _currentMapType,
+          myLocationEnabled: _userPosition != null,
+          initialCameraPosition: CameraPosition(
+              target: _userPosition?.toLatLng ?? centerOfDenmark, zoom: 7),
+          markers: context.read<GoogleMarkersProvider>().getMarkers,
+        ),
+        Positioned(bottom: 5, left: 5,child: FloatingActionButton(onPressed: (){
+          setState(() {
+            _currentMapType = (_currentMapType == MapType.normal) ? MapType.satellite : MapType.normal;
+          });
+        }, child: const Icon(Icons.layers),),)
+      ],
     );
   }
 }
