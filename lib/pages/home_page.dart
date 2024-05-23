@@ -48,14 +48,6 @@ class _HomeState extends State<Home> {
     context.read<BeachesProvider>().setSearchedValue(value);
   }
 
-  bool getIsFavourite(List<String> favouriteBeaches, String beachName) {
-    if (favouriteBeaches.contains(beachName.toLowerCase())) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   bool get _isLoading => context.watch<LoadingProvider>().getIsAppLoading;
 
   @override
@@ -66,26 +58,7 @@ class _HomeState extends State<Home> {
           const Text("Den bedste badevandsapp"),
           OutlinedButton(
               onPressed: () async {
-                List<dynamic> result = [];
-                context.read<LoadingProvider>().toggleAppLoadingState(true);
-                await getBeachData().then((List<dynamic> value) {
-                  result = value;
-                  context.read<LoadingProvider>().toggleAppLoadingState(false);
-                });
-
-                final SharedPreferences prefs =
-                    await SharedPreferences.getInstance();
-                final List<String> favouriteBeaches =
-                    prefs.getStringList('favourites') ?? [];
-
-                context.read<BeachesProvider>().setBeaches = result
-                    .map((e) => Beach.fromMap(e,
-                        getIsFavourite(favouriteBeaches, e["name"].toString())))
-                    .toList()
-                    .sortBeach(SortingOption(value: SortingValues.name));
-                await context
-                    .read<GoogleMarkersProvider>()
-                    .initMarkers(context);
+                await getBeachData().then((result) => handleBeachData(context, beachDataResults: result));
               },
               child: Text(
                   "Get data (${beaches.isNotEmpty ? 'hasData' : "hasNotData"})")),
@@ -211,6 +184,39 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+}
+
+Future<void> handleBeachData(BuildContext context,
+    {required List<dynamic> beachDataResults}) async {
+
+  bool getIsFavourite(List<String> favouriteBeaches, String beachName) {
+    if (favouriteBeaches.contains(beachName.toLowerCase())) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  List<dynamic> result = [];
+  context.read<LoadingProvider>().toggleAppLoadingState(true);
+  await getBeachData().then((List<dynamic> value) {
+    result = value;
+    context.read<LoadingProvider>().toggleAppLoadingState(false);
+  });
+
+  final SharedPreferences prefs =
+      await SharedPreferences.getInstance();
+  final List<String> favouriteBeaches =
+      prefs.getStringList('favourites') ?? [];
+
+  context.read<BeachesProvider>().setBeaches = result
+      .map((e) => Beach.fromMap(e,
+      getIsFavourite(favouriteBeaches, e["name"].toString())))
+      .toList()
+      .sortBeach(SortingOption(value: SortingValues.name));
+  await context
+      .read<GoogleMarkersProvider>()
+      .initMarkers(context);
 }
 
 Future<List<dynamic>> getBeachData() async {

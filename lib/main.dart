@@ -104,6 +104,8 @@ class _MyAppState extends State<MyApp> {
       initializeDateFormatting("da", "DA");
     });
 
+    // getBeachData().then((List<dynamic>))
+
     super.initState();
   }
 
