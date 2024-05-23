@@ -90,7 +90,9 @@ class _MyAppState extends State<MyApp> {
   List<Beach> get beaches => context.read<BeachesProvider>().getBeaches;
 
   late SharedPreferences prefs;
-  Future<SharedPreferences> get setPrefs async => prefs = await SharedPreferences.getInstance();
+
+  Future<SharedPreferences> get setPrefs async =>
+      prefs = await SharedPreferences.getInstance();
 
   @override
   void initState() {
@@ -121,9 +123,15 @@ class _MyAppState extends State<MyApp> {
                 BottomNavigationBarItem(icon: Icon(Icons.map), label: "Kort"),
               ],
               currentIndex: _selectedMenuIndex,
-              onTap: (int newIndex) => context
-                  .read<HomeMenuIndexProvider>()
-                  .changeSelectedIndex(newIndex)),
+              onTap: (int newIndex) {
+                if (context.read<HomeMenuIndexProvider>().getSelectedIndex ==
+                    0) {
+                  context.read<BeachesProvider>().setSearchedValue("");
+                }
+                context
+                    .read<HomeMenuIndexProvider>()
+                    .changeSelectedIndex(newIndex);
+              }),
           body: kAllScreens.elementAt(_selectedMenuIndex)(context)),
     );
   }
