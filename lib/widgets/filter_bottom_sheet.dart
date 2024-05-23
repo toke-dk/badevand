@@ -71,6 +71,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                   setState(() {
                     _selectedMunicipality = newVal;
                   });
+                  context.read<BeachesProvider>().filterByMunicipality(_selectedMunicipality!);
                 },
                 value: _selectedMunicipality,
               )

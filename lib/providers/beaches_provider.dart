@@ -38,16 +38,22 @@ class BeachesProvider extends ChangeNotifier {
       _filteredBeaches = _allBeaches;
       return _filteredBeaches;
     }
-    print("no");
     return _filteredBeaches;
   }
 
   void sortBeaches(SortingOption option, LatLng? userPosition) {
-    _filteredBeaches = _filteredBeaches.sortBeach(option, userPosition);
+    _allBeaches = _allBeaches.sortBeach(option, userPosition);
     notifyListeners();
   }
 
-
+  void filterByMunicipality(String municipality) {
+    if (municipality.toLowerCase() == "alle") {
+      _filteredBeaches = _allBeaches;
+    } else {
+      _filteredBeaches = getBeaches.filterByMunicipality(municipality);
+    }
+    notifyListeners();
+  }
 
 
 }

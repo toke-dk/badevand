@@ -155,4 +155,10 @@ extension ListOfBeachExtension on List<Beach> {
     return where((beach) => beach.getSpecsOfToday.waterQualityType == quality)
         .toList();
   }
+
+  List<Beach> filterByMunicipality(String municipality) {
+    List<Beach> beachesToReturn =  where((beach) => beach.municipality.toLowerCase() == municipality.toLowerCase()).toList();
+    print("those to filter ${beachesToReturn.map((e) => e.municipality)}");
+    return beachesToReturn;
+  }
 }
