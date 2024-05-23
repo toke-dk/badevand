@@ -11,6 +11,7 @@ import 'package:badevand/providers/home_menu_index.dart';
 import 'package:badevand/providers/loading_provider.dart';
 import 'package:badevand/widgets/filter_bottom_sheet.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/rendering.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 
@@ -52,72 +53,73 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Søg',
-                prefixIcon: const Icon(Icons.search),
-                suffixIcon: Container(
-                    padding: const EdgeInsets.only(right: 10, left: 8),
-                    child: FittedBox(
-                        child: badges.Badge(
-                      position: badges.BadgePosition.topEnd(top: 6, end: 6),
-                      child: IconButton(
-                        icon: const Icon(Icons.tune),
-                        onPressed: () {
-                          showModalBottomSheet(
-                              context: context,
-                              builder: (context) => const FilterBottomSheet());
-                        },
-                      ),
-                    ))),
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(50)),
-              ),
-              onChanged: (value) {
-                _filterSearchedBeaches(value);
-              },
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 5),
+          child: TextField(
+            decoration: InputDecoration(
+              hintText: 'Søg',
+              prefixIcon: const Icon(Icons.search),
+              suffixIcon: Container(
+                  padding: const EdgeInsets.only(right: 10, left: 8),
+                  child: FittedBox(
+                      child: badges.Badge(
+                    position: badges.BadgePosition.topEnd(top: 6, end: 6),
+                    child: IconButton(
+                      icon: const Icon(Icons.tune),
+                      onPressed: () {
+                        showModalBottomSheet(
+                            context: context,
+                            builder: (context) => const FilterBottomSheet());
+                      },
+                    ),
+                  ))),
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(50)),
             ),
+            onChanged: (value) {
+              _filterSearchedBeaches(value);
+            },
           ),
-          const Gap(10),
-          _isLoading == false
-              ? const SizedBox.shrink()
-              : Column(
-                  children: List.generate(
-                  4,
-                  (int index) => Shimmer.fromColors(
-                      baseColor: Colors.grey.shade300,
-                      highlightColor: Colors.grey.shade100,
-                      enabled: true,
-                      child: ListTile(
-                        leading: const Icon(Icons.flag),
-                        trailing: const Icon(Icons.star),
-                        subtitle: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Flexible(
-                                child: Container(
-                              height: 12,
-                              color: Colors.black,
-                            )),
-                            const Spacer(
-                              flex: 4,
-                            )
-                          ],
-                        ),
-                        title: Container(
-                          height: 16.0,
-                          color: Colors.black,
-                        ),
-                      )),
-                )),
-          const Gap(10),
-          Column(
+        ),
+        const Gap(10),
+        _isLoading == false
+            ? const SizedBox.shrink()
+            : Column(
+                children: List.generate(
+                4,
+                (int index) => Shimmer.fromColors(
+                    baseColor: Colors.grey.shade300,
+                    highlightColor: Colors.grey.shade100,
+                    enabled: true,
+                    child: ListTile(
+                      leading: const Icon(Icons.flag),
+                      trailing: const Icon(Icons.star),
+                      subtitle: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Flexible(
+                              child: Container(
+                            height: 12,
+                            color: Colors.black,
+                          )),
+                          const Spacer(
+                            flex: 4,
+                          )
+                        ],
+                      ),
+                      title: Container(
+                        height: 16.0,
+                        color: Colors.black,
+                      ),
+                    )),
+              )),
+        Expanded(
+          child: ListView(
+
+            shrinkWrap: true,
             children: List.generate(_beachesToDisplay.length, (index) {
               final Beach indexBeach = _beachesToDisplay[index];
               return ListTile(
@@ -167,9 +169,9 @@ class _HomeState extends State<Home> {
                 ),
               );
             }),
-          )
-        ],
-      ),
+          ),
+        )
+      ],
     );
   }
 }
