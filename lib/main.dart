@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:badevand/enums/water_quality.dart';
 import 'package:badevand/extenstions/beaches_extension.dart';
+import 'package:badevand/extenstions/http_override.dart';
 import 'package:badevand/models/ad_state.dart';
 import 'package:badevand/models/beach.dart';
 import 'package:badevand/models/navigator_service.dart';
@@ -34,6 +36,8 @@ void main() {
 
   final initFuture = MobileAds.instance.initialize();
   final AdState adState = AdState(initFuture);
+
+  HttpOverrides.global = MyHttpOverrides();
 
   runApp(Provider.value(
       value: adState,
