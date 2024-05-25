@@ -33,7 +33,8 @@ class _MapPageState extends State<MapPage> {
   }
 
   double get _getStartZoom {
-    if (widget.preLocatedPosition != null) return 12;
+    if (widget.preLocatedPosition != null) return 14.8;
+    if (_userPosition != null) return 10.2;
     return 7;
   }
 
