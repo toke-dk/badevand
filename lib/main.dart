@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:badevand/enums/water_quality.dart';
 import 'package:badevand/extenstions/beaches_extension.dart';
+import 'package:badevand/models/ad_state.dart';
 import 'package:badevand/models/beach.dart';
 import 'package:badevand/models/navigator_service.dart';
 import 'package:badevand/pages/all_pages.dart';
@@ -17,6 +18,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 import 'dart:ui' as ui;
@@ -28,21 +30,28 @@ import 'enums/sorting_values.dart';
 import 'models/sorting_option.dart';
 
 void main() {
-  runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider(
-          create: (BuildContext context) => BeachesProvider()),
-      ChangeNotifierProvider(
-          create: (BuildContext context) => GoogleMarkersProvider()),
-      ChangeNotifierProvider(
-          create: (BuildContext context) => UserPositionProvider()),
-      ChangeNotifierProvider(
-          create: (BuildContext context) => HomeMenuIndexProvider()),
-      ChangeNotifierProvider(
-          create: (BuildContext context) => LoadingProvider()),
-    ],
-    child: const MyApp(),
-  ));
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final initFuture = MobileAds.instance.initialize();
+  final AdState adState = AdState(initFuture);
+
+  runApp(Provider.value(
+      value: adState,
+      builder: (context, child) => MultiProvider(
+            providers: [
+              ChangeNotifierProvider(
+                  create: (BuildContext context) => BeachesProvider()),
+              ChangeNotifierProvider(
+                  create: (BuildContext context) => GoogleMarkersProvider()),
+              ChangeNotifierProvider(
+                  create: (BuildContext context) => UserPositionProvider()),
+              ChangeNotifierProvider(
+                  create: (BuildContext context) => HomeMenuIndexProvider()),
+              ChangeNotifierProvider(
+                  create: (BuildContext context) => LoadingProvider()),
+            ],
+            child: const MyApp(),
+          )));
 }
 
 class MyApp extends StatefulWidget {
@@ -116,6 +125,25 @@ class _MyAppState extends State<MyApp> {
     super.initState();
   }
 
+  BannerAd? banner;
+
+  @override
+  void didChangeDependencies() {
+    final adState = Provider.of<AdState>(context);
+
+    adState.initialization.then((status) {
+      setState(() {
+        banner = BannerAd(
+            size: AdSize.banner,
+            adUnitId: adState.bannerAdUnitId,
+            listener: adState.bannerAdListener,
+            request: AdRequest())
+          ..load();
+      });
+    });
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -128,7 +156,8 @@ class _MyAppState extends State<MyApp> {
       home: Scaffold(
           bottomNavigationBar: BottomNavigationBar(
               items: const [
-                BottomNavigationBarItem(icon: Icon(Icons.water), label: "Liste"),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.water), label: "Liste"),
                 BottomNavigationBarItem(icon: Icon(Icons.map), label: "Kort"),
               ],
               currentIndex: _selectedMenuIndex,
@@ -141,7 +170,29 @@ class _MyAppState extends State<MyApp> {
                     .read<HomeMenuIndexProvider>()
                     .changeSelectedIndex(newIndex);
               }),
-          body: kAllScreens.elementAt(_selectedMenuIndex)(context)),
+          body: SafeArea(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(height: 10,),
+                if (banner == null)
+                  SizedBox(
+                    height: 50,
+                  )
+                else
+                  Container(
+                    height: 50,
+                    child: AdWidget(
+                      ad: banner!,
+                    ),
+                  ),
+                SizedBox(height: 10,),
+
+                Expanded(
+                    child: kAllScreens.elementAt(_selectedMenuIndex)(context)),
+              ],
+            ),
+          )),
     );
   }
 }
