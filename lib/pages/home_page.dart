@@ -57,7 +57,7 @@ class _HomeState extends State<Home> {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
+            padding: const EdgeInsets.only(left: 20, right: 20, bottom: 15),
             child: TextField(
               decoration: InputDecoration(
                 hintText: 'Søg',
