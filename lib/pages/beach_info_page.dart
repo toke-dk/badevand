@@ -65,11 +65,14 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
                 children: [
                   _beach.getSpecsOfToday.waterQualityType.flag,
                   Gap(8),
-                  Text(
-                    _beach.name,
-                    style: textTheme.titleMedium,
+                  Expanded(
+                    child: Text(
+                      _beach.name,
+                      softWrap: false,
+                      style: textTheme.titleMedium,
+                      overflow: TextOverflow.fade,
+                    ),
                   ),
-                  Spacer(),
                   IconButton(icon: Icon(Icons.pin_drop_outlined), onPressed: () {
                     final provider = context.read<HomeMenuIndexProvider>();
                     provider.setMapPageStartLocation(widget.selectedBeach.position);
