@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:badevand/enums/weather_types.dart';
@@ -54,6 +55,12 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              OutlinedButton(onPressed: () async {
+                final lat = widget.selectedBeach.position.latitude;
+                final long = widget.selectedBeach.position.longitude;
+                List<Placemark> placemarks = await placemarkFromCoordinates(lat, long);
+                print(placemarks);
+              }, child: Text("Test")),
               Row(
                 children: [
                   _beach.getSpecsOfToday.waterQualityType.flag,
@@ -65,7 +72,7 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
                   Spacer(),
                   IconButton(icon: Icon(Icons.pin_drop_outlined), onPressed: () {
                     final provider = context.read<HomeMenuIndexProvider>();
-                    provider.setMapPageStartLocation(_beach.position);
+                    provider.setMapPageStartLocation(widget.selectedBeach.position);
                     provider.changeSelectedIndex(1);
                     Navigator.of(context).pop();
                   },),
