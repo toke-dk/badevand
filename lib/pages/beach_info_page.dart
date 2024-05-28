@@ -55,12 +55,12 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              OutlinedButton(onPressed: () async {
-                final lat = widget.selectedBeach.position.latitude;
-                final long = widget.selectedBeach.position.longitude;
-                List<Placemark> placemarks = await placemarkFromCoordinates(lat, long);
-                print(placemarks);
-              }, child: Text("Test")),
+              // OutlinedButton(onPressed: () async {
+              //   final lat = widget.selectedBeach.position.latitude;
+              //   final long = widget.selectedBeach.position.longitude;
+              //   List<Placemark> placemarks = await placemarkFromCoordinates(lat, long);
+              //   print(placemarks);
+              // }, child: Text("Test")),
               Row(
                 children: [
                   _beach.getSpecsOfToday.waterQualityType.flag,
