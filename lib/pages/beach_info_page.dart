@@ -261,7 +261,7 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
                   onPressed: () async {
                     final temperatures = _receivedData.firstWhere(
                             (e) => e["parameter"] == "t_2m:C")["coordinates"].first["dates"].first["value"];
-                    print(temperatures);
+                    print(DateTime.now().meteoDateFormat);
                   },
                   child: Text(
                       "Manipulate data ${_receivedData.isEmpty ? '(tom)' : ''}"))
