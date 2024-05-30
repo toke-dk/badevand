@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:badevand/enums/water_quality.dart';
+import 'package:badevand/env/env.dart';
 import 'package:badevand/extenstions/date_extensions.dart';
 import 'package:badevand/extenstions/numbers_extension.dart';
 import 'package:badevand/providers/beaches_provider.dart';
@@ -15,6 +18,8 @@ import 'package:provider/provider.dart';
 import 'package:badevand/enums/weather_types.dart';
 import 'package:weather_icons/weather_icons.dart';
 import '../models/beach.dart';
+import 'package:http/http.dart' as http;
+
 
 class BeachInfoPage extends StatefulWidget {
   const BeachInfoPage({super.key, required this.selectedBeach});
@@ -34,6 +39,8 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
       .watch<BeachesProvider>()
       .getBeaches
       .firstWhere((element) => element == widget.selectedBeach);
+  
+  List<dynamic> _receivedData = [];
 
   @override
   Widget build(BuildContext context) {
@@ -239,10 +246,35 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
                     "ingen informationer"),
                 subtitle: Text("Nedbør"),
               ),
+              OutlinedButton(onPressed:()async{await getWeatherData();}, child: Text("Test"))
             ],
           ),
         ),
       ),
     );
+  }
+}
+
+Future<void> getWeatherData() async {
+  final url = Uri.parse('https://api.meteomatics.com/2024-05-30T00:00:00Z--2024-06-07T00:00:00Z:PT30M/weather_symbol_1h:idx,t_2m:C,precip_1h:mm,wind_speed_10m:ms/55.867298,11.460067/json');
+
+  // final response = await http.get(url);
+
+  final username = Env.meteoUsername;
+  final password = Env.meteoPassword;
+
+  Codec<String, String> stringToBase64 = utf8.fuse(base64);
+
+  final headers = {'Authorization': 'Basic ${stringToBase64.encode("$username:$password")}'};
+
+  final response = await http.get(url, headers: headers);
+
+
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+    print(data);
+  } else {
+    // Handle error scenario
+    throw Exception('Could not find the data from the link');
   }
 }
