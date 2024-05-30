@@ -20,7 +20,6 @@ import 'package:weather_icons/weather_icons.dart';
 import '../models/beach.dart';
 import 'package:http/http.dart' as http;
 
-
 class BeachInfoPage extends StatefulWidget {
   const BeachInfoPage({super.key, required this.selectedBeach});
 
@@ -39,7 +38,7 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
       .watch<BeachesProvider>()
       .getBeaches
       .firstWhere((element) => element == widget.selectedBeach);
-  
+
   List<dynamic> _receivedData = [];
 
   @override
@@ -80,12 +79,16 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
                       overflow: TextOverflow.fade,
                     ),
                   ),
-                  IconButton(icon: Icon(Icons.pin_drop_outlined), onPressed: () {
-                    final provider = context.read<HomeMenuIndexProvider>();
-                    provider.setMapPageStartLocation(widget.selectedBeach.position);
-                    provider.changeSelectedIndex(1);
-                    Navigator.of(context).pop();
-                  },),
+                  IconButton(
+                    icon: Icon(Icons.pin_drop_outlined),
+                    onPressed: () {
+                      final provider = context.read<HomeMenuIndexProvider>();
+                      provider.setMapPageStartLocation(
+                          widget.selectedBeach.position);
+                      provider.changeSelectedIndex(1);
+                      Navigator.of(context).pop();
+                    },
+                  ),
                   Gap(6),
                   _beach.createFavoriteIcon(context),
                 ],
@@ -109,22 +112,22 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
               _beach.comments == "" || _beach.comments == null
                   ? const SizedBox.shrink()
                   : GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      maxLines = maxLines != null ? null : 3;
-                    });
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 9),
-                    child: Text(
-                      _beach.comments!,
-                      style: textTheme.bodySmall!
-                          .copyWith(color: Colors.grey[700]),
-                      maxLines: maxLines,
-                      overflow:
-                      maxLines == null ? null : TextOverflow.ellipsis,
-                    ),
-                  )),
+                      onTap: () {
+                        setState(() {
+                          maxLines = maxLines != null ? null : 3;
+                        });
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 9),
+                        child: Text(
+                          _beach.comments!,
+                          style: textTheme.bodySmall!
+                              .copyWith(color: Colors.grey[700]),
+                          maxLines: maxLines,
+                          overflow:
+                              maxLines == null ? null : TextOverflow.ellipsis,
+                        ),
+                      )),
               Row(
                 children: [
                   Expanded(
@@ -208,7 +211,8 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
               Divider(),
               ListTile(
                 leading: specificationForSelectedIndex.waterQualityType.flag,
-                title: Text(specificationForSelectedIndex.waterQualityType.description),
+                title: Text(
+                    specificationForSelectedIndex.waterQualityType.description),
                 subtitle: Text("Vandkvalitet"),
               ),
               ListTile(
@@ -246,7 +250,20 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
                     "ingen informationer"),
                 subtitle: Text("Nedbør"),
               ),
-              OutlinedButton(onPressed:()async{await getWeatherData();}, child: Text("Test"))
+              OutlinedButton(
+                  onPressed: () async {
+                    _receivedData = await getWeatherData();
+                    setState(() {});
+                  },
+                  child: Text("Get data")),
+              OutlinedButton(
+                  onPressed: () async {
+                    final temperatures = _receivedData.firstWhere(
+                            (e) => e["parameter"] == "t_2m:C")["coordinates"].first["dates"].first["value"];
+                    print(temperatures);
+                  },
+                  child: Text(
+                      "Manipulate data ${_receivedData.isEmpty ? '(tom)' : ''}"))
             ],
           ),
         ),
@@ -255,8 +272,9 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
   }
 }
 
-Future<void> getWeatherData() async {
-  final url = Uri.parse('https://api.meteomatics.com/2024-05-30T00:00:00Z--2024-06-07T00:00:00Z:PT30M/weather_symbol_1h:idx,t_2m:C,precip_1h:mm,wind_speed_10m:ms/55.867298,11.460067/json');
+Future<List<dynamic>> getWeatherData() async {
+  final url = Uri.parse(
+      'https://api.meteomatics.com/2024-05-30T00:00:00Z--2024-06-07T00:00:00Z:PT30M/weather_symbol_1h:idx,t_2m:C,precip_1h:mm,wind_speed_10m:ms/55.867298,11.460067/json');
 
   // final response = await http.get(url);
 
@@ -265,14 +283,16 @@ Future<void> getWeatherData() async {
 
   Codec<String, String> stringToBase64 = utf8.fuse(base64);
 
-  final headers = {'Authorization': 'Basic ${stringToBase64.encode("$username:$password")}'};
+  final headers = {
+    'Authorization': 'Basic ${stringToBase64.encode("$username:$password")}'
+  };
 
   final response = await http.get(url, headers: headers);
 
-
   if (response.statusCode == 200) {
-    final data = jsonDecode(response.body);
+    final List<dynamic> data = jsonDecode(response.body)["data"];
     print(data);
+    return data;
   } else {
     // Handle error scenario
     throw Exception('Could not find the data from the link');
