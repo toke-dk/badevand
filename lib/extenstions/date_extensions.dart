@@ -13,6 +13,8 @@ extension DateExtension on DateTime {
 
   String get myDateFormat => DateFormat("dd-MM-yyyy").format(this);
 
+  String get meteoDateFormat => '${DateFormat("yyyy-MM-dd").format(this.onlyYearMonthDay)}T00:00:00Z';
+
   String get stringAsDayName => DateFormat.E("da").format(this);
 
   String get dateAsRelativeString {

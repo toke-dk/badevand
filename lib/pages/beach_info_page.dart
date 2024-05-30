@@ -11,6 +11,7 @@ import 'package:custom_sliding_segmented_control/custom_sliding_segmented_contro
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -273,8 +274,11 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
 }
 
 Future<List<dynamic>> getWeatherData() async {
+  final DateTime firstDate = DateTime.now().subtract(1.days);
+  final DateTime lastDate = DateTime.now().add(8.days);
+
   final url = Uri.parse(
-      'https://api.meteomatics.com/2024-05-30T00:00:00Z--2024-06-07T00:00:00Z:PT30M/weather_symbol_1h:idx,t_2m:C,precip_1h:mm,wind_speed_10m:ms/55.867298,11.460067/json');
+      'https://api.meteomatics.com/${firstDate.meteoDateFormat}--${lastDate.meteoDateFormat}:PT30M/weather_symbol_1h:idx,t_2m:C,precip_1h:mm,wind_speed_10m:ms/55.867298,11.460067/json');
 
   // final response = await http.get(url);
 
