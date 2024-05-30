@@ -4,6 +4,7 @@ import 'package:badevand/enums/water_quality.dart';
 import 'package:badevand/env/env.dart';
 import 'package:badevand/extenstions/date_extensions.dart';
 import 'package:badevand/extenstions/numbers_extension.dart';
+import 'package:badevand/models/meteo/weather_data.dart';
 import 'package:badevand/providers/beaches_provider.dart';
 import 'package:badevand/providers/home_menu_index.dart';
 import 'package:badevand/providers/user_position_provider.dart';
@@ -262,6 +263,8 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
                     final temperatures = _receivedData.firstWhere(
                             (e) => e["parameter"] == "t_2m:C")["coordinates"].first["dates"].first["value"];
                     print(DateTime.now().meteoDateFormat);
+                    print(MeteoWeatherData.fromMap(_receivedData.firstWhere(
+                            (e) => e["parameter"] == "t_2m:C")));
                   },
                   child: Text(
                       "Manipulate data ${_receivedData.isEmpty ? '(tom)' : ''}"))
