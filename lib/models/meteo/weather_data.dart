@@ -7,8 +7,10 @@ class MeteoWeatherData {
 
   MeteoWeatherData({required this.location, required this.dateInfo});
 
-  factory MeteoWeatherData.fromMap(Map<String, dynamic> map) {
-    final List<dynamic> coordinateData = map["coordinates"];
+  factory MeteoWeatherData.fromMap(List<dynamic> data, String parameter) {
+
+    final List<dynamic> coordinateData = data.firstWhere(
+            (e) => e["parameter"] == parameter)["coordinates"];
     final double lat = coordinateData.first["lat"] as double;
     final double lon = coordinateData.first["lon"] as double;
     return MeteoWeatherData(

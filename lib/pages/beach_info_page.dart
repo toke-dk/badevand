@@ -263,8 +263,7 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
                     final temperatures = _receivedData.firstWhere(
                             (e) => e["parameter"] == "t_2m:C")["coordinates"].first["dates"].first["value"];
                     print(DateTime.now().meteoDateFormat);
-                    print(MeteoWeatherData.fromMap(_receivedData.firstWhere(
-                            (e) => e["parameter"] == "t_2m:C")));
+                    print(MeteoWeatherData.fromMap(_receivedData, "t_2m:C"));
                   },
                   child: Text(
                       "Manipulate data ${_receivedData.isEmpty ? '(tom)' : ''}"))
