@@ -18,7 +18,7 @@ import '../providers/beaches_provider.dart';
 import '../widgets/filter_bottom_sheet.dart';
 
 class Beach {
-  int id;
+  String id;
   String name;
   String? description;
   String? comments;
@@ -30,8 +30,8 @@ class Beach {
   Beach({
     required this.id,
     required this.name,
-    required this.description,
-    required this.comments,
+    this.description,
+    this.comments,
     required this.beachSpecifications,
     required this.position,
     required this.municipality,
@@ -40,7 +40,7 @@ class Beach {
 
   factory Beach.fromMap(Map<String, dynamic> map, bool isBeachFavourite) {
     return Beach(
-      id: int.parse(map["id"].toString()),
+      id: map["id"].toString(),
       name: map["name"] as String,
       description: map["description"] as String?,
       comments: map["comments"]?.toString(),

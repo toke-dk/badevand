@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:math' as math;
 import 'package:badevand/extenstions/numbers_extension.dart';
 import 'package:badevand/extenstions/string_extension.dart';
+import 'package:badevand/models/beach.dart';
 import 'package:csv/csv.dart';
 import 'package:coordinate_converter/coordinate_converter.dart';
 
