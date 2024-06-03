@@ -15,6 +15,7 @@ Future<void> main(List<String> arguments) async {
   List<Map<String, dynamic>> result = rowsAsListOfValues.skip(1).map((row) {
     String name = row[2].toString();
     String municipality = row[13].toString();
+    String id = row[2].toString();
 
     int zone = int.parse(row[4].toString());
     double xCords = row[5].toString().commaDecimalToDouble;
@@ -28,11 +29,11 @@ Future<void> main(List<String> arguments) async {
     double lat = ddCords.latitude;
     double lon = ddCords.longitude;
 
-    return {"name": name, "lat": lat, "lon": lon, "municipality": municipality};
+    return {"id": id, "name": name, "lat": lat, "lon": lon, "municipality": municipality};
   }).toList();
 
-  final Set names = result.map((e) => e["name"]).toSet();
-  result.retainWhere((x) => names.remove(x["name"]));
+  final Set names = result.map((e) => e["id"]).toSet();
+  result.retainWhere((x) => names.remove(x["id"]));
   print(result.length);
 }
 
