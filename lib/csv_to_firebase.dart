@@ -27,11 +27,3 @@ Future<void> main(List<String> arguments) async {
     return "$lat $lon";
   }).toList()[6]);
 }
-
-double y2lat(double y) {
-  final pi = math.pi;
-  final radToDeg = 180 / math.pi;
-  final degToRad = math.pi / 180;
-  final r = 6378137;
-  return (2 * math.atan(math.exp(y / r)) - pi / 2) * radToDeg;
-}
