@@ -26,7 +26,7 @@ import '../models/sorting_option.dart';
 import '../providers/beaches_provider.dart';
 import '../providers/google_markers_provider.dart';
 import '../providers/user_position_provider.dart';
-import 'beach_info_page.dart';
+import 'beach_info/beach_info_page.dart';
 import 'package:badges/badges.dart' as badges;
 
 class Home extends StatefulWidget {
