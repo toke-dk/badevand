@@ -25,17 +25,17 @@ class Beach {
   List<BeachSpecifications> beachSpecifications;
   LatLng position;
   String municipality;
-  bool isFavourite = false;
+  bool isFavourite;
 
   Beach({
     required this.id,
     required this.name,
     this.description,
     this.comments,
-    required this.beachSpecifications,
+    this.beachSpecifications = const [],
     required this.position,
     required this.municipality,
-    required this.isFavourite,
+    this.isFavourite = false,
   });
 
   factory Beach.fromMap(Map<String, dynamic> map, bool isBeachFavourite) {
