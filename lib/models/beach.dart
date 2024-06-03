@@ -54,8 +54,13 @@ class Beach {
     );
   }
 
-  BeachSpecifications get getSpecsOfToday =>
-      beachSpecifications.firstWhere((element) => element.dataDate.isToday);
+  BeachSpecifications? get getSpecsOfToday {
+    if (beachSpecifications.indexWhere((specs) => specs.dataDate.isToday) == -1)
+      return null;
+
+    return beachSpecifications
+        .firstWhere((element) => element.dataDate.isToday);
+  }
 
   Widget createFavoriteIcon(BuildContext context) => IconButton(
         onPressed: () {

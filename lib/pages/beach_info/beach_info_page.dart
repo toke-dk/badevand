@@ -35,6 +35,8 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
       .getBeaches
       .firstWhere((element) => element == widget.selectedBeach);
 
+  late BeachSpecifications? specsToday = _beach.getSpecsOfToday;
+
   @override
   Widget build(BuildContext context) {
     final Position? userPosition =
@@ -58,7 +60,7 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
               // }, child: Text("Test")),
               Row(
                 children: [
-                  _beach.getSpecsOfToday.waterQualityType.flag,
+                  specsToday?.waterQualityType.flag ?? SizedBox.shrink(),
                   Gap(8),
                   Expanded(
                     child: Text(

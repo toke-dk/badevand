@@ -122,6 +122,9 @@ class _HomeState extends State<Home> {
               shrinkWrap: true,
               children: List.generate(_beachesToDisplay.length, (index) {
                 final Beach indexBeach = _beachesToDisplay[index];
+
+                final BeachSpecifications? specsToday = indexBeach.getSpecsOfToday;
+
                 return ListTile(
                   trailing: indexBeach.createFavoriteIcon(context),
                   onTap: () => Navigator.of(context).push(MaterialPageRoute(
@@ -138,22 +141,20 @@ class _HomeState extends State<Home> {
                       ),
                     ],
                   ),
-                  leading: indexBeach.getSpecsOfToday.waterQualityType.flag,
-                  subtitle: Row(
+                  leading: specsToday?.waterQualityType.flag,
+                  subtitle: specsToday == null ? null : Row(
                     children: [
                       Icon(
                         Icons.water_drop_outlined,
                         color: Colors.blue[800],
                       ),
                       const Gap(4),
-                      Text(indexBeach
-                          .getSpecsOfToday.waterTemperature.asCelsiusTemperature),
+                      Text(specsToday.waterTemperature.asCelsiusTemperature),
                       const Gap(10),
-                      indexBeach.getSpecsOfToday.weatherType?.icon ??
+                      specsToday.weatherType?.icon ??
                           const SizedBox.shrink(),
                       const Gap(8),
-                      Text(indexBeach
-                          .getSpecsOfToday.airTemperature.asCelsiusTemperature),
+                      Text(specsToday.airTemperature.asCelsiusTemperature),
                       const Spacer(),
                       IconButton(
                           onPressed: () {

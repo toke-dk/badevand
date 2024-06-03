@@ -54,7 +54,9 @@ Future<Set<Marker>> _initializeMarkers(
   for (Beach indexBeach in beaches) {
 
     BitmapDescriptor iconToUse() {
-      switch (indexBeach.getSpecsOfToday.waterQualityType) {
+      final BeachSpecifications? specs = indexBeach.getSpecsOfToday;
+      if (specs == null) return greyIcon;
+      switch (specs.waterQualityType) {
         case WaterQualityTypes.goodQuality:
           return greenIcon;
         case WaterQualityTypes.badQuality:

@@ -36,17 +36,19 @@ class _SpecsWidgetState extends State<SpecsWidget> {
 
     final BeachSpecifications specificationForSelectedIndex =
     widget.beach.beachSpecifications[_selectedDateIndex];
+    
+    late BeachSpecifications? specsToday = widget.beach.getSpecsOfToday;
 
     return specifications.isEmpty ? SizedBox.shrink() : Column(
       children: [
         Row(
           children: [
-            widget.beach.getSpecsOfToday.weatherType?.icon ?? SizedBox.shrink(),
+            specsToday?.weatherType?.icon ?? SizedBox.shrink(),
             Gap(30),
             Expanded(
               child: Text(
                 overflow: TextOverflow.visible,
-                widget.beach.getSpecsOfToday.weatherType?.displayedText ??
+                specsToday?.weatherType?.displayedText ??
                     "Ukendt vejr",
                 style: textTheme.titleLarge,
               ),

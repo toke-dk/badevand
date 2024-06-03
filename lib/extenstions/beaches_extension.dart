@@ -41,7 +41,7 @@ extension ListOfBeachExtension on List<Beach> {
   }
 
   List<Beach> getBeachesFromQuality(WaterQualityTypes quality) {
-    return where((beach) => beach.getSpecsOfToday.waterQualityType == quality)
+    return where((beach) => beach.getSpecsOfToday?.waterQualityType == quality)
         .toList();
   }
 
