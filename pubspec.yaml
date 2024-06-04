@@ -54,6 +54,7 @@ dependencies:
   firebase_core: ^2.32.0
   csv: ^6.0.0
   coordinate_converter: ^1.1.1
+  cloud_firestore: ^4.17.5
 
 dev_dependencies:
   build_runner: ^2.4.10
@@ -90,6 +91,7 @@ flutter:
    - assets/grey_flag.png
    - assets/red_flag.png
    - assets/yellow_flag.png
+   - assets/badevand_data.csv
 
    # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

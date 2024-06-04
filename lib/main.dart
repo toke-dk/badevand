@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:badevand/csv_to_firebase.dart';
 import 'package:badevand/enums/water_quality.dart';
 import 'package:badevand/extenstions/beaches_extension.dart';
 import 'package:badevand/extenstions/http_override.dart';
+import 'package:badevand/firebase_options.dart';
 import 'package:badevand/models/ad_state.dart';
 import 'package:badevand/models/beach.dart';
 import 'package:badevand/models/navigator_service.dart';
@@ -16,6 +18,7 @@ import 'package:badevand/providers/home_menu_index.dart';
 import 'package:badevand/providers/loading_provider.dart';
 import 'package:badevand/providers/user_position_provider.dart';
 import 'package:badevand/widgets/widget_to_map_icon.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -31,8 +34,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'enums/sorting_values.dart';
 import 'models/sorting_option.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   final initFuture = MobileAds.instance.initialize();
   final AdState adState = AdState(initFuture);
@@ -178,7 +183,12 @@ class _MyAppState extends State<MyApp> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                SizedBox(height: 10,),
+                OutlinedButton(onPressed: ()async{
+                  await setDataFromCSV("assets/badevand_data.csv");
+                }, child: Text("set")),
+                SizedBox(
+                  height: 10,
+                ),
                 if (banner == null)
                   SizedBox(
                     height: 50,
@@ -190,8 +200,9 @@ class _MyAppState extends State<MyApp> {
                       ad: banner!,
                     ),
                   ),
-                SizedBox(height: 10,),
-
+                SizedBox(
+                  height: 10,
+                ),
                 Expanded(
                     child: kAllScreens.elementAt(_selectedMenuIndex)(context)),
               ],
