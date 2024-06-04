@@ -34,12 +34,12 @@ class _SpecsWidgetState extends State<SpecsWidget> {
 
     final List<BeachSpecifications> specifications = widget.beach.beachSpecifications;
 
-    final BeachSpecifications specificationForSelectedIndex =
-    widget.beach.beachSpecifications[_selectedDateIndex];
+    final BeachSpecifications? specificationForSelectedIndex =
+    specifications.isEmpty ? null : widget.beach.beachSpecifications[_selectedDateIndex];
     
     late BeachSpecifications? specsToday = widget.beach.getSpecsOfToday;
 
-    return specifications.isEmpty ? SizedBox.shrink() : Column(
+    return specificationForSelectedIndex == null ? SizedBox.shrink() : Column(
       children: [
         Row(
           children: [
