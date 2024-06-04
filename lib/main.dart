@@ -18,6 +18,7 @@ import 'package:badevand/providers/home_menu_index.dart';
 import 'package:badevand/providers/loading_provider.dart';
 import 'package:badevand/providers/user_position_provider.dart';
 import 'package:badevand/widgets/widget_to_map_icon.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -183,9 +184,6 @@ class _MyAppState extends State<MyApp> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                OutlinedButton(onPressed: ()async{
-                  await setDataFromCSV("assets/badevand_data.csv");
-                }, child: Text("set")),
                 SizedBox(
                   height: 10,
                 ),
@@ -232,10 +230,17 @@ Future<void> handleBeachData(BuildContext context,
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   final List<String> favouriteBeaches = prefs.getStringList('favourites') ?? [];
 
-  context.read<BeachesProvider>().setBeaches = result
-      .map((e) => Beach.fromMap(
-          e, getIsFavourite(favouriteBeaches, e["name"].toString())))
-      .toList()
+  final ref = await FirebaseFirestore.instance.collection("beaches").get();
+  final List<Beach> beachesFromFirebase = ref.docs.map((doc) {
+    return Beach(
+        id: doc.id,
+        name: doc.data()["name"],
+        position: LatLng(doc.data()["lat"], doc.data()["lon"]),
+        municipality: doc.data()["municipality"],
+        isFavourite: getIsFavourite(favouriteBeaches, doc.data()["name"]));
+  }).toList();
+
+  context.read<BeachesProvider>().setBeaches = beachesFromFirebase
       .sortBeach(SortingOption(value: SortingValues.name));
   await context.read<GoogleMarkersProvider>().initMarkers(context);
 }
