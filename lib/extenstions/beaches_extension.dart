@@ -8,7 +8,7 @@ import '../widgets/filter_bottom_sheet.dart';
 
 extension ListOfBeachExtension on List<Beach> {
   List<String> get getBeachesMunicipalityStrings =>
-      map((Beach beach) => beach.municipality).toSet().toList();
+      map((Beach beach) => beach.municipality).toSet().toList()..sort((a, b) => a.compareTo(b));
 
   List<Beach> sortBeach(SortingOption option) {
     LatLng? userPosition = option.userPosition;
