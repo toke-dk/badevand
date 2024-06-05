@@ -127,8 +127,7 @@ class _MyAppState extends State<MyApp> {
     _determinePosition();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       initializeDateFormatting("da", "DA");
-      getBeachData().then((List<dynamic> result) =>
-          handleBeachData(context, beachDataResults: result));
+      handleBeachData(context);
     });
 
     super.initState();
@@ -219,15 +218,14 @@ bool getIsFavourite(SharedPreferences prefs, String beachId) {
   }
 }
 
-Future<void> handleBeachData(BuildContext context,
-    {required List<dynamic> beachDataResults}) async {
+Future<void> handleBeachData(BuildContext context) async {
 
-  List<dynamic> result = [];
-  context.read<LoadingProvider>().toggleAppLoadingState(true);
-  await getBeachData().then((List<dynamic> value) {
-    result = value;
-    context.read<LoadingProvider>().toggleAppLoadingState(false);
-  });
+  // List<dynamic> result = [];
+  // context.read<LoadingProvider>().toggleAppLoadingState(true);
+  // await getBeachData().then((List<dynamic> value) {
+  //   result = value;
+  //   context.read<LoadingProvider>().toggleAppLoadingState(false);
+  // });
 
   // final ref = await FirebaseFirestore.instance.collection("beaches").get();
   // final List<Beach> beachesFromFirebase = ref.docs.map((doc) {
