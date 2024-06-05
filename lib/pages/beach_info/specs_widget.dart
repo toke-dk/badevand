@@ -64,6 +64,8 @@ class _SpecsWidgetState extends State<SpecsWidget> {
 
   bool get _isAppLoading => context.watch<LoadingProvider>().getIsAppLoading;
 
+  MeteorologicalData get _currentMomentData => _receivedData!.first;
+
   @override
   Widget build(BuildContext context) {
     if (_isAppLoading) {
@@ -75,18 +77,18 @@ class _SpecsWidgetState extends State<SpecsWidget> {
               ? SizedBox.shrink()
               : ListTile(
                   leading: Icon(Icons.thermostat),
-                  title: Text(
-                      _receivedData!.first.temperature.asCelsiusTemperature),
+                  title:
+                      Text(_currentMomentData.temperature.asCelsiusTemperature),
                   subtitle: Text("Lufttemperatur"),
                 ),
           _receivedData == null
               ? SizedBox.shrink()
               : ListTile(
                   leading:
-                      WindDirection(angle: _receivedData!.first.windDirection)
+                      WindDirection(angle: _currentMomentData.windDirection)
                           .getChildWidget,
                   title: Text(
-                      "${_receivedData!.first.windSpeed}/(${_receivedData!.first.windGust}) m/s"),
+                      "${_currentMomentData.windSpeed}/(${_currentMomentData.windGust}) m/s"),
                   subtitle: Text("Vind/(Stød)"),
                 ),
           _receivedData == null
@@ -94,7 +96,7 @@ class _SpecsWidgetState extends State<SpecsWidget> {
               : ListTile(
                   leading: Icon(WeatherIcons.rain),
                   title: Text(
-                      "${_receivedData!.first.precipitation == 0 ? '---' : '${_receivedData!.first.precipitation} mm'}"),
+                      "${_currentMomentData.precipitation == 0 ? '---' : '${_currentMomentData.precipitation} mm'}"),
                   subtitle: Text("Nedbør"),
                 ),
         ],
