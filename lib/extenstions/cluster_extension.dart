@@ -29,6 +29,7 @@ class MapMarker extends Clusterable {
       infoWindow: InfoWindow(title: title),
       markerId: MarkerId(id),
       position: position,
+      icon: BitmapDescriptor.defaultMarkerWithHue(isCluster! ? BitmapDescriptor.hueOrange : BitmapDescriptor.hueRed),
     );
   }
 }
