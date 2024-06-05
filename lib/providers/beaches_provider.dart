@@ -37,10 +37,10 @@ class BeachesProvider extends ChangeNotifier {
 
     if (previousValue) {
       prefs.setStringList(
-          "favourites", favouriteBeaches..remove(beachChange.name.toLowerCase()));
+          "favourites", favouriteBeaches..remove(beachChange.id));
     } else if (!previousValue) {
       prefs.setStringList(
-          'favourites', favouriteBeaches..add(beachChange.name.toLowerCase()));
+          'favourites', favouriteBeaches..add(beachChange.id));
     }
     print("prefs ${prefs.getStringList('favourites')}");
 

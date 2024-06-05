@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui' as ui;
 
 import 'package:badevand/csv_to_firebase.dart';
 import 'package:badevand/enums/water_quality.dart';
@@ -25,11 +26,9 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
-import 'dart:ui' as ui;
-import 'package:http/http.dart' as http;
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'enums/sorting_values.dart';
@@ -210,15 +209,18 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
+bool getIsFavourite(SharedPreferences prefs, String beachId) {
+  final List<String> favouriteBeachesId = prefs.getStringList('favourites') ?? [];
+
+  if (favouriteBeachesId.contains(beachId)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 Future<void> handleBeachData(BuildContext context,
     {required List<dynamic> beachDataResults}) async {
-  bool getIsFavourite(List<String> favouriteBeaches, String beachName) {
-    if (favouriteBeaches.contains(beachName.toLowerCase())) {
-      return true;
-    } else {
-      return false;
-    }
-  }
 
   List<dynamic> result = [];
   context.read<LoadingProvider>().toggleAppLoadingState(true);
@@ -227,21 +229,27 @@ Future<void> handleBeachData(BuildContext context,
     context.read<LoadingProvider>().toggleAppLoadingState(false);
   });
 
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-  final List<String> favouriteBeaches = prefs.getStringList('favourites') ?? [];
+  // final ref = await FirebaseFirestore.instance.collection("beaches").get();
+  // final List<Beach> beachesFromFirebase = ref.docs.map((doc) {
+  //   return Beach(
+  //       id: doc.id,
+  //       name: doc.data()["name"],
+  //       position: LatLng(doc.data()["lat"], doc.data()["lon"]),
+  //       municipality: doc.data()["municipality"],
+  //       isFavourite: getIsFavourite(favouriteBeaches, doc.data()["name"]));
+  // }).toList();
 
-  final ref = await FirebaseFirestore.instance.collection("beaches").get();
-  final List<Beach> beachesFromFirebase = ref.docs.map((doc) {
-    return Beach(
-        id: doc.id,
-        name: doc.data()["name"],
-        position: LatLng(doc.data()["lat"], doc.data()["lon"]),
-        municipality: doc.data()["municipality"],
-        isFavourite: getIsFavourite(favouriteBeaches, doc.data()["name"]));
-  }).toList();
+  // context.read<BeachesProvider>().setBeaches = beachesFromFirebase
+  //     .sortBeach(SortingOption(value: SortingValues.name));
 
-  context.read<BeachesProvider>().setBeaches = beachesFromFirebase
-      .sortBeach(SortingOption(value: SortingValues.name));
+  List<Beach> beachesFromCSV =
+      await getBeachesFromCSV("assets/badevand_data.csv");
+
+  print(beachesFromCSV);
+
+  context.read<BeachesProvider>().setBeaches =
+      beachesFromCSV.sortBeach(SortingOption(value: SortingValues.name));
+
   await context.read<GoogleMarkersProvider>().initMarkers(context);
 }
 

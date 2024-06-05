@@ -1,13 +1,17 @@
 import 'dart:io';
 import 'package:badevand/extenstions/string_extension.dart';
 import 'package:badevand/firebase_options.dart';
+import 'package:badevand/main.dart';
+import 'package:badevand/models/beach.dart';
 import 'package:csv/csv.dart';
 import 'package:coordinate_converter/coordinate_converter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/services.dart'; // new
+import 'package:flutter/services.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // new
 
-Future<void> setDataFromCSV(String path) async {
+Future<List<Beach>> getBeachesFromCSV(String path) async {
   List<List<dynamic>> rowsAsListOfValues =
       CsvToListConverter(fieldDelimiter: ";").convert(await _loadCSV(path));
   List<Map<String, dynamic>> result = rowsAsListOfValues.skip(1).map((row) {
@@ -43,7 +47,6 @@ Future<void> setDataFromCSV(String path) async {
   final Set ids = result.map((e) => "${e['lat']}, ${e['lon']}").toSet();
   result.retainWhere((x) => ids.remove("${x['lat']}, ${x['lon']}"));
 
-
   //print(result[3]..remove("id"));
 
   // for (var beach in result) {
@@ -54,6 +57,17 @@ Future<void> setDataFromCSV(String path) async {
   //       .set(beach..remove("id"));
   // }
   print(result.length);
+
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  return result
+      .map((e) => Beach(
+      id: e["id"],
+      name: e["name"],
+      position: LatLng(e["lat"], e["lon"]),
+      isFavourite: getIsFavourite(prefs, e["id"]),
+      municipality: e["municipality"]), )
+      .toList();
 }
 
 bool areMapsEqual(Map map1, Map map2) {
