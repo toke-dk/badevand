@@ -45,11 +45,19 @@ class _SpecsWidgetState extends State<SpecsWidget> {
 
   List<MeteorologicalData>? _receivedData;
 
+  Twilight? _twilight;
+
   Future<void> initMeteorologicalData() async {
     context.read<LoadingProvider>().toggleAppLoadingState(true);
     await getWeatherData(widget.beach).then((result) {
       setState(() {
         _receivedData = result;
+      });
+    });
+
+    await getTwilightForToday(widget.beach).then((twilight) {
+      setState(() {
+        _twilight = twilight;
       });
       context.read<LoadingProvider>().toggleAppLoadingState(false);
     });
@@ -100,6 +108,19 @@ class _SpecsWidgetState extends State<SpecsWidget> {
                       "${_currentMomentData.precipitation == 0 ? '---' : '${_currentMomentData.precipitation} mm'}"),
                   subtitle: Text("Nedbør"),
                 ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(WeatherIcons.sunrise),
+              Gap(10),
+              Text(_twilight?.sunRise.myTimeFormat ?? ""),
+              Gap(20),
+              Icon(WeatherIcons.sunset),
+              Gap(10),
+              Text(_twilight?.sunSet.myTimeFormat ?? ""),
+
+            ],
+          )
         ],
       );
     }
@@ -111,6 +132,9 @@ Future<List<MeteorologicalData>> getWeatherData(Beach beach) async {
   final DateTime lastDate = DateTime.now().add(8.days);
 
   print(firstDate.meteoDateFormatHour);
+
+  final double lat = beach.position.latitude;
+  final double lon = beach.position.longitude;
 
   final String link = createLink(
       startDate: firstDate,
@@ -124,8 +148,8 @@ Future<List<MeteorologicalData>> getWeatherData(Beach beach) async {
         "uv:idx",
         "wind_gusts_10m_1h:ms"
       ],
-      lat: beach.position.latitude,
-      lon: beach.position.longitude);
+      lat: lat,
+      lon: lon);
 
   final url = Uri.parse(link);
 
@@ -148,17 +172,81 @@ Future<List<MeteorologicalData>> getWeatherData(Beach beach) async {
     return getMeteorologicalDataList(data);
   } else {
     // Handle error scenario
-    throw Exception('Could not find the data from the link');
+    throw Exception('Could not find the data from the links');
+  }
+}
+
+Future<Twilight> getTwilightForToday(Beach beach) async {
+  final lat = beach.position.latitude;
+  final lon = beach.position.longitude;
+
+  final sunRiseAndSetLink = createLink(
+      startDate: DateTime.now().onlyYearMonthDay,
+      parameters: ["sunrise:sql", "sunset:sql"],
+      lat: lat,
+      lon: lon);
+
+  final sunUrl = Uri.parse(sunRiseAndSetLink);
+
+  final username = Env.meteoUsername;
+  final password = Env.meteoPassword;
+
+  Codec<String, String> stringToBase64 = utf8.fuse(base64);
+
+  final headers = {
+    'Authorization': 'Basic ${stringToBase64.encode("$username:$password")}'
+  };
+
+  final sunResponse = await http.get(sunUrl, headers: headers);
+
+  if (sunResponse.statusCode == 200) {
+    final List<dynamic> data = jsonDecode(sunResponse.body)["data"];
+    return Twilight.fromMeteoMap(data);
+  } else {
+    // Handle error scenario
+    throw Exception('Could not find the data from the links');
+  }
+}
+
+class Twilight {
+  DateTime sunRise;
+  DateTime sunSet;
+
+  Twilight({required this.sunRise, required this.sunSet});
+
+  factory Twilight.fromMeteoMap(List<dynamic> map) {
+    String getDateFromParameter(String parameter) {
+      return map
+          .firstWhere((e) => e["parameter"] == parameter)["coordinates"]
+          .first["dates"]
+          .first["value"]
+          .toString();
+    }
+
+    // TODO I added two hours in both ends because of its inaccuracy
+    final DateTime sunRiseDate =
+        DateTime.parse(getDateFromParameter("sunrise:sql")).add(2.hours);
+
+    final DateTime sunSetDate =
+        DateTime.parse(getDateFromParameter("sunset:sql")).add(2.hours);
+    print("set $sunSetDate");
+
+    return Twilight(sunRise: sunRiseDate, sunSet: sunSetDate);
   }
 }
 
 String createLink(
     {required DateTime startDate,
-    required DateTime endDate,
+    DateTime? endDate,
     required List<String> parameters,
     required lat,
     required lon,
-    int minuteDuration = 30,
+    String timeGap = "60M",
     String format = "json"}) {
-  return 'https://api.meteomatics.com/${startDate.meteoDateFormatHour}--${endDate.meteoDateFormat}:PT${minuteDuration}M/${parameters.join(',')}/${lat},${lon}/$format';
+  String dateRange = endDate == null
+      ? startDate.meteoDateFormat.toString()
+      : "${startDate.meteoDateFormatHour}--${endDate.meteoDateFormat}:PT${timeGap}";
+  String linkToReturn =
+      'https://api.meteomatics.com/$dateRange/${parameters.join(',')}/${lat},${lon}/$format';
+  return linkToReturn;
 }

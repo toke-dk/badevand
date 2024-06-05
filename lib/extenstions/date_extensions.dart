@@ -13,6 +13,8 @@ extension DateExtension on DateTime {
 
   String get myDateFormat => DateFormat("dd-MM-yyyy").format(this);
 
+  String get myTimeFormat => DateFormat("HH:mm").format(this);
+
   String get meteoDateFormat => "${DateFormat('yyyy-MM-ddTHH:mm:ss').format(this.onlyYearMonthDay)}Z";
 
   String get meteoDateFormatHour => "${DateFormat('yyyy-MM-ddTHH:mm:ss').format(this.toNearestHour)}Z";
