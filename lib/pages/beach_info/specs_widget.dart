@@ -8,6 +8,7 @@ import 'package:badevand/models/wind_direction.dart';
 import 'package:badevand/providers/loading_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
@@ -82,6 +83,20 @@ class _SpecsWidgetState extends State<SpecsWidget> {
     } else {
       return Column(
         children: [
+          Container(
+            height: 100,
+            child: ListView(
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              children: List.generate(8, (index) {
+                MeteorologicalData indexData = _receivedData![index];
+                return Padding(
+                  padding: const EdgeInsets.only(right: 30),
+                  child: Text(indexData.date.myTimeFormat),
+                );
+              }),
+            ),
+          ),
           _receivedData == null
               ? SizedBox.shrink()
               : ListTile(
@@ -118,7 +133,6 @@ class _SpecsWidgetState extends State<SpecsWidget> {
               Icon(WeatherIcons.sunset),
               Gap(10),
               Text(_twilight?.sunSet.myTimeFormat ?? ""),
-
             ],
           )
         ],
