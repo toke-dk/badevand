@@ -1,3 +1,16 @@
+import 'dart:convert';
+
+import 'package:badevand/enums/water_quality.dart';
+import 'package:badevand/env/env.dart';
+import 'package:badevand/extenstions/date_extensions.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:gap/gap.dart';
+import '../../models/beach.dart';
+import 'package:http/http.dart' as http;
+
 import 'package:badevand/enums/water_quality.dart';
 import 'package:badevand/enums/weather_types.dart';
 import 'package:badevand/extenstions/date_extensions.dart';
@@ -160,5 +173,35 @@ class _SpecsWidgetState extends State<SpecsWidget> {
                 "Manipulate data ${_receivedData.isEmpty ? '(tom)' : ''}"))
       ],
     );
+  }
+}
+
+Future<List<dynamic>> getWeatherData() async {
+  final DateTime firstDate = DateTime.now().subtract(1.days);
+  final DateTime lastDate = DateTime.now().add(8.days);
+
+  final url = Uri.parse(
+      'https://api.meteomatics.com/${firstDate.meteoDateFormat}--${lastDate.meteoDateFormat}:PT30M/weather_symbol_1h:idx,t_2m:C,precip_1h:mm,wind_speed_10m:ms/55.867298,11.460067/json');
+
+  // final response = await http.get(url);
+
+  final username = Env.meteoUsername;
+  final password = Env.meteoPassword;
+
+  Codec<String, String> stringToBase64 = utf8.fuse(base64);
+
+  final headers = {
+    'Authorization': 'Basic ${stringToBase64.encode("$username:$password")}'
+  };
+
+  final response = await http.get(url, headers: headers);
+
+  if (response.statusCode == 200) {
+    final List<dynamic> data = jsonDecode(response.body)["data"];
+    print(data);
+    return data;
+  } else {
+    // Handle error scenario
+    throw Exception('Could not find the data from the link');
   }
 }
