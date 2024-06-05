@@ -96,11 +96,13 @@ class _SpecsWidgetState extends State<SpecsWidget> {
 }
 
 Future<MeteorologicalData> getWeatherData(Beach beach) async {
-  final DateTime firstDate = DateTime.now().subtract(1.days);
+  final DateTime firstDate = DateTime.now();
   final DateTime lastDate = DateTime.now().add(8.days);
 
+  print(firstDate.meteoDateFormatHour);
+
   final url = Uri.parse(
-      'https://api.meteomatics.com/${firstDate.meteoDateFormat}--${lastDate.meteoDateFormat}:PT30M/weather_symbol_1h:idx,t_2m:C,precip_1h:mm,wind_speed_10m:ms,wind_dir_10m:d,uv:idx,wind_gusts_10m_1h:ms/${beach.position.latitude},${beach.position.longitude}/json');
+      'https://api.meteomatics.com/${firstDate.meteoDateFormatHour}--${lastDate.meteoDateFormat}:PT30M/weather_symbol_1h:idx,t_2m:C,precip_1h:mm,wind_speed_10m:ms,wind_dir_10m:d,uv:idx,wind_gusts_10m_1h:ms/${beach.position.latitude},${beach.position.longitude}/json');
 
   // final response = await http.get(url);
 

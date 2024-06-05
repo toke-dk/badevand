@@ -11,6 +11,10 @@ extension NumerExtension on num {
   String get asMillimetersString => "$myDoubleToString mm";
 
   double get toRadiansFromDegree => this * pi / 180;
+
+  int toNearestHour() {
+    return (this + 0.5).floor(); // Add 0.5 for rounding and floor to nearest hour
+  }
 }
 
 extension CoordinateTransform on num {
