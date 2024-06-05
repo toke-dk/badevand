@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:badevand/extenstions/postion_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -38,22 +39,47 @@ class _MapPageState extends State<MapPage> {
     return 7;
   }
 
+  late double _currentZoom;
+
+  @override
+  void didChangeDependencies() {
+    _currentZoom = _getStartZoom;
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
+    print(_currentZoom);
     return Stack(
       children: [
         GoogleMap(
+          onCameraMove: (CameraPosition newPos) {
+            setState(() {
+              _currentZoom = newPos.zoom;
+            });
+          },
           mapType: _currentMapType,
           myLocationEnabled: _userPosition != null,
-          initialCameraPosition: CameraPosition(
-              target: _getStartPosition, zoom: _getStartZoom),
-          markers: context.read<GoogleMarkersProvider>().getMarkers,
+          initialCameraPosition:
+              CameraPosition(target: _getStartPosition, zoom: _getStartZoom),
+          markers: googleMarkers(context.read<BeachesProvider>().getBeaches,
+                  _currentZoom ?? _getStartZoom)
+              .toSet(),
         ),
-        Positioned(bottom: 5, left: 5,child: FloatingActionButton(onPressed: (){
-          setState(() {
-            _currentMapType = (_currentMapType == MapType.normal) ? MapType.satellite : MapType.normal;
-          });
-        }, child: const Icon(Icons.layers),),)
+        Positioned(
+          bottom: 5,
+          left: 5,
+          child: FloatingActionButton(
+            onPressed: () {
+              setState(() {
+                _currentMapType = (_currentMapType == MapType.normal)
+                    ? MapType.satellite
+                    : MapType.normal;
+              });
+            },
+            child: const Icon(Icons.layers),
+          ),
+        )
       ],
     );
   }

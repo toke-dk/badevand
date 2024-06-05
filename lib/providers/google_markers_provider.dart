@@ -2,10 +2,12 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:badevand/enums/water_quality.dart';
+import 'package:badevand/extenstions/cluster_extension.dart';
 import 'package:badevand/models/navigator_service.dart';
 import 'package:badevand/pages/beach_info/beach_info_page.dart';
 import 'package:badevand/providers/beaches_provider.dart';
 import 'package:badevand/widgets/widget_to_map_icon.dart';
+import 'package:fluster/fluster.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -30,29 +32,32 @@ class GoogleMarkersProvider extends ChangeNotifier {
 
 Future<Uint8List> getBytesFromAsset(String path, int width) async {
   ByteData data = await rootBundle.load(path);
-  ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(), targetWidth: width);
+  ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
+      targetWidth: width);
   ui.FrameInfo fi = await codec.getNextFrame();
-  return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!.buffer.asUint8List();
+  return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
+      .buffer
+      .asUint8List();
 }
 
 Future<Set<Marker>> _initializeMarkers(
     BuildContext context, List<Beach> beaches) async {
   Set<Marker> markerList = {};
 
-  final Uint8List greenFlag = await getBytesFromAsset('assets/green_flag.png', 150);
+  final Uint8List greenFlag =
+      await getBytesFromAsset('assets/green_flag.png', 150);
   final Uint8List redFlag = await getBytesFromAsset('assets/red_flag.png', 150);
-  final Uint8List yellowFlag = await getBytesFromAsset('assets/yellow_flag.png', 150);
-  final Uint8List greyFlag = await getBytesFromAsset('assets/grey_flag.png', 150);
-
+  final Uint8List yellowFlag =
+      await getBytesFromAsset('assets/yellow_flag.png', 150);
+  final Uint8List greyFlag =
+      await getBytesFromAsset('assets/grey_flag.png', 150);
 
   final BitmapDescriptor greenIcon = BitmapDescriptor.fromBytes(greenFlag);
   final BitmapDescriptor redIcon = BitmapDescriptor.fromBytes(redFlag);
   final BitmapDescriptor yellowIcon = BitmapDescriptor.fromBytes(yellowFlag);
   final BitmapDescriptor greyIcon = BitmapDescriptor.fromBytes(greyFlag);
 
-
   for (Beach indexBeach in beaches) {
-
     BitmapDescriptor iconToUse() {
       final BeachSpecifications? specs = indexBeach.getSpecsOfToday;
       if (specs == null) return greyIcon;
@@ -72,9 +77,48 @@ Future<Set<Marker>> _initializeMarkers(
         markerId: MarkerId(indexBeach.name),
         position: indexBeach.position,
         infoWindow: InfoWindow(
-          onTap: () => NavigationService.instance.push(BeachInfoPage(selectedBeach: indexBeach)),
+            onTap: () => NavigationService.instance
+                .push(BeachInfoPage(selectedBeach: indexBeach)),
             title: indexBeach.name,
             snippet: indexBeach.comments != "" ? indexBeach.comments : null)));
   }
   return markerList;
+}
+
+List<Marker> googleMarkers(List<Beach> beaches, double currentZoom) {
+  final List<MapMarker> markers = [];
+
+  for (Beach indexBeach in beaches) {
+    markers.add(
+      MapMarker(
+        id: indexBeach.id,
+        position: indexBeach.position,
+      ),
+    );
+  }
+
+  Fluster<MapMarker> fluster = Fluster<MapMarker>(
+      minZoom: 0,
+      maxZoom: 20,
+      radius: 150,
+      extent: 1100,
+      nodeSize: 64,
+      points: markers,
+      createCluster: (BaseCluster? cluster, double? longitude, double? latitude) {
+        return MapMarker(
+          id: cluster!.id.toString(),
+          position: LatLng(latitude!, longitude!),
+          isCluster: cluster.isCluster,
+          clusterId: cluster.id,
+          pointsSize: cluster.pointsSize,
+          childMarkerId: cluster.childMarkerId,
+        );
+      });
+
+  final List<Marker> googleMarkers = fluster
+      .clusters([-180, -85, 180, 85], currentZoom.toInt())
+      .map((cluster) => cluster.toMarker())
+      .toList();
+
+  return googleMarkers;
 }
