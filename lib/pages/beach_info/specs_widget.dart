@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:badevand/enums/water_quality.dart';
 import 'package:badevand/env/env.dart';
 import 'package:badevand/extenstions/date_extensions.dart';
+import 'package:badevand/models/meteo/date_info.dart';
 import 'package:badevand/models/wind_direction.dart';
 import 'package:badevand/providers/loading_provider.dart';
 import 'package:flutter/cupertino.dart';
@@ -111,8 +112,22 @@ Future<List<MeteorologicalData>> getWeatherData(Beach beach) async {
 
   print(firstDate.meteoDateFormatHour);
 
-  final url = Uri.parse(
-      'https://api.meteomatics.com/${firstDate.meteoDateFormatHour}--${lastDate.meteoDateFormat}:PT30M/weather_symbol_1h:idx,t_2m:C,precip_1h:mm,wind_speed_10m:ms,wind_dir_10m:d,uv:idx,wind_gusts_10m_1h:ms/${beach.position.latitude},${beach.position.longitude}/json');
+  final String link = createLink(
+      startDate: firstDate,
+      endDate: lastDate,
+      parameters: [
+        "weather_symbol_1h:idx",
+        "t_2m:C",
+        "precip_1h:mm",
+        "wind_speed_10m:ms",
+        "wind_dir_10m:d",
+        "uv:idx",
+        "wind_gusts_10m_1h:ms"
+      ],
+      lat: beach.position.latitude,
+      lon: beach.position.longitude);
+
+  final url = Uri.parse(link);
 
   // final response = await http.get(url);
 
@@ -135,4 +150,15 @@ Future<List<MeteorologicalData>> getWeatherData(Beach beach) async {
     // Handle error scenario
     throw Exception('Could not find the data from the link');
   }
+}
+
+String createLink(
+    {required DateTime startDate,
+    required DateTime endDate,
+    required List<String> parameters,
+    required lat,
+    required lon,
+    int minuteDuration = 30,
+    String format = "json"}) {
+  return 'https://api.meteomatics.com/${startDate.meteoDateFormatHour}--${endDate.meteoDateFormat}:PT${minuteDuration}M/${parameters.join(',')}/${lat},${lon}/$format';
 }
