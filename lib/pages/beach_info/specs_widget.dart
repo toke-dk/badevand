@@ -86,8 +86,8 @@ class _SpecsWidgetState extends State<SpecsWidget> {
                           angle: _receivedData!.first.windDirection)
                       .getChildWidget,
                   title: Text(
-                      _receivedData!.first.windSpeed.asMeterPerSecond),
-                  subtitle: Text("Vind"),
+                      "${_receivedData!.first.windSpeed}/(${_receivedData!.first.windGust}) m/s"),
+                  subtitle: Text("Vind/(Stød)"),
                 ),
         ],
       );
