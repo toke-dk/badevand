@@ -42,7 +42,7 @@ class SpecsWidget extends StatefulWidget {
 class _SpecsWidgetState extends State<SpecsWidget> {
   int? maxLines = 3;
 
-  MeteorologicalData? _receivedData;
+  List<MeteorologicalData>? _receivedData;
 
   Future<void> initMeteorologicalData() async {
     context.read<LoadingProvider>().toggleAppLoadingState(true);
@@ -76,17 +76,17 @@ class _SpecsWidgetState extends State<SpecsWidget> {
               : ListTile(
                   leading: Icon(Icons.thermostat),
                   title: Text(_receivedData!
-                      .temperatures.first.value.asCelsiusTemperature),
+                      .first.temperature.asCelsiusTemperature),
                   subtitle: Text("Lufttemperatur"),
                 ),
           _receivedData == null
               ? SizedBox.shrink()
               : ListTile(
                   leading: WindDirection(
-                          angle: _receivedData!.windDirections.first.value)
+                          angle: _receivedData!.first.windDirection)
                       .getChildWidget,
                   title: Text(
-                      _receivedData!.windSpeeds.first.value.asMeterPerSecond),
+                      _receivedData!.first.windSpeed.asMeterPerSecond),
                   subtitle: Text("Vind"),
                 ),
         ],
@@ -95,7 +95,7 @@ class _SpecsWidgetState extends State<SpecsWidget> {
   }
 }
 
-Future<MeteorologicalData> getWeatherData(Beach beach) async {
+Future<List<MeteorologicalData>> getWeatherData(Beach beach) async {
   final DateTime firstDate = DateTime.now();
   final DateTime lastDate = DateTime.now().add(8.days);
 
@@ -120,7 +120,7 @@ Future<MeteorologicalData> getWeatherData(Beach beach) async {
   if (response.statusCode == 200) {
     final List<dynamic> data = jsonDecode(response.body)["data"];
     print(data);
-    return MeteorologicalData.fromMeteoMap(data);
+    return getMeteorologicalDataList(data);
   } else {
     // Handle error scenario
     throw Exception('Could not find the data from the link');
