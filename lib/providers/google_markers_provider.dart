@@ -71,7 +71,6 @@ Future<Set<Marker>> _initializeMarkers(
     markerList.add(Marker(
         markerId: MarkerId(indexBeach.name),
         position: indexBeach.position,
-        icon: iconToUse(),
         infoWindow: InfoWindow(
           onTap: () => NavigationService.instance.push(BeachInfoPage(selectedBeach: indexBeach)),
             title: indexBeach.name,
