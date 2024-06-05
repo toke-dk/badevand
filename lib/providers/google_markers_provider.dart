@@ -93,7 +93,7 @@ List<Marker> googleMarkers(List<Beach> beaches, double currentZoom) {
       MapMarker(
         id: indexBeach.id,
         position: indexBeach.position,
-        title: indexBeach.name,
+        beach: indexBeach,
       ),
     );
   }
