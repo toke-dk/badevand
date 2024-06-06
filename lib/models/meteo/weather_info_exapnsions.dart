@@ -29,16 +29,24 @@ class _WeatherInfoExpansionsState extends State<WeatherInfoExpansions> {
         });
         print(_expandedIndexes);
       },
+      expandedHeaderPadding: EdgeInsets.all(20),
       children: List.generate(widget.groupedData.length, (index) {
         final idxData = widget.groupedData[index];
         return ExpansionPanel(
+
             headerBuilder: (context, isExpanded) {
               return Align(
                   alignment: Alignment.centerLeft,
-                  child: Text(idxData.day.myDateFormat));
+                  child: Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Text(idxData.day.myDateFormat),
+                  ));
             },
             isExpanded: _expandedIndexes.contains(index),
-            body: ForecastScroll(dataList: idxData.dataList));
+            body: Padding(
+              padding: const EdgeInsets.all(15),
+              child: ForecastScroll(dataList: idxData.dataList),
+            ));
       }),
     );
   }
