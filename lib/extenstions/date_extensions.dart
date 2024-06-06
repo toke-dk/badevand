@@ -1,3 +1,4 @@
+import 'package:badevand/extenstions/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -19,7 +20,7 @@ extension DateExtension on DateTime {
 
   String get meteoDateFormatHour => "${DateFormat('yyyy-MM-ddTHH:mm:ss').format(this.onlyYMDH)}Z";
 
-  String get stringAsDayName => DateFormat.E("da").format(this);
+  String get stringAsDayName => DateFormat.MMMEd("da").format(this).capitalize;
 
   DateTime get onlyYMDH {
     return DateTime(year, month, day, hour);

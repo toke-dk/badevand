@@ -1,6 +1,7 @@
 import 'package:badevand/extenstions/date_extensions.dart';
 import 'package:badevand/models/meteo/forecast_scroll.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 
 import 'day_grouped_data.dart';
 
@@ -39,7 +40,7 @@ class _WeatherInfoExpansionsState extends State<WeatherInfoExpansions> {
                   alignment: Alignment.centerLeft,
                   child: Padding(
                     padding: const EdgeInsets.all(15),
-                    child: Text(idxData.day.myDateFormat),
+                    child: Text(idxData.day.stringAsDayName),
                   ));
             },
             isExpanded: _expandedIndexes.contains(index),
