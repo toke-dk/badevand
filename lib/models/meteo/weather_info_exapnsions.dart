@@ -1,4 +1,5 @@
 import 'package:badevand/extenstions/date_extensions.dart';
+import 'package:badevand/models/meteo/forecast_scroll.dart';
 import 'package:flutter/material.dart';
 
 import 'day_grouped_data.dart';
@@ -37,18 +38,7 @@ class _WeatherInfoExpansionsState extends State<WeatherInfoExpansions> {
                   child: Text(idxData.day.myDateFormat));
             },
             isExpanded: _expandedIndexes.contains(index),
-            body: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: List.generate(idxData.dataList.length, (i) {
-                  final wData = idxData.dataList[i];
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(wData.date.myDateFormat),
-                  );
-                }),
-              ),
-            ));
+            body: ForecastScroll(dataList: idxData.dataList));
       }),
     );
   }
