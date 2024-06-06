@@ -33,7 +33,7 @@ class _WeatherInfoExpansionsState extends State<WeatherInfoExpansions> {
       children: List.generate(widget.groupedData.length, (index) {
         final idxData = widget.groupedData[index];
         return ExpansionPanel(
-
+            canTapOnHeader: true,
             headerBuilder: (context, isExpanded) {
               return Align(
                   alignment: Alignment.centerLeft,
