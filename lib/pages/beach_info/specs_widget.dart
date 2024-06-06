@@ -93,11 +93,6 @@ class _SpecsWidgetState extends State<SpecsWidget> {
           children: [
             Row(
               children: [
-                Expanded(
-                  child: ListTile(
-                    title: Text(_receivedData!.first.weatherDescription),
-                  ),
-                ),
                 userPosition == null
                     ? SizedBox.shrink()
                     : Expanded(
@@ -109,21 +104,27 @@ class _SpecsWidgetState extends State<SpecsWidget> {
                       ),
               ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            Gap(10),
+            Column(
               children: [
-                _receivedData!.first.weatherSymbolImage(scale: 0.7),
-                Text(
-                  _receivedData!.first.temperature.asDegrees,
-                  style: _textTheme.displayMedium,
-                )
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _receivedData!.first.weatherSymbolImage(scale: 0.7),
+                    Text(
+                      _receivedData!.first.temperature.asDegrees,
+                      style: _textTheme.displayMedium,
+                    )
+                  ],
+                ),
+                Text(_receivedData!.first.weatherDescription, style: _textTheme.titleMedium,)
               ],
             ),
-            Gap(10),
+            Gap(25),
             ForecastScroll(
               dataList: _receivedData!.take(8).toList(),
             ),
-            Gap(15),
+            Gap(35),
             WeatherInfoExpansions(groupedData: _groupedDataWithoutToday),
             Gap(30),
             Row(
