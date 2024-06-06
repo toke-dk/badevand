@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:badevand/env/env.dart';
 import 'package:badevand/extenstions/date_extensions.dart';
+import 'package:badevand/extenstions/meteorological_data_extension.dart';
 import 'package:badevand/extenstions/numbers_extension.dart';
+import 'package:badevand/models/meteo/day_grouped_data.dart';
 import 'package:badevand/models/wind_direction.dart';
 import 'package:badevand/providers/loading_provider.dart';
 import 'package:flutter/material.dart';
@@ -99,6 +101,28 @@ class _SpecsWidgetState extends State<SpecsWidget> {
                   );
                 }),
               ),
+            ),
+            Column(
+              children: List.generate(_receivedData!.groupData.length, (index) {
+                final DayGroupedMeteorologicalData idxData = _receivedData!.groupData[index];
+                return Column(
+                  children: [
+                    Text(idxData.day.myDateFormat),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: List.generate(idxData.dataList.length, (i) {
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(idxData.dataList[i].date.myTimeFormat),
+                          );
+                        })
+
+                      ),
+                    )
+                  ],
+                );
+              })
             ),
             Gap(15),
             Row(
