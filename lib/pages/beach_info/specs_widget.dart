@@ -1,33 +1,19 @@
 import 'dart:convert';
 
-import 'package:badevand/enums/water_quality.dart';
 import 'package:badevand/env/env.dart';
 import 'package:badevand/extenstions/date_extensions.dart';
-import 'package:badevand/models/meteo/date_info.dart';
+import 'package:badevand/extenstions/numbers_extension.dart';
 import 'package:badevand/models/wind_direction.dart';
 import 'package:badevand/providers/loading_provider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
-import 'package:provider/provider.dart';
-import '../../models/beach.dart';
 import 'package:http/http.dart' as http;
-
-import 'package:badevand/enums/water_quality.dart';
-import 'package:badevand/enums/weather_types.dart';
-import 'package:badevand/extenstions/date_extensions.dart';
-import 'package:badevand/extenstions/numbers_extension.dart';
-import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
-import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
+import 'package:provider/provider.dart';
 import 'package:weather_icons/weather_icons.dart';
 
 import '../../models/beach.dart';
 import '../../models/meteo/weather_data.dart';
-import 'beach_info_page.dart';
 
 class SpecsWidget extends StatefulWidget {
   SpecsWidget({
@@ -86,16 +72,25 @@ class _SpecsWidgetState extends State<SpecsWidget> {
       } else {
         return Column(
           children: [
-            Container(
-              height: 100,
-              child: ListView(
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
                 children: List.generate(8, (index) {
                   MeteorologicalData indexData = _receivedData![index];
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 30),
-                    child: Text(indexData.date.myTimeFormat),
+                  return IntrinsicHeight(
+                    child: Row(
+                      children: [
+                        VerticalDivider(),
+                        Column(
+                          children: [
+                            Text(indexData.date.myTimeFormat),
+                            indexData.weatherSymbolImage,
+                            Text(indexData.temperature.asCelsiusTemperature)
+                          ],
+                        ),
+                        index != 7 ? SizedBox.shrink() : VerticalDivider(),
+                      ],
+                    ),
                   );
                 }),
               ),
