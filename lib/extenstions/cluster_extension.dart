@@ -20,52 +20,43 @@ class MapMarker extends Clusterable {
     pointsSize,
     childMarkerId,
   }) : super(
-    markerId: id,
-    latitude: position.latitude,
-    longitude: position.longitude,
-    isCluster: isCluster,
-    clusterId: clusterId,
-    pointsSize: pointsSize,
-    childMarkerId: childMarkerId,
-  );
+          markerId: id,
+          latitude: position.latitude,
+          longitude: position.longitude,
+          isCluster: isCluster,
+          clusterId: clusterId,
+          pointsSize: pointsSize,
+          childMarkerId: childMarkerId,
+        );
 }
 
-Future<Marker> convertToMarker(MapMarker marker) async {
+Future<Marker> convertToMarker(
+    MapMarker marker, Map<int, BitmapDescriptor> icons) async {
   return Marker(
     infoWindow: marker.beach == null
         ? InfoWindow.noText
         : InfoWindow(
-      title: marker.beach!.name,
-      onTap: () =>
-          NavigationService.instance
-              .push(BeachInfoPage(selectedBeach: marker.beach!)),
-    ),
-    onTap: () => print("size: ${getIcon(marker.pointsSize ?? 1)}"),
+            title: marker.beach!.name,
+            onTap: () => NavigationService.instance
+                .push(BeachInfoPage(selectedBeach: marker.beach!)),
+          ),
     markerId: MarkerId(marker.id),
     position: marker.position,
-    icon: await getIcon(marker.pointsSize ?? 1),
+    icon: await getIcon(marker.pointsSize ?? 1, icons),
   );
 }
 
-Future<BitmapDescriptor> getIcon(int pointSize) async {
-  BitmapDescriptor? toReturn;
-  final int size = 150;
-
+BitmapDescriptor getIcon(int pointSize, Map<int, BitmapDescriptor> icons) {
   if (pointSize >= 100) {
-    toReturn = BitmapDescriptor.fromBytes(
-        await getBytesFromAsset("assets/cluster_icons/p100.png", size));
+    return icons[100]!;
   } else if (pointSize >= 50) {
-    toReturn = BitmapDescriptor.fromBytes(
-        await getBytesFromAsset("assets/cluster_icons/p50.png", size));
+    return icons[50]!;
   } else if (pointSize >= 10) {
-    toReturn = BitmapDescriptor.fromBytes(
-        await getBytesFromAsset("assets/cluster_icons/p10.png", size));
+    return icons[10]!;
   } else if (pointSize >= 5) {
-    toReturn = BitmapDescriptor.fromBytes(
-        await getBytesFromAsset("assets/cluster_icons/p5.png", size));
+    return icons[5]!;
   } else if (pointSize > 1) {
-    toReturn = BitmapDescriptor.fromBytes(
-        await getBytesFromAsset("assets/cluster_icons/p1.png", size));
+    return icons[1]!;
   }
-  return toReturn ?? BitmapDescriptor.defaultMarker;
+  return BitmapDescriptor.defaultMarker;
 }

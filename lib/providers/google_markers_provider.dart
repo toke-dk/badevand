@@ -85,7 +85,7 @@ Future<Set<Marker>> _initializeMarkers(
   return markerList;
 }
 
-Future<Set<Marker>> googleMarkers(List<Beach> beaches, double currentZoom) async {
+Future<Set<Marker>> googleMarkers(List<Beach> beaches, double currentZoom, Map<int, BitmapDescriptor> icons) async {
   final List<MapMarker> markers = [];
 
   for (Beach indexBeach in beaches) {
@@ -117,10 +117,15 @@ Future<Set<Marker>> googleMarkers(List<Beach> beaches, double currentZoom) async
       });
 
   final List<Marker> googleMarkers = [];
+
   for (final cluster in fluster.clusters([-180, -85, 180, 85], currentZoom.toInt())) {
     googleMarkers
-        .add(await convertToMarker(cluster));
+        .add(await convertToMarker(cluster, icons));
   }
 
   return googleMarkers.toSet();
+}
+
+Future<BitmapDescriptor> createBitMapFromAsset(String asset, int size) async {
+  return BitmapDescriptor.fromBytes(await getBytesFromAsset(asset, size));
 }

@@ -21,7 +21,9 @@ class MapPage extends StatefulWidget {
 
 class _MapPageState extends State<MapPage> {
   Position? get _userPosition =>
-      context.watch<UserPositionProvider>().getPosition;
+      context
+          .watch<UserPositionProvider>()
+          .getPosition;
 
   static const LatLng centerOfDenmark = LatLng(56.000, 11.100);
 
@@ -48,18 +50,37 @@ class _MapPageState extends State<MapPage> {
   }
 
   late List<Beach> _placesToShowMarkers =
-      context.read<BeachesProvider>().getBeaches;
+      context
+          .read<BeachesProvider>()
+          .getBeaches;
 
   Set<Marker> _markers = {};
 
-  late List<Beach> _allBeaches = context.read<BeachesProvider>().getBeaches;
+  Map<int, BitmapDescriptor> icons = {
+  };
+
+  Future<void> initializeIcons() async {
+    int initialSize = 150;
+    icons = {
+      1: await createBitMapFromAsset("assets/cluster_icons/p1.png", initialSize),
+      5: await createBitMapFromAsset("assets/cluster_icons/p5.png", initialSize),
+      10: await createBitMapFromAsset("assets/cluster_icons/p10.png",initialSize),
+      50: await createBitMapFromAsset("assets/cluster_icons/p50.png",initialSize),
+      100: await createBitMapFromAsset("assets/cluster_icons/p100.png",initialSize),
+    };
+  }
+
+  late List<Beach> _allBeaches = context
+      .read<BeachesProvider>()
+      .getBeaches;
 
   late GoogleMapController _controller;
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_){
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       _updateVisibleMarkers();
+      initializeIcons();
     });
     super.initState();
   }
@@ -76,12 +97,14 @@ class _MapPageState extends State<MapPage> {
     LatLngBounds visibleRegion = await _controller.getVisibleRegion();
 
     final List<Beach> visibleBeaches =
-        _allBeaches.where((b) => visibleRegion.contains(b.position)).toList();
+    _allBeaches.where((b) => visibleRegion.contains(b.position)).toList();
 
-    final gMarks = await googleMarkers(_placesToShowMarkers, _currentZoom ?? _getStartZoom);
+    _placesToShowMarkers = visibleBeaches;
+
+    final gMarks = await googleMarkers(
+        _placesToShowMarkers, _currentZoom ?? _getStartZoom, icons);
 
     setState(() {
-      _placesToShowMarkers = visibleBeaches;
       _markers = gMarks.toSet();
     });
   }
@@ -104,7 +127,7 @@ class _MapPageState extends State<MapPage> {
           mapType: _currentMapType,
           myLocationEnabled: _userPosition != null,
           initialCameraPosition:
-              CameraPosition(target: _getStartPosition, zoom: _getStartZoom),
+          CameraPosition(target: _getStartPosition, zoom: _getStartZoom),
           markers: _markers,
         ),
         Positioned(
