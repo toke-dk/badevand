@@ -5,6 +5,7 @@ import 'package:badevand/extenstions/date_extensions.dart';
 import 'package:badevand/extenstions/meteorological_data_extension.dart';
 import 'package:badevand/extenstions/numbers_extension.dart';
 import 'package:badevand/models/meteo/day_grouped_data.dart';
+import 'package:badevand/models/meteo/forecast_scroll.dart';
 import 'package:badevand/models/meteo/weather_info_exapnsions.dart';
 import 'package:badevand/models/wind_direction.dart';
 import 'package:badevand/providers/loading_provider.dart';
@@ -77,38 +78,7 @@ class _SpecsWidgetState extends State<SpecsWidget> {
       } else {
         return Column(
           children: [
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: List.generate(8, (index) {
-                  MeteorologicalData indexData = _receivedData![index];
-                  return IntrinsicHeight(
-                    child: Row(
-                      children: [
-                        VerticalDivider(),
-                        Column(
-                          children: [
-                            Text(indexData.date.myTimeFormat),
-                            indexData.weatherSymbolImage,
-                            Text(indexData.temperature.asCelsiusTemperature),
-                            Text(indexData.precipitation == 0
-                                ? ""
-                                : indexData.precipitation.asMillimetersString),
-                            indexData.windDirection.getWindDirectionSymbol,
-                            Text(indexData.windSpeed.asMeterPerSecond),
-                            Text(
-                              "Vindstød ${indexData.windGust.asMeterPerSecond}",
-                            ),
-                            Text("UV ${indexData.uvIndex.myDoubleToString}")
-                          ],
-                        ),
-                        index != 7 ? SizedBox.shrink() : VerticalDivider(),
-                      ],
-                    ),
-                  );
-                }),
-              ),
-            ),
+            ForecastScroll(dataList: _receivedData!.take(8).toList(),),
             Gap(15),
             WeatherInfoExpansions(groupedData: _groupedDataWithoutToday),
             Gap(15),
