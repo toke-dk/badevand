@@ -18,24 +18,26 @@ class ForecastScroll extends StatelessWidget {
           return IntrinsicHeight(
             child: Row(
               children: [
-                VerticalDivider(),
-                Column(
-                  children: [
-                    Text(indexData.date.myTimeFormat),
-                    indexData.weatherSymbolImage,
-                    Text(indexData.temperature.asCelsiusTemperature),
-                    Text(indexData.precipitation == 0
-                        ? ""
-                        : indexData.precipitation.asMillimetersString),
-                    indexData.windDirection.getWindDirectionSymbol,
-                    Text(indexData.windSpeed.asMeterPerSecond),
-                    Text(
-                      "Vindstød ${indexData.windGust.asMeterPerSecond}",
-                    ),
-                    Text("UV ${indexData.uvIndex.myDoubleToString}")
-                  ],
+                index == 0 ? SizedBox.shrink() : VerticalDivider(),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: Column(
+                    children: [
+                      Text(indexData.date.myTimeFormat),
+                      indexData.weatherSymbolImage,
+                      Text(indexData.temperature.asCelsiusTemperature),
+                      Text(indexData.precipitation == 0
+                          ? ""
+                          : indexData.precipitation.asMillimetersString),
+                      indexData.windDirection.getWindDirectionSymbol,
+                      Text(indexData.windSpeed.asMeterPerSecond),
+                      Text(
+                        "Vindstød ${indexData.windGust.asMeterPerSecond}",
+                      ),
+                      Text("UV ${indexData.uvIndex.myDoubleToString}")
+                    ],
+                  ),
                 ),
-                index != 7 ? SizedBox.shrink() : VerticalDivider(),
               ],
             ),
           );
