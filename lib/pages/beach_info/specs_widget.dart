@@ -89,7 +89,8 @@ class _SpecsWidgetState extends State<SpecsWidget> {
                             Text(indexData.precipitation == 0 ? "" : indexData.precipitation.asMillimetersString),
                             indexData.windDirection.getWindDirectionSymbol,
                             Text(indexData.windSpeed.asMeterPerSecond),
-                            Text("Vindstød ${indexData.windGust.asMeterPerSecond}",)
+                            Text("Vindstød ${indexData.windGust.asMeterPerSecond}",),
+                            Text("UV ${indexData.uvIndex.myDoubleToString}")
                           ],
                         ),
                         index != 7 ? SizedBox.shrink() : VerticalDivider(),
@@ -99,32 +100,7 @@ class _SpecsWidgetState extends State<SpecsWidget> {
                 }),
               ),
             ),
-            _receivedData == null
-                ? SizedBox.shrink()
-                : ListTile(
-                    leading: Icon(Icons.thermostat),
-                    title: Text(
-                        _currentMomentData.temperature.asCelsiusTemperature),
-                    subtitle: Text("Lufttemperatur"),
-                  ),
-            _receivedData == null
-                ? SizedBox.shrink()
-                : ListTile(
-                    leading:
-                        WindDirection(angle: _currentMomentData.windDirection)
-                            .getChildWidget,
-                    title: Text(
-                        "${_currentMomentData.windSpeed}/(${_currentMomentData.windGust}) m/s"),
-                    subtitle: Text("Vind/(Stød)"),
-                  ),
-            _receivedData == null
-                ? SizedBox.shrink()
-                : ListTile(
-                    leading: Icon(WeatherIcons.rain),
-                    title: Text(
-                        "${_currentMomentData.precipitation == 0 ? '---' : '${_currentMomentData.precipitation} mm'}"),
-                    subtitle: Text("Nedbør"),
-                  ),
+            Gap(15),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
