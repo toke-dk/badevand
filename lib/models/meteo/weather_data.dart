@@ -9,7 +9,7 @@ class MeteorologicalData {
   double windGust;
   double windDirection;
   double uvIndex;
-  int weatherSymbolIdx;
+  int weatherIdx;
 
   MeteorologicalData(
       {required this.date,
@@ -19,12 +19,41 @@ class MeteorologicalData {
       required this.windGust,
       required this.windDirection,
       required this.uvIndex,
-      required this.weatherSymbolIdx});
+      required this.weatherIdx});
 
   Image weatherSymbolImage({double? scale}) => Image.asset(
-        "assets/weather_symbols/${weatherSymbolIdx}.png",
+        "assets/weather_symbols/${weatherIdx}.png",
         scale: scale,
       );
+
+  String get weatherDescription {
+    if (weatherIdx < 0 || weatherIdx > 116) {
+      return "Fejl i beskrivelse";
+    }
+    final index = weatherIdx % 100;
+
+    final List<String> descriptions = [
+      "Et vejrsymbol kunne ikke bestemmes",
+      "Skyfri himmel",
+      "Lette skyer",
+      "Delvist skyet",
+      "Overskyet",
+      "Regn",
+      "Regn og sne / slud",
+      "Sne",
+      "Regnbyge",
+      "Snebyge",
+      "Sludbyge",
+      "Let tåge",
+      "Tyk tåge",
+      "Frysende regn",
+      "Tordenvejr",
+      "Støvregn",
+      "Sandstorm"
+    ];
+
+    return descriptions[index];
+  }
 }
 
 List<MeteorologicalData> getMeteorologicalDataList(List<dynamic> map) {
@@ -52,7 +81,7 @@ List<MeteorologicalData> getMeteorologicalDataList(List<dynamic> map) {
         windGust: getDatesInfoFromString("wind_gusts_10m_1h:ms")[i],
         windDirection: getDatesInfoFromString("wind_dir_10m:d")[i],
         uvIndex: getDatesInfoFromString("uv:idx")[i],
-        weatherSymbolIdx:
+        weatherIdx:
             getDatesInfoFromString("weather_symbol_1h:idx")[i].toInt()));
   }
 

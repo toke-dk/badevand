@@ -8,15 +8,18 @@ import 'package:badevand/models/meteo/day_grouped_data.dart';
 import 'package:badevand/pages/beach_info/weather_info_exapnsions.dart';
 import 'package:badevand/models/wind_direction.dart';
 import 'package:badevand/providers/loading_provider.dart';
+import 'package:badevand/providers/user_position_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:weather_icons/weather_icons.dart';
 
 import '../../models/beach.dart';
 import '../../models/meteo/weather_data.dart';
+import '../../providers/beaches_provider.dart';
 import 'forecast_scroll.dart';
 
 class SpecsWidget extends StatefulWidget {
@@ -70,8 +73,16 @@ class _SpecsWidgetState extends State<SpecsWidget> {
 
   late TextTheme _textTheme = Theme.of(context).textTheme;
 
+  Beach get _beach => context
+      .watch<BeachesProvider>()
+      .getBeaches
+      .firstWhere((element) => element == widget.beach);
+
   @override
   Widget build(BuildContext context) {
+    final Position? userPosition =
+        context.watch<UserPositionProvider>().getPosition;
+
     if (_isAppLoading) {
       return Center(child: CircularProgressIndicator());
     } else {
@@ -81,29 +92,73 @@ class _SpecsWidgetState extends State<SpecsWidget> {
         return Column(
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _receivedData!.first.weatherSymbolImage(scale: 0.7),
-                Text(_receivedData!.first.temperature.asDegrees, style: _textTheme.displayMedium,)
+                Expanded(
+                  child: ListTile(
+                    title: Text(_receivedData!.first.weatherDescription),
+                  ),
+                ),
+                userPosition == null
+                    ? SizedBox.shrink()
+                    : Expanded(
+                        child: ListTile(
+                          title: Text(
+                              "${userPosition == null ? '???' : (Geolocator.distanceBetween(userPosition.latitude, userPosition.longitude, _beach.position.latitude, _beach.position.longitude) / 1000).toInt()}km"),
+                          subtitle: Text("Afstand"),
+                        ),
+                      ),
               ],
             ),
-            Gap(10),
-            ForecastScroll(dataList: _receivedData!.take(8).toList(),),
-            Gap(15),
-            WeatherInfoExpansions(groupedData: _groupedDataWithoutToday),
-            Gap(15),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(WeatherIcons.sunrise),
-                Gap(10),
-                Text(_twilight?.sunRise.myTimeFormat ?? ""),
-                Gap(20),
-                Icon(WeatherIcons.sunset),
-                Gap(10),
-                Text(_twilight?.sunSet.myTimeFormat ?? ""),
+                _receivedData!.first.weatherSymbolImage(scale: 0.7),
+                Text(
+                  _receivedData!.first.temperature.asDegrees,
+                  style: _textTheme.displayMedium,
+                )
               ],
-            )
+            ),
+            Gap(10),
+            ForecastScroll(
+              dataList: _receivedData!.take(8).toList(),
+            ),
+            Gap(15),
+            WeatherInfoExpansions(groupedData: _groupedDataWithoutToday),
+            Gap(30),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  children: [
+                    Row(
+                      children: [
+                        Icon(WeatherIcons.sunrise),
+                        Gap(10),
+                        Text(
+                          _twilight?.sunRise.myTimeFormat ?? "",
+                        ),
+                      ],
+                    ),
+                    Text("Solopgang", style: _textTheme.labelSmall)
+                  ],
+                ),
+                Gap(25),
+                Column(
+                  children: [
+                    Row(
+                      children: [
+                        Icon(WeatherIcons.sunset),
+                        Gap(10),
+                        Text(_twilight?.sunSet.myTimeFormat ?? ""),
+                      ],
+                    ),
+                    Text("Solnedgang", style: _textTheme.labelSmall)
+                  ],
+                ),
+              ],
+            ),
+            Gap(30)
           ],
         );
       }

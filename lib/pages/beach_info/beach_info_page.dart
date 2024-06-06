@@ -40,8 +40,6 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
 
   @override
   Widget build(BuildContext context) {
-    final Position? userPosition =
-        context.watch<UserPositionProvider>().getPosition;
 
     final TextTheme textTheme = Theme.of(context).textTheme;
 
@@ -65,11 +63,17 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
                   specsToday?.waterQualityType.flag ?? SizedBox.shrink(),
                   Gap(8),
                   Expanded(
-                    child: Text(
-                      _beach.name,
-                      softWrap: false,
-                      style: textTheme.titleMedium,
-                      overflow: TextOverflow.fade,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          _beach.name,
+                          softWrap: false,
+                          style: textTheme.titleMedium,
+                          overflow: TextOverflow.fade,
+                        ),
+                        Text(_beach.municipality)
+                      ],
                     ),
                   ),
                   IconButton(
@@ -121,25 +125,6 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
                               maxLines == null ? null : TextOverflow.ellipsis,
                         ),
                       )),
-              Row(
-                children: [
-                  Expanded(
-                    child: ListTile(
-                      title: Text(_beach.municipality),
-                      subtitle: Text("Kommune"),
-                    ),
-                  ),
-                  userPosition == null
-                      ? SizedBox.shrink()
-                      : Expanded(
-                          child: ListTile(
-                            title: Text(
-                                "${userPosition == null ? '???' : (Geolocator.distanceBetween(userPosition.latitude, userPosition.longitude, _beach.position.latitude, _beach.position.longitude) / 1000).toInt()}km"),
-                            subtitle: Text("Afstand"),
-                          ),
-                        ),
-                ],
-              ),
               SpecsWidget(beach: widget.selectedBeach),
             ],
           ),
