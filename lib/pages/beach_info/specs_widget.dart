@@ -81,62 +81,66 @@ class _SpecsWidgetState extends State<SpecsWidget> {
     if (_isAppLoading) {
       return Center(child: CircularProgressIndicator());
     } else {
-      return Column(
-        children: [
-          Container(
-            height: 100,
-            child: ListView(
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              children: List.generate(8, (index) {
-                MeteorologicalData indexData = _receivedData![index];
-                return Padding(
-                  padding: const EdgeInsets.only(right: 30),
-                  child: Text(indexData.date.myTimeFormat),
-                );
-              }),
+      if (_receivedData == null) {
+        return Text("Intet modtaget data");
+      } else {
+        return Column(
+          children: [
+            Container(
+              height: 100,
+              child: ListView(
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                children: List.generate(8, (index) {
+                  MeteorologicalData indexData = _receivedData![index];
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 30),
+                    child: Text(indexData.date.myTimeFormat),
+                  );
+                }),
+              ),
             ),
-          ),
-          _receivedData == null
-              ? SizedBox.shrink()
-              : ListTile(
-                  leading: Icon(Icons.thermostat),
-                  title:
-                      Text(_currentMomentData.temperature.asCelsiusTemperature),
-                  subtitle: Text("Lufttemperatur"),
-                ),
-          _receivedData == null
-              ? SizedBox.shrink()
-              : ListTile(
-                  leading:
-                      WindDirection(angle: _currentMomentData.windDirection)
-                          .getChildWidget,
-                  title: Text(
-                      "${_currentMomentData.windSpeed}/(${_currentMomentData.windGust}) m/s"),
-                  subtitle: Text("Vind/(Stød)"),
-                ),
-          _receivedData == null
-              ? SizedBox.shrink()
-              : ListTile(
-                  leading: Icon(WeatherIcons.rain),
-                  title: Text(
-                      "${_currentMomentData.precipitation == 0 ? '---' : '${_currentMomentData.precipitation} mm'}"),
-                  subtitle: Text("Nedbør"),
-                ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(WeatherIcons.sunrise),
-              Gap(10),
-              Text(_twilight?.sunRise.myTimeFormat ?? ""),
-              Gap(20),
-              Icon(WeatherIcons.sunset),
-              Gap(10),
-              Text(_twilight?.sunSet.myTimeFormat ?? ""),
-            ],
-          )
-        ],
-      );
+            _receivedData == null
+                ? SizedBox.shrink()
+                : ListTile(
+                    leading: Icon(Icons.thermostat),
+                    title: Text(
+                        _currentMomentData.temperature.asCelsiusTemperature),
+                    subtitle: Text("Lufttemperatur"),
+                  ),
+            _receivedData == null
+                ? SizedBox.shrink()
+                : ListTile(
+                    leading:
+                        WindDirection(angle: _currentMomentData.windDirection)
+                            .getChildWidget,
+                    title: Text(
+                        "${_currentMomentData.windSpeed}/(${_currentMomentData.windGust}) m/s"),
+                    subtitle: Text("Vind/(Stød)"),
+                  ),
+            _receivedData == null
+                ? SizedBox.shrink()
+                : ListTile(
+                    leading: Icon(WeatherIcons.rain),
+                    title: Text(
+                        "${_currentMomentData.precipitation == 0 ? '---' : '${_currentMomentData.precipitation} mm'}"),
+                    subtitle: Text("Nedbør"),
+                  ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(WeatherIcons.sunrise),
+                Gap(10),
+                Text(_twilight?.sunRise.myTimeFormat ?? ""),
+                Gap(20),
+                Icon(WeatherIcons.sunset),
+                Gap(10),
+                Text(_twilight?.sunSet.myTimeFormat ?? ""),
+              ],
+            )
+          ],
+        );
+      }
     }
   }
 }
