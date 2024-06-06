@@ -16,9 +16,11 @@ extension DateExtension on DateTime {
 
   String get myTimeFormat => DateFormat("HH:mm").format(this);
 
-  String get meteoDateFormat => "${DateFormat('yyyy-MM-ddTHH:mm:ss').format(this.onlyYearMonthDay)}Z";
+  String get _formatInMeteo => this.toUtc().toString().replaceAll(" ", "T");
 
-  String get meteoDateFormatHour => "${DateFormat('yyyy-MM-ddTHH:mm:ss').format(this.onlyYMDH)}Z";
+  String get meteoDateFormat => this.onlyYearMonthDay._formatInMeteo;
+
+  String get meteoDateFormatHour => this.onlyYMDH._formatInMeteo;
 
   String get stringAsDayName => DateFormat.MMMEd("da").format(this).capitalize;
 

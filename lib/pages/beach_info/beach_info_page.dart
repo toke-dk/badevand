@@ -13,6 +13,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../models/beach.dart';
 import 'package:http/http.dart' as http;
@@ -44,6 +45,7 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
 
     final TextTheme textTheme = Theme.of(context).textTheme;
 
+    print('now ${DateTime.now().toUtc().toString().replaceAll(" ", "T")}');
     return Scaffold(
       appBar: AppBar(),
       body: SingleChildScrollView(

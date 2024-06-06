@@ -199,10 +199,10 @@ class Twilight {
 
     // TODO I added two hours in both ends because of its inaccuracy
     final DateTime sunRiseDate =
-        DateTime.parse(getDateFromParameter("sunrise:sql")).add(2.hours);
+        DateTime.parse(getDateFromParameter("sunrise:sql")).toLocal();
 
     final DateTime sunSetDate =
-        DateTime.parse(getDateFromParameter("sunset:sql")).add(2.hours);
+        DateTime.parse(getDateFromParameter("sunset:sql")).toLocal();
     print("set $sunSetDate");
 
     return Twilight(sunRise: sunRiseDate, sunSet: sunSetDate);

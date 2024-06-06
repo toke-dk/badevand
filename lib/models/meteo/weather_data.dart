@@ -36,7 +36,7 @@ List<MeteorologicalData> getMeteorologicalDataList(List<dynamic> map) {
 
   List<DateTime> getDates() {
     return (map.first["coordinates"].first["dates"] as List<dynamic>)
-        .map((m) => DateTime.parse(m["date"].toString()))
+        .map((m) => DateTime.parse(m["date"].toString()).toLocal())
         .toList();
   }
 
