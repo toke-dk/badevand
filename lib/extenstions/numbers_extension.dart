@@ -1,13 +1,17 @@
 import 'dart:math';
 import 'dart:math' as math;
 
+import 'package:badevand/extenstions/string_extension.dart';
 import 'package:badevand/models/wind_direction.dart';
 import 'package:flutter/cupertino.dart';
 
 extension NumerExtension on num {
-  String get myDoubleToString => toStringAsFixed(this % 1 == 0 ? 0 : 1);
+  String get myDoubleToString =>
+      toStringAsFixed(this % 1 == 0 ? 0 : 1).replaceAll(".", ",");
 
   String get asCelsiusTemperature => "$myDoubleToString \u2103";
+
+  String get asDegrees => "$myDoubleToString \u00B0";
 
   String get asMeterPerSecond => "$myDoubleToString m/s";
 

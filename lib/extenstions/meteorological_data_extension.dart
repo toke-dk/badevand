@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:badevand/extenstions/date_extensions.dart';
+import 'package:badevand/extenstions/numbers_extension.dart';
 import 'package:badevand/models/meteo/weather_data.dart';
 
 import '../models/meteo/day_grouped_data.dart';
@@ -20,5 +23,22 @@ extension MeteorologicalDataExtension on List<MeteorologicalData> {
       }
     }
     return groups;
+  }
+
+  double get maxTemp => map((d) => d.temperature).reduce(max);
+
+  double get minTemp => map((d) => d.temperature).reduce(min);
+
+  double get totalPrecipitation =>
+      map((d) => d.precipitation).reduce((a, b) => a + b);
+}
+
+extension DayGroupedMeteorologicalDataExtension on DayGroupedMeteorologicalData {
+  String get dataOverviewString {
+    final minTemp = this.dataList.minTemp.asDegrees;
+    final maxTemp = this.dataList.maxTemp.asDegrees;
+    final precipitation = dataList.totalPrecipitation.asMillimetersString;
+
+    return "${minTemp}/${maxTemp} | ${precipitation}";
   }
 }

@@ -1,4 +1,5 @@
 import 'package:badevand/extenstions/date_extensions.dart';
+import 'package:badevand/extenstions/meteorological_data_extension.dart';
 import 'package:badevand/models/meteo/forecast_scroll.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -40,7 +41,14 @@ class _WeatherInfoExpansionsState extends State<WeatherInfoExpansions> {
                   alignment: Alignment.centerLeft,
                   child: Padding(
                     padding: const EdgeInsets.all(15),
-                    child: Text(idxData.day.stringAsDayName),
+                    child: Row(
+                      children: [
+                        Text(idxData.day.stringAsDayName),
+                        Gap(8),
+                        Text(idxData.dataOverviewString),
+
+                      ],
+                    ),
                   ));
             },
             isExpanded: _expandedIndexes.contains(index),
