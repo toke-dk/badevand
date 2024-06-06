@@ -47,24 +47,56 @@ class _MapPageState extends State<MapPage> {
     super.didChangeDependencies();
   }
 
+  late List<Beach> _placesToShowMarkers =
+      context.read<BeachesProvider>().getBeaches;
+
+  late List<Beach> _allBeaches = context.read<BeachesProvider>().getBeaches;
+
+  late GoogleMapController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  Future<void> _updateVisibleMarkers() async {
+    print("update");
+    LatLngBounds visibleRegion = await _controller.getVisibleRegion();
+    final List<Beach> visibleBeaches =
+        _allBeaches.where((b) => visibleRegion.contains(b.position)).toList();
+    setState(() {
+      _placesToShowMarkers = visibleBeaches;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    print(_currentZoom);
     return Stack(
       children: [
         GoogleMap(
+          onCameraIdle: () => _updateVisibleMarkers(),
           onCameraMove: (CameraPosition newPos) {
-            setState(() {
-              _currentZoom = newPos.zoom;
-            });
+            // waiting to set the state for the camera idle to improve
+            // performance
+            _currentZoom = newPos.zoom;
+          },
+          onMapCreated: (controller) {
+            _controller = controller;
+            _updateVisibleMarkers();
           },
           mapType: _currentMapType,
           myLocationEnabled: _userPosition != null,
           initialCameraPosition:
               CameraPosition(target: _getStartPosition, zoom: _getStartZoom),
-          markers: googleMarkers(context.read<BeachesProvider>().getBeaches,
-                  _currentZoom ?? _getStartZoom)
-              .toSet(),
+          markers:
+              googleMarkers(_placesToShowMarkers, _currentZoom ?? _getStartZoom)
+                  .toSet(),
         ),
         Positioned(
           bottom: 5,
