@@ -140,7 +140,6 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
                         ),
                 ],
               ),
-              Gap(20),
               SpecsWidget(beach: widget.selectedBeach),
             ],
           ),

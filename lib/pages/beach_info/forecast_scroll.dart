@@ -24,7 +24,7 @@ class ForecastScroll extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(indexData.date.myTimeFormat),
-                      indexData.weatherSymbolImage,
+                      indexData.weatherSymbolImage(),
                       Text(indexData.temperature.asCelsiusTemperature),
                       Text(indexData.precipitation == 0
                           ? ""

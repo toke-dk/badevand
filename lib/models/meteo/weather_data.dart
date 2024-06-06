@@ -1,4 +1,3 @@
-import 'package:badevand/models/meteo/date_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -22,7 +21,10 @@ class MeteorologicalData {
       required this.uvIndex,
       required this.weatherSymbolIdx});
 
-  Widget get weatherSymbolImage => Image.asset("assets/weather_symbols/${weatherSymbolIdx}.png");
+  Image weatherSymbolImage({double? scale}) => Image.asset(
+        "assets/weather_symbols/${weatherSymbolIdx}.png",
+        scale: scale,
+      );
 }
 
 List<MeteorologicalData> getMeteorologicalDataList(List<dynamic> map) {
@@ -50,7 +52,8 @@ List<MeteorologicalData> getMeteorologicalDataList(List<dynamic> map) {
         windGust: getDatesInfoFromString("wind_gusts_10m_1h:ms")[i],
         windDirection: getDatesInfoFromString("wind_dir_10m:d")[i],
         uvIndex: getDatesInfoFromString("uv:idx")[i],
-        weatherSymbolIdx: getDatesInfoFromString("weather_symbol_1h:idx")[i].toInt()));
+        weatherSymbolIdx:
+            getDatesInfoFromString("weather_symbol_1h:idx")[i].toInt()));
   }
 
   return dataList;

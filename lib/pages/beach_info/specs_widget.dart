@@ -68,6 +68,8 @@ class _SpecsWidgetState extends State<SpecsWidget> {
       _receivedData!.groupData
         ..removeWhere((d) => d.day.isSameDate(DateTime.now()));
 
+  late TextTheme _textTheme = Theme.of(context).textTheme;
+
   @override
   Widget build(BuildContext context) {
     if (_isAppLoading) {
@@ -78,6 +80,14 @@ class _SpecsWidgetState extends State<SpecsWidget> {
       } else {
         return Column(
           children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _receivedData!.first.weatherSymbolImage(scale: 0.7),
+                Text(_receivedData!.first.temperature.asDegrees, style: _textTheme.displayMedium,)
+              ],
+            ),
+            Gap(10),
             ForecastScroll(dataList: _receivedData!.take(8).toList(),),
             Gap(15),
             WeatherInfoExpansions(groupedData: _groupedDataWithoutToday),
