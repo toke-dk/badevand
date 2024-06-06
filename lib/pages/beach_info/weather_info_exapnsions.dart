@@ -1,10 +1,10 @@
 import 'package:badevand/extenstions/date_extensions.dart';
 import 'package:badevand/extenstions/meteorological_data_extension.dart';
-import 'package:badevand/models/meteo/forecast_scroll.dart';
+import 'package:badevand/pages/beach_info/forecast_scroll.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
-import 'day_grouped_data.dart';
+import '../../models/meteo/day_grouped_data.dart';
 
 class WeatherInfoExpansions extends StatefulWidget {
   const WeatherInfoExpansions({super.key, required this.groupedData});

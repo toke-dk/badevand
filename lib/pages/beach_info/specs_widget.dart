@@ -5,8 +5,7 @@ import 'package:badevand/extenstions/date_extensions.dart';
 import 'package:badevand/extenstions/meteorological_data_extension.dart';
 import 'package:badevand/extenstions/numbers_extension.dart';
 import 'package:badevand/models/meteo/day_grouped_data.dart';
-import 'package:badevand/models/meteo/forecast_scroll.dart';
-import 'package:badevand/models/meteo/weather_info_exapnsions.dart';
+import 'package:badevand/pages/beach_info/weather_info_exapnsions.dart';
 import 'package:badevand/models/wind_direction.dart';
 import 'package:badevand/providers/loading_provider.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +17,7 @@ import 'package:weather_icons/weather_icons.dart';
 
 import '../../models/beach.dart';
 import '../../models/meteo/weather_data.dart';
+import 'forecast_scroll.dart';
 
 class SpecsWidget extends StatefulWidget {
   SpecsWidget({
