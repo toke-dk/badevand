@@ -85,7 +85,7 @@ Future<Set<Marker>> _initializeMarkers(
   return markerList;
 }
 
-List<Marker> googleMarkers(List<Beach> beaches, double currentZoom) {
+Future<Set<Marker>> googleMarkers(List<Beach> beaches, double currentZoom) async {
   final List<MapMarker> markers = [];
 
   for (Beach indexBeach in beaches) {
@@ -116,10 +116,11 @@ List<Marker> googleMarkers(List<Beach> beaches, double currentZoom) {
         );
       });
 
-  final List<Marker> googleMarkers = fluster
-      .clusters([-180, -85, 180, 85], currentZoom.toInt())
-      .map((cluster) => cluster.toMarker())
-      .toList();
+  final List<Marker> googleMarkers = [];
+  for (final cluster in fluster.clusters([-180, -85, 180, 85], currentZoom.toInt())) {
+    googleMarkers
+        .add(await convertToMarker(cluster));
+  }
 
-  return googleMarkers;
+  return googleMarkers.toSet();
 }
