@@ -64,6 +64,10 @@ class _SpecsWidgetState extends State<SpecsWidget> {
 
   MeteorologicalData get _currentMomentData => _receivedData!.first;
 
+  late List<DayGroupedMeteorologicalData> _groupedDataWithoutToday =
+      _receivedData!.groupData
+        ..removeWhere((d) => d.day.isSameDate(DateTime.now()));
+
   @override
   Widget build(BuildContext context) {
     if (_isAppLoading) {
@@ -88,10 +92,14 @@ class _SpecsWidgetState extends State<SpecsWidget> {
                             Text(indexData.date.myTimeFormat),
                             indexData.weatherSymbolImage,
                             Text(indexData.temperature.asCelsiusTemperature),
-                            Text(indexData.precipitation == 0 ? "" : indexData.precipitation.asMillimetersString),
+                            Text(indexData.precipitation == 0
+                                ? ""
+                                : indexData.precipitation.asMillimetersString),
                             indexData.windDirection.getWindDirectionSymbol,
                             Text(indexData.windSpeed.asMeterPerSecond),
-                            Text("Vindstød ${indexData.windGust.asMeterPerSecond}",),
+                            Text(
+                              "Vindstød ${indexData.windGust.asMeterPerSecond}",
+                            ),
                             Text("UV ${indexData.uvIndex.myDoubleToString}")
                           ],
                         ),
@@ -103,27 +111,26 @@ class _SpecsWidgetState extends State<SpecsWidget> {
               ),
             ),
             Column(
-              children: List.generate(_receivedData!.groupData.length, (index) {
-                final DayGroupedMeteorologicalData idxData = _receivedData!.groupData[index];
-                return Column(
-                  children: [
-                    Text(idxData.day.myDateFormat),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
+                children:
+                    List.generate(_groupedDataWithoutToday.length, (index) {
+              final DayGroupedMeteorologicalData idxData =
+                  _groupedDataWithoutToday[index];
+              return Column(
+                children: [
+                  Text(idxData.day.myDateFormat),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
                         children: List.generate(idxData.dataList.length, (i) {
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(idxData.dataList[i].date.myTimeFormat),
-                          );
-                        })
-
-                      ),
-                    )
-                  ],
-                );
-              })
-            ),
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(idxData.dataList[i].date.myTimeFormat),
+                      );
+                    })),
+                  )
+                ],
+              );
+            })),
             Gap(15),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
