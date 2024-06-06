@@ -1,6 +1,9 @@
 import 'dart:math';
 import 'dart:math' as math;
 
+import 'package:badevand/models/wind_direction.dart';
+import 'package:flutter/cupertino.dart';
+
 extension NumerExtension on num {
   String get myDoubleToString => toStringAsFixed(this % 1 == 0 ? 0 : 1);
 
@@ -12,8 +15,12 @@ extension NumerExtension on num {
 
   double get toRadiansFromDegree => this * pi / 180;
 
+  Widget get getWindDirectionSymbol =>
+      WindDirection(angle: this.toDouble()).getChildWidget;
+
   int toNearestHour() {
-    return (this + 0.5).floor(); // Add 0.5 for rounding and floor to nearest hour
+    return (this + 0.5)
+        .floor(); // Add 0.5 for rounding and floor to nearest hour
   }
 }
 
@@ -34,4 +41,3 @@ extension CoordinateTransform on num {
 
   double get lon2x => this * degToRad * r;
 }
-

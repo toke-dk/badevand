@@ -85,7 +85,11 @@ class _SpecsWidgetState extends State<SpecsWidget> {
                           children: [
                             Text(indexData.date.myTimeFormat),
                             indexData.weatherSymbolImage,
-                            Text(indexData.temperature.asCelsiusTemperature)
+                            Text(indexData.temperature.asCelsiusTemperature),
+                            Text(indexData.precipitation == 0 ? "" : indexData.precipitation.asMillimetersString),
+                            indexData.windDirection.getWindDirectionSymbol,
+                            Text(indexData.windSpeed.asMeterPerSecond),
+                            Text("Vindstød ${indexData.windGust.asMeterPerSecond}",)
                           ],
                         ),
                         index != 7 ? SizedBox.shrink() : VerticalDivider(),
