@@ -17,9 +17,13 @@ extension DateExtension on DateTime {
 
   String get meteoDateFormat => "${DateFormat('yyyy-MM-ddTHH:mm:ss').format(this.onlyYearMonthDay)}Z";
 
-  String get meteoDateFormatHour => "${DateFormat('yyyy-MM-ddTHH:mm:ss').format(this.toNearestHour)}Z";
+  String get meteoDateFormatHour => "${DateFormat('yyyy-MM-ddTHH:mm:ss').format(this.onlyYMDH)}Z";
 
   String get stringAsDayName => DateFormat.E("da").format(this);
+
+  DateTime get onlyYMDH {
+    return DateTime(year, month, day, hour);
+  }
 
   DateTime get toNearestHour {
     return DateTime(year, month, day, minute >= 30 ? hour + 1 : hour);
