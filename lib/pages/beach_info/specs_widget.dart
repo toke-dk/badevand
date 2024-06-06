@@ -5,6 +5,7 @@ import 'package:badevand/extenstions/date_extensions.dart';
 import 'package:badevand/extenstions/meteorological_data_extension.dart';
 import 'package:badevand/extenstions/numbers_extension.dart';
 import 'package:badevand/models/meteo/day_grouped_data.dart';
+import 'package:badevand/models/meteo/weather_info_exapnsions.dart';
 import 'package:badevand/models/wind_direction.dart';
 import 'package:badevand/providers/loading_provider.dart';
 import 'package:flutter/material.dart';
@@ -62,8 +63,6 @@ class _SpecsWidgetState extends State<SpecsWidget> {
 
   bool get _isAppLoading => context.watch<LoadingProvider>().getIsAppLoading;
 
-  MeteorologicalData get _currentMomentData => _receivedData!.first;
-
   late List<DayGroupedMeteorologicalData> _groupedDataWithoutToday =
       _receivedData!.groupData
         ..removeWhere((d) => d.day.isSameDate(DateTime.now()));
@@ -110,27 +109,8 @@ class _SpecsWidgetState extends State<SpecsWidget> {
                 }),
               ),
             ),
-            Column(
-                children:
-                    List.generate(_groupedDataWithoutToday.length, (index) {
-              final DayGroupedMeteorologicalData idxData =
-                  _groupedDataWithoutToday[index];
-              return Column(
-                children: [
-                  Text(idxData.day.myDateFormat),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                        children: List.generate(idxData.dataList.length, (i) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(idxData.dataList[i].date.myTimeFormat),
-                      );
-                    })),
-                  )
-                ],
-              );
-            })),
+            Gap(15),
+            WeatherInfoExpansions(groupedData: _groupedDataWithoutToday),
             Gap(15),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
