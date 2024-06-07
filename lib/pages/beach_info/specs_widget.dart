@@ -42,11 +42,6 @@ class _SpecsWidgetState extends State<SpecsWidget> {
 
   late TextTheme _textTheme = Theme.of(context).textTheme;
 
-  Beach get _beach => context
-      .watch<BeachesProvider>()
-      .getBeaches
-      .firstWhere((element) => element == widget.beach);
-
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -55,11 +50,11 @@ class _SpecsWidgetState extends State<SpecsWidget> {
     super.initState();
   }
 
+  late Position? userPosition =
+      context.watch<UserPositionProvider>().getPosition;
+
   @override
   Widget build(BuildContext context) {
-    final Position? userPosition =
-        context.watch<UserPositionProvider>().getPosition;
-
     if (_isAppLoading) {
       return Center(child: CircularProgressIndicator());
     } else {
@@ -75,7 +70,7 @@ class _SpecsWidgetState extends State<SpecsWidget> {
                     : Expanded(
                         child: ListTile(
                           title: Text(
-                              "${userPosition == null ? '???' : (Geolocator.distanceBetween(userPosition.latitude, userPosition.longitude, _beach.position.latitude, _beach.position.longitude) / 1000).toInt()}km"),
+                              "${userPosition == null ? '???' : (Geolocator.distanceBetween(userPosition!.latitude, userPosition!.longitude, widget.beach.position.latitude, widget.beach.position.longitude) / 1000).toInt()}km"),
                           subtitle: Text("Afstand"),
                         ),
                       ),
@@ -94,7 +89,10 @@ class _SpecsWidgetState extends State<SpecsWidget> {
                     )
                   ],
                 ),
-                Text(_receivedData!.first.weatherDescription, style: _textTheme.titleMedium,)
+                Text(
+                  _receivedData!.first.weatherDescription,
+                  style: _textTheme.titleMedium,
+                )
               ],
             ),
             Gap(25),
@@ -104,38 +102,7 @@ class _SpecsWidgetState extends State<SpecsWidget> {
             Gap(35),
             WeatherInfoExpansions(groupedData: _groupedDataWithoutToday),
             Gap(30),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
-                  children: [
-                    Row(
-                      children: [
-                        Icon(WeatherIcons.sunrise),
-                        Gap(10),
-                        Text(
-                          _twilight?.sunRise.myTimeFormat ?? "",
-                        ),
-                      ],
-                    ),
-                    Text("Solopgang", style: _textTheme.labelSmall)
-                  ],
-                ),
-                Gap(25),
-                Column(
-                  children: [
-                    Row(
-                      children: [
-                        Icon(WeatherIcons.sunset),
-                        Gap(10),
-                        Text(_twilight?.sunSet.myTimeFormat ?? ""),
-                      ],
-                    ),
-                    Text("Solnedgang", style: _textTheme.labelSmall)
-                  ],
-                ),
-              ],
-            ),
+            SunRiseSunsetWidget(twilight: _twilight),
             Gap(30)
           ],
         );
@@ -157,5 +124,48 @@ class _SpecsWidgetState extends State<SpecsWidget> {
       });
       context.read<LoadingProvider>().toggleAppLoadingState(false);
     });
+  }
+}
+
+class SunRiseSunsetWidget extends StatelessWidget {
+  const SunRiseSunsetWidget({super.key, required this.twilight});
+
+  final Twilight? twilight;
+
+  @override
+  Widget build(BuildContext context) {
+    final TextTheme _textTheme = Theme.of(context).textTheme;
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        makeIconWithText(
+            twilight: twilight, isSunrise: true, textTheme: _textTheme),
+        Gap(25),
+        makeIconWithText(
+            twilight: twilight, isSunrise: false, textTheme: _textTheme),
+      ],
+    );
+  }
+
+  Widget makeIconWithText(
+      {required Twilight? twilight,
+      required bool isSunrise,
+      required TextTheme textTheme}) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Icon(isSunrise ? WeatherIcons.sunrise : WeatherIcons.sunset),
+            Gap(10),
+            Text(isSunrise
+                ? twilight?.sunRise.myTimeFormat ?? ""
+                : twilight?.sunSet.myTimeFormat ?? "?"),
+          ],
+        ),
+        Text(isSunrise ? "Solopgang" : "Solnedgang",
+            style: textTheme.labelSmall)
+      ],
+    );
   }
 }
