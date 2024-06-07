@@ -61,8 +61,12 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
               Container(
                 height: 60,
                 child: Center(
-                  child: AdWidget(
-                    ad: banner!,
+                  child: StatefulBuilder(
+                    builder: (context, setState) {
+                      return AdWidget(
+                        ad: banner!,
+                      );
+                    }
                   ),
                 ),
               ),
