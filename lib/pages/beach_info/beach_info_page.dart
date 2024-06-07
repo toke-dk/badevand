@@ -61,11 +61,6 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
                     Navigator.of(context).pop();
                   },
                 ),
-                Gap(6),
-                context
-                    .watch<BeachesProvider>()
-                    .getCurrentlySelectedBeach
-                    .createFavoriteIcon(context),
               ],
             ),
             _beach.description == "" || _beach.description == null
