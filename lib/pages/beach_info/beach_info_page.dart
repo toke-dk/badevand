@@ -23,25 +23,6 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
 
   late BeachSpecifications? specsToday = _beach.getSpecsOfToday;
 
-  BannerAd? banner;
-
-  @override
-  void didChangeDependencies() {
-    final adState = Provider.of<AdState>(context);
-
-    adState.initialization.then((status) {
-      setState(() {
-        banner = BannerAd(
-            size: AdSize.banner,
-            adUnitId: adState.bannerAdUnitId,
-            listener: adState.bannerAdListener,
-            request: AdRequest())
-          ..load();
-      });
-    });
-    super.didChangeDependencies();
-  }
-
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
@@ -53,23 +34,6 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (banner == null)
-              SizedBox(
-                height: 60,
-              )
-            else
-              Container(
-                height: 60,
-                child: Center(
-                  child: StatefulBuilder(
-                    builder: (context, setState) {
-                      return AdWidget(
-                        ad: banner!,
-                      );
-                    }
-                  ),
-                ),
-              ),
             Row(
               children: [
                 specsToday?.waterQualityType.flag ?? SizedBox.shrink(),

@@ -9,10 +9,12 @@ import 'package:badevand/providers/user_position_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:weather_icons/weather_icons.dart';
 
 import '../../apis/meteomatics_api.dart';
+import '../../models/ad_state.dart';
 import '../../models/beach.dart';
 import '../../models/meteo/weather_data.dart';
 import 'forecast_scroll.dart';
@@ -54,6 +56,25 @@ class _SpecsWidgetState extends State<SpecsWidget> {
 
   late MeteorologicalData _currentMomentData =
       _receivedData!.first.dataList.first;
+
+  BannerAd? banner;
+
+  @override
+  void didChangeDependencies() {
+    final adState = Provider.of<AdState>(context);
+
+    adState.initialization.then((status) {
+      setState(() {
+        banner = BannerAd(
+            size: AdSize.banner,
+            adUnitId: adState.bannerAdUnitId,
+            listener: adState.bannerAdListener,
+            request: AdRequest())
+          ..load();
+      });
+    });
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +123,24 @@ class _SpecsWidgetState extends State<SpecsWidget> {
             ForecastScroll(
               dataList: _receivedData!.first.dataList,
             ),
-            Gap(35),
+            if (banner == null)
+              SizedBox(
+                height: 60,
+              )
+            else
+              Container(
+                height: 60,
+                child: Center(
+                  child: StatefulBuilder(
+                      builder: (context, setState) {
+                        return AdWidget(
+                          ad: banner!,
+                        );
+                      }
+                  ),
+                ),
+              ),
+            Gap(25),
             WeatherInfoExpansions(groupedData: _groupedDataWithoutToday),
             Gap(30),
             SunRiseSunsetWidget(twilight: _twilight),
