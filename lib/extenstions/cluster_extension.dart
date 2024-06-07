@@ -39,6 +39,7 @@ Future<Marker> convertToMarker(
         ? InfoWindow.noText
         : InfoWindow(
             title: marker.beach!.name,
+            snippet: "Tryk for at se mere",
             onTap: () {
               context.read<BeachesProvider>().setCurrentlySelectedBeach(marker.beach!);
               NavigationService.instance
