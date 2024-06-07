@@ -1,3 +1,4 @@
+import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:badevand/enums/water_quality.dart';
 import 'package:badevand/enums/weather_types.dart';
 import 'package:badevand/extenstions/numbers_extension.dart';
@@ -38,7 +39,21 @@ class _SearchBeachPageState extends State<SearchBeachPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBarWithSearchSwitch(
+        onChanged: (text) {
+          _filterSearchedBeaches(text);
+        },
+        appBarBuilder: (context) {
+          return AppBar(
+            title: Text("Find badested"),
+            actions: [
+              AppBarSearchButton(),
+            ],
+          );
+        },
+        animation: AppBarAnimationSlideLeft.call,
+
+      ),
       body: Column(
         children: [
           Padding(
