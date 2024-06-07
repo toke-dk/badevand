@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:badevand/csv_to_firebase.dart';
+import 'package:badevand/apis/beaches_from_csv/beaches_from_csv_method.dart';
 import 'package:badevand/extenstions/beaches_extension.dart';
 import 'package:badevand/extenstions/http_override.dart';
 import 'package:badevand/firebase_options.dart';
@@ -23,6 +23,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'apis/beaches_from_csv/beaches_csv_api.dart';
 import 'enums/sorting_values.dart';
 import 'models/sorting_option.dart';
 
@@ -78,7 +79,7 @@ class _MyAppState extends State<MyApp> {
     _determinePosition();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       initializeDateFormatting("da", "DA");
-      handleBeachData(context);
+      _initBeaches();
     });
 
     super.initState();
@@ -158,6 +159,15 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
+  Future<void> _initBeaches() async {
+    List<Beach> beaches = await getBeachDataFromAssetFile(context);
+
+    context.read<BeachesProvider>().setBeaches =
+        beaches.sortBeach(SortingOption(value: SortingValues.name));
+
+    await context.read<GoogleMarkersProvider>().initMarkers(context);
+  }
+
   Future<void> _determinePosition() async {
     Position? position;
 
@@ -200,60 +210,4 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-bool getIsFavourite(SharedPreferences prefs, String beachId) {
-  final List<String> favouriteBeachesId = prefs.getStringList('favourites') ?? [];
 
-  if (favouriteBeachesId.contains(beachId)) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-Future<void> handleBeachData(BuildContext context) async {
-
-  // List<dynamic> result = [];
-  // context.read<LoadingProvider>().toggleAppLoadingState(true);
-  // await getBeachData().then((List<dynamic> value) {
-  //   result = value;
-  //   context.read<LoadingProvider>().toggleAppLoadingState(false);
-  // });
-
-  // final ref = await FirebaseFirestore.instance.collection("beaches").get();
-  // final List<Beach> beachesFromFirebase = ref.docs.map((doc) {
-  //   return Beach(
-  //       id: doc.id,
-  //       name: doc.data()["name"],
-  //       position: LatLng(doc.data()["lat"], doc.data()["lon"]),
-  //       municipality: doc.data()["municipality"],
-  //       isFavourite: getIsFavourite(favouriteBeaches, doc.data()["name"]));
-  // }).toList();
-
-  // context.read<BeachesProvider>().setBeaches = beachesFromFirebase
-  //     .sortBeach(SortingOption(value: SortingValues.name));
-
-  List<Beach> beachesFromCSV =
-      await getBeachesFromCSV("assets/badevand_data.csv");
-
-  print(beachesFromCSV);
-
-  context.read<BeachesProvider>().setBeaches =
-      beachesFromCSV.sortBeach(SortingOption(value: SortingValues.name));
-
-  await context.read<GoogleMarkersProvider>().initMarkers(context);
-}
-
-Future<List<dynamic>> getBeachData() async {
-  final url = Uri.parse('http://api.vandudsigten.dk/beaches');
-
-  final response = await http.get(url);
-
-  if (response.statusCode == 200) {
-    final List<dynamic> data = jsonDecode(response.body);
-    print(data[1]["name"]);
-    return data;
-  } else {
-    // Handle error scenario
-    throw Exception('Could not find the data from the vandusigt link:(');
-  }
-}

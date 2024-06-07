@@ -35,23 +35,10 @@ Future<List<Beach>> getBeachesFromCSV(String path) async {
       "municipality": municipality
     };
   }).toList();
-  // result.map((beach) async {
-  //   print(beach["id"]);
-  //
-  // });
 
   final Set ids = result.map((e) => "${e['lat']}, ${e['lon']}").toSet();
   result.retainWhere((x) => ids.remove("${x['lat']}, ${x['lon']}"));
 
-  //print(result[3]..remove("id"));
-
-  // for (var beach in result) {
-  //   print("name ${beach["name"]}");
-  //   await FirebaseFirestore.instance
-  //       .collection("beaches")
-  //       .doc(beach["id"])
-  //       .set(beach..remove("id"));
-  // }
   print(result.length);
 
   final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -76,4 +63,14 @@ bool areMapsEqual(Map map1, Map map2) {
 
 Future<String> _loadCSV(String path) async {
   return rootBundle.loadString(path);
+}
+
+bool getIsFavourite(SharedPreferences prefs, String beachId) {
+  final List<String> favouriteBeachesId = prefs.getStringList('favourites') ?? [];
+
+  if (favouriteBeachesId.contains(beachId)) {
+    return true;
+  } else {
+    return false;
+  }
 }
