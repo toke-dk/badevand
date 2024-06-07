@@ -10,13 +10,13 @@ extension DateExtension on DateTime {
 
   DateTime get onlyYearMonthDay => DateTime(year, month, day);
 
+  DateTime get lastHourOfDay => DateTime(year, month, day, 23);
+
   String get myDateFormat => DateFormat("dd-MM-yyyy").format(this);
 
   String get myTimeFormat => DateFormat("HH:mm").format(this);
 
   String get _formatInMeteo => this.toUtc().toString().replaceAll(" ", "T");
-
-  String get meteoDateFormat => this.onlyYearMonthDay._formatInMeteo;
 
   String get meteoDateFormatHour => this.onlyYMDH._formatInMeteo;
 

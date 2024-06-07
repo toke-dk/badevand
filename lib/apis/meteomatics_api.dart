@@ -11,8 +11,9 @@ import '../models/beach.dart';
 import '../models/meteo/weather_data.dart';
 
 Future<List<MeteorologicalData>> getWeatherData(LatLng position) async {
-  final DateTime firstDate = DateTime.now();
-  final DateTime lastDate = DateTime.now().add(8.days);
+  final DateTime now = DateTime.now();
+  final DateTime firstDate = now;
+  final DateTime lastDate = now.add(8.days).lastHourOfDay;
 
   print(firstDate.meteoDateFormatHour);
 
@@ -61,7 +62,7 @@ Future<List<MeteorologicalData>> getWeatherData(LatLng position) async {
 
 Future<List<DailyForecastMeteoData>> getDailyForecastData(LatLng position) async {
   final DateTime now = DateTime.now();
-  final DateTime firstDate = DateTime(now.year, now.month, now.day, 23);
+  final DateTime firstDate = now.lastHourOfDay;
   final DateTime lastDate = firstDate.add(8.days);
 
   print(firstDate.meteoDateFormatHour);
@@ -173,8 +174,8 @@ String _createLink(
     String timeGap = "60M",
     String format = "json"}) {
   String dateRange = endDate == null
-      ? startDate.meteoDateFormat.toString()
-      : "${startDate.meteoDateFormatHour}--${endDate.meteoDateFormat}:PT${timeGap}";
+      ? startDate.meteoDateFormatHour.toString()
+      : "${startDate.meteoDateFormatHour}--${endDate.meteoDateFormatHour}:PT${timeGap}";
   String linkToReturn =
       'https://api.meteomatics.com/$dateRange/${parameters.join(',')}/${lat},${lon}/$format';
   return linkToReturn;
