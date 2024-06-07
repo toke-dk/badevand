@@ -289,6 +289,13 @@ class _MyLocationDrawerState extends State<MyLocationDrawer> {
                       title: Text(idxBeach.name),
                       trailing: idxBeach.createFavoriteIcon(context,
                           color: Theme.of(context).colorScheme.onSurface),
+                      onTap: () {
+                        context.read<BeachesProvider>().setCurrentlySelectedBeach(idxBeach);
+                        setState(() {
+                          
+                        });
+                        Navigator.pop(context);
+                      },
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10),
