@@ -1,7 +1,5 @@
-import 'dart:convert';
 import 'dart:io';
 
-import 'package:badevand/apis/beaches_from_csv/beaches_from_csv_method.dart';
 import 'package:badevand/extenstions/beaches_extension.dart';
 import 'package:badevand/extenstions/http_override.dart';
 import 'package:badevand/firebase_options.dart';
@@ -18,7 +16,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:http/http.dart' as http;
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
