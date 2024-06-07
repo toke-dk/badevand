@@ -39,7 +39,8 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
   @override
   void didChangeDependencies() {
     if (userPosition != null) {
-      _sortingOptions.add(SortingOption(value: SortingValues.distance, userPosition: userPosition!.toLatLng));
+      _sortingOptions.add(SortingOption(
+          value: SortingValues.distance, userPosition: userPosition!.toLatLng));
     }
     super.didChangeDependencies();
   }
@@ -77,17 +78,23 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
           ),
           Divider(),
           ListTile(
-            leading: Icon(Icons.filter_list),
-            title: Row(
-              children: [
+              leading: Icon(Icons.filter_list),
+              title: Row(children: [
                 const Text("Kommune"),
                 const Gap(15),
                 DropdownButton<String>(
+                  isExpanded: false,
+                  isDense: true,
                   menuMaxHeight: 350,
                   items: _beachesMunicipalityStrings
                       .map((e) => DropdownMenuItem<String>(
                             value: e,
-                            child: Text(e),
+                            child: ConstrainedBox(
+                                constraints: BoxConstraints(maxWidth: 120),
+                                child: Text(
+                                  e,
+                                  overflow: TextOverflow.ellipsis,
+                                )),
                           ))
                       .toList(),
                   onChanged: (newVal) {
@@ -97,10 +104,8 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                     });
                   },
                   value: _selectedMunicipality,
-                )
-              ],
-            ),
-          ),
+                ),
+              ])),
           ListTile(
             leading: Icon(Icons.sort),
             title: Row(
@@ -145,9 +150,11 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                   child: FilledButton(
                       onPressed: () {
                         print(_selectedMunicipality);
-                        context.read<BeachesProvider>().setMunicipalityFilter = _selectedMunicipality;
-                        context.read<BeachesProvider>().sortBeaches(
-                            _selectedSortingOption);
+                        context.read<BeachesProvider>().setMunicipalityFilter =
+                            _selectedMunicipality;
+                        context
+                            .read<BeachesProvider>()
+                            .sortBeaches(_selectedSortingOption);
                         Navigator.of(context).pop();
                       },
                       child: Text("Tilføj"))),

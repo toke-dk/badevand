@@ -83,7 +83,8 @@ class _MyAppState extends State<MyApp> {
     super.initState();
   }
 
-  Beach get _selectedBeach => context.watch<BeachesProvider>().getCurrentlySelectedBeach;
+  Beach get _selectedBeach =>
+      context.watch<BeachesProvider>().getCurrentlySelectedBeach;
 
   @override
   Widget build(BuildContext context) {
@@ -94,50 +95,53 @@ class _MyAppState extends State<MyApp> {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: context.watch<BeachesProvider>().getBeaches.isEmpty ? Scaffold() : Scaffold(
-          drawer: Drawer(),
-          appBar: AppBar(
-            actions: [
-              _selectedBeach.createFavoriteIcon(context,
-                  color: Theme.of(context).colorScheme.onPrimaryContainer),
-              IconButton(
-                icon: Icon(Icons.search),
-                onPressed: () {
-                  NavigationService.instance
-                    .push(SearchBeachPage())
-                    .then((_) =>
-                        context.read<BeachesProvider>().setSearchedValue(""));
-                },
-              )
-            ],
-            title: Text(_selectedBeach.name),
-            backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-          ),
-          bottomNavigationBar: BottomNavigationBar(
-              items: const [
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.sunny), label: "Udsigt"),
-                BottomNavigationBarItem(icon: Icon(Icons.map), label: "Kort"),
-              ],
-              currentIndex: _selectedMenuIndex,
-              onTap: (int newIndex) {
-                if (context.read<HomeMenuIndexProvider>().getSelectedIndex ==
-                    0) {
-                  context.read<BeachesProvider>().setSearchedValue("");
-                }
-                context
-                    .read<HomeMenuIndexProvider>()
-                    .changeSelectedIndex(newIndex);
-              }),
-          body: SafeArea(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Expanded(
-                    child: kAllScreens.elementAt(_selectedMenuIndex)(context)),
-              ],
-            ),
-          )),
+      home: context.watch<BeachesProvider>().getBeaches.isEmpty
+          ? Scaffold()
+          : Scaffold(
+              drawer: Drawer(),
+              appBar: AppBar(
+                actions: [
+                  _selectedBeach.createFavoriteIcon(context,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer),
+                  IconButton(
+                    icon: Icon(Icons.list_alt),
+                    onPressed: () {
+                      NavigationService.instance.push(SearchBeachPage());
+                    },
+                  )
+                ],
+                title: Text(_selectedBeach.name),
+                backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+              ),
+              bottomNavigationBar: BottomNavigationBar(
+                  items: const [
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.beach_access), label: "Udsigt"),
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.map), label: "Kort"),
+                  ],
+                  currentIndex: _selectedMenuIndex,
+                  onTap: (int newIndex) {
+                    if (context
+                            .read<HomeMenuIndexProvider>()
+                            .getSelectedIndex ==
+                        0) {
+                      context.read<BeachesProvider>().setSearchedValue("");
+                    }
+                    context
+                        .read<HomeMenuIndexProvider>()
+                        .changeSelectedIndex(newIndex);
+                  }),
+              body: SafeArea(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Expanded(
+                        child:
+                            kAllScreens.elementAt(_selectedMenuIndex)(context)),
+                  ],
+                ),
+              )),
     );
   }
 
@@ -148,7 +152,6 @@ class _MyAppState extends State<MyApp> {
         beaches.sortBeach(SortingOption(value: SortingValues.name));
 
     await context.read<GoogleMarkersProvider>().initMarkers(context);
-
   }
 
   Future<void> _determinePosition() async {
