@@ -1,31 +1,17 @@
-import 'dart:convert';
-import 'package:badevand/enums/sorting_values.dart';
 import 'package:badevand/enums/water_quality.dart';
 import 'package:badevand/enums/weather_types.dart';
-import 'package:badevand/extenstions/beaches_extension.dart';
 import 'package:badevand/extenstions/numbers_extension.dart';
-import 'package:badevand/extenstions/postion_extension.dart';
-import 'package:badevand/models/navigator_service.dart';
-import 'package:badevand/pages/map_page.dart';
 import 'package:badevand/providers/home_menu_index.dart';
 import 'package:badevand/providers/loading_provider.dart';
 import 'package:badevand/widgets/filter_bottom_sheet.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/rendering.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../models/beach.dart';
-import '../models/sorting_option.dart';
 import '../providers/beaches_provider.dart';
-import '../providers/google_markers_provider.dart';
-import '../providers/user_position_provider.dart';
 import 'beach_info/beach_info_page.dart';
 import 'package:badges/badges.dart' as badges;
 
@@ -38,9 +24,6 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   List<Beach> get beaches => context.watch<BeachesProvider>().getBeaches;
-
-  Position? get _userPosition =>
-      context.read<UserPositionProvider>().getPosition;
 
   List<Beach> get _beachesToDisplay =>
       context.watch<BeachesProvider>().getSearchedBeaches;

@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'dart:math' as math;
 
-import 'package:badevand/extenstions/string_extension.dart';
 import 'package:badevand/models/wind_direction.dart';
 import 'package:flutter/cupertino.dart';
 

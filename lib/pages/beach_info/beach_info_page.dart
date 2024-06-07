@@ -1,22 +1,12 @@
-import 'dart:convert';
 
 import 'package:badevand/enums/water_quality.dart';
-import 'package:badevand/env/env.dart';
-import 'package:badevand/extenstions/date_extensions.dart';
 import 'package:badevand/pages/beach_info/specs_widget.dart';
 import 'package:badevand/providers/beaches_provider.dart';
 import 'package:badevand/providers/home_menu_index.dart';
-import 'package:badevand/providers/user_position_provider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../models/beach.dart';
-import 'package:http/http.dart' as http;
 
 class BeachInfoPage extends StatefulWidget {
   const BeachInfoPage({super.key, required this.selectedBeach});

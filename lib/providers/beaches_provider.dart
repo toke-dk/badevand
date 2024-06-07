@@ -1,17 +1,10 @@
-import 'dart:ui' as ui;
 
-import 'package:badevand/enums/water_quality.dart';
 import 'package:badevand/extenstions/beaches_extension.dart';
-import 'package:badevand/widgets/filter_bottom_sheet.dart';
-import 'package:badevand/widgets/widget_to_map_icon.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/beach.dart';
 import '../models/sorting_option.dart';
-import 'google_markers_provider.dart';
 
 class BeachesProvider extends ChangeNotifier {
   List<Beach> _allBeaches = [];

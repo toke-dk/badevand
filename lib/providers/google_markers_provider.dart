@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:badevand/enums/water_quality.dart';
@@ -6,7 +5,6 @@ import 'package:badevand/extenstions/cluster_extension.dart';
 import 'package:badevand/models/navigator_service.dart';
 import 'package:badevand/pages/beach_info/beach_info_page.dart';
 import 'package:badevand/providers/beaches_provider.dart';
-import 'package:badevand/widgets/widget_to_map_icon.dart';
 import 'package:fluster/fluster.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

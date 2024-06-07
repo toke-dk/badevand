@@ -14,7 +14,6 @@ import 'package:weather_icons/weather_icons.dart';
 import '../../apis/meteomatics_api.dart';
 import '../../models/beach.dart';
 import '../../models/meteo/weather_data.dart';
-import '../../providers/beaches_provider.dart';
 import 'forecast_scroll.dart';
 
 class SpecsWidget extends StatefulWidget {

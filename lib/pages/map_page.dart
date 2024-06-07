@@ -100,7 +100,7 @@ class _MapPageState extends State<MapPage> {
     _placesToShowMarkers = visibleBeaches;
 
     final gMarks = await googleMarkers(
-        _placesToShowMarkers, _currentZoom ?? _getStartZoom, icons);
+        _placesToShowMarkers, _currentZoom, icons);
 
     setState(() {
       _markers = gMarks.toSet();

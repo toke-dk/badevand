@@ -1,21 +1,14 @@
-import 'dart:convert';
 
 import 'package:badevand/enums/weather_types.dart';
 import 'package:badevand/extenstions/date_extensions.dart';
-import 'package:badevand/extenstions/numbers_extension.dart';
 import 'package:badevand/models/wind_direction.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:weather_icons/weather_icons.dart';
 
-import '../enums/sorting_values.dart';
 import '../enums/water_quality.dart';
 import '../providers/beaches_provider.dart';
-import '../widgets/filter_bottom_sheet.dart';
 
 class Beach {
   String id;

@@ -1,7 +1,5 @@
 import 'package:badevand/extenstions/string_extension.dart';
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:intl/date_symbol_data_local.dart';
 
 extension DateExtension on DateTime {
   bool isSameDate(DateTime other) {

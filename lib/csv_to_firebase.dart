@@ -1,12 +1,8 @@
-import 'dart:io';
 import 'package:badevand/extenstions/string_extension.dart';
-import 'package:badevand/firebase_options.dart';
 import 'package:badevand/main.dart';
 import 'package:badevand/models/beach.dart';
 import 'package:csv/csv.dart';
 import 'package:coordinate_converter/coordinate_converter.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // new

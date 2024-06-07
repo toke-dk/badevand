@@ -1,6 +1,5 @@
 import 'package:badevand/models/navigator_service.dart';
 import 'package:badevand/pages/beach_info/beach_info_page.dart';
-import 'package:badevand/providers/google_markers_provider.dart';
 import 'package:fluster/fluster.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
