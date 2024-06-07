@@ -72,7 +72,7 @@ class _MapPageState extends State<MapPage> {
 
   late List<Beach> _allBeaches = context.read<BeachesProvider>().getBeaches;
 
-  late GoogleMapController _controller;
+  GoogleMapController? _controller;
 
   @override
   void initState() {
@@ -85,14 +85,14 @@ class _MapPageState extends State<MapPage> {
 
   @override
   void dispose() {
-    _controller.dispose();
+    _controller?.dispose();
     super.dispose();
   }
 
   Future<void> _updateVisibleMarkers() async {
     print("update");
 
-    LatLngBounds visibleRegion = await _controller.getVisibleRegion();
+    LatLngBounds visibleRegion = await _controller!.getVisibleRegion();
 
     final List<Beach> visibleBeaches =
         _allBeaches.where((b) => visibleRegion.contains(b.position)).toList();
