@@ -55,13 +55,13 @@ class Beach {
         .firstWhere((element) => element.dataDate.isToday);
   }
 
-  Widget createFavoriteIcon(BuildContext context) => IconButton(
+  Widget createFavoriteIcon(BuildContext context, {Color? color}) => IconButton(
         onPressed: () {
           context.read<BeachesProvider>().changeValueFavoriteBeach(this);
         },
         icon: Icon(
           isFavourite ? Icons.star : Icons.star_outline,
-          color: Colors.yellow[600],
+          color: color ?? Colors.yellow[600],
           size: 30,
         ),
       );

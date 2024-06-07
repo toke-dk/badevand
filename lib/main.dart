@@ -7,6 +7,7 @@ import 'package:badevand/models/ad_state.dart';
 import 'package:badevand/models/beach.dart';
 import 'package:badevand/models/navigator_service.dart';
 import 'package:badevand/pages/all_pages.dart';
+import 'package:badevand/pages/home_page.dart';
 import 'package:badevand/providers/beaches_provider.dart';
 import 'package:badevand/providers/google_markers_provider.dart';
 import 'package:badevand/providers/home_menu_index.dart';
@@ -71,6 +72,9 @@ class _MyAppState extends State<MyApp> {
   Future<SharedPreferences> get setPrefs async =>
       prefs = await SharedPreferences.getInstance();
 
+  late Beach _selectedBeach =
+      context.watch<BeachesProvider>().getCurrentlySelectedBeach;
+
   @override
   void initState() {
     _determinePosition();
@@ -80,25 +84,6 @@ class _MyAppState extends State<MyApp> {
     });
 
     super.initState();
-  }
-
-  BannerAd? banner;
-
-  @override
-  void didChangeDependencies() {
-    final adState = Provider.of<AdState>(context);
-
-    adState.initialization.then((status) {
-      setState(() {
-        banner = BannerAd(
-            size: AdSize.banner,
-            adUnitId: adState.bannerAdUnitId,
-            listener: adState.bannerAdListener,
-            request: AdRequest())
-          ..load();
-      });
-    });
-    super.didChangeDependencies();
   }
 
   @override
@@ -111,10 +96,26 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
       home: Scaffold(
+          drawer: Drawer(),
+          appBar: AppBar(
+            actions: [
+              _selectedBeach.createFavoriteIcon(context,
+                  color: Theme.of(context).colorScheme.onPrimaryContainer),
+              IconButton(
+                icon: Icon(Icons.search),
+                onPressed: () => NavigationService.instance
+                    .push(SearchBeachPage())
+                    .then((_) =>
+                        context.read<BeachesProvider>().setSearchedValue("")),
+              )
+            ],
+            title: Text(_selectedBeach.name),
+            backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+          ),
           bottomNavigationBar: BottomNavigationBar(
               items: const [
                 BottomNavigationBarItem(
-                    icon: Icon(Icons.water), label: "Liste"),
+                    icon: Icon(Icons.sunny), label: "Udsigt"),
                 BottomNavigationBarItem(icon: Icon(Icons.map), label: "Kort"),
               ],
               currentIndex: _selectedMenuIndex,
@@ -131,23 +132,6 @@ class _MyAppState extends State<MyApp> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                SizedBox(
-                  height: 10,
-                ),
-                if (banner == null)
-                  SizedBox(
-                    height: 50,
-                  )
-                else
-                  Container(
-                    height: 50,
-                    child: AdWidget(
-                      ad: banner!,
-                    ),
-                  ),
-                SizedBox(
-                  height: 10,
-                ),
                 Expanded(
                     child: kAllScreens.elementAt(_selectedMenuIndex)(context)),
               ],
@@ -206,5 +190,3 @@ class _MyAppState extends State<MyApp> {
     context.read<UserPositionProvider>().setPosition = position;
   }
 }
-
-
