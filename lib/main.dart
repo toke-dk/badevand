@@ -8,6 +8,7 @@ import 'package:badevand/models/beach.dart';
 import 'package:badevand/models/navigator_service.dart';
 import 'package:badevand/pages/all_pages.dart';
 import 'package:badevand/pages/home_page.dart';
+import 'package:badevand/pages/search_beach.dart';
 import 'package:badevand/providers/beaches_provider.dart';
 import 'package:badevand/providers/google_markers_provider.dart';
 import 'package:badevand/providers/home_menu_index.dart';
@@ -72,9 +73,6 @@ class _MyAppState extends State<MyApp> {
   Future<SharedPreferences> get setPrefs async =>
       prefs = await SharedPreferences.getInstance();
 
-  late Beach _selectedBeach =
-      context.watch<BeachesProvider>().getCurrentlySelectedBeach;
-
   @override
   void initState() {
     _determinePosition();
@@ -82,12 +80,14 @@ class _MyAppState extends State<MyApp> {
       initializeDateFormatting("da", "DA");
       _initBeaches();
     });
-
     super.initState();
   }
 
+  late Beach _selectedBeach = context.watch<BeachesProvider>().getCurrentlySelectedBeach;
+
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       title: 'Dansk Badevand',
       navigatorKey: NavigationService.instance.navigatorKey,
@@ -95,11 +95,11 @@ class _MyAppState extends State<MyApp> {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: Scaffold(
+      home: context.watch<BeachesProvider>().getBeaches.isEmpty ? Scaffold() : Scaffold(
           drawer: Drawer(),
           appBar: AppBar(
             actions: [
-              _selectedBeach.createFavoriteIcon(context,
+              _selectedBeach!.createFavoriteIcon(context,
                   color: Theme.of(context).colorScheme.onPrimaryContainer),
               IconButton(
                 icon: Icon(Icons.search),
@@ -109,7 +109,7 @@ class _MyAppState extends State<MyApp> {
                         context.read<BeachesProvider>().setSearchedValue("")),
               )
             ],
-            title: Text(_selectedBeach.name),
+            title: Text(_selectedBeach!.name),
             backgroundColor: Theme.of(context).colorScheme.primaryContainer,
           ),
           bottomNavigationBar: BottomNavigationBar(
@@ -147,6 +147,7 @@ class _MyAppState extends State<MyApp> {
         beaches.sortBeach(SortingOption(value: SortingValues.name));
 
     await context.read<GoogleMarkersProvider>().initMarkers(context);
+
   }
 
   Future<void> _determinePosition() async {
