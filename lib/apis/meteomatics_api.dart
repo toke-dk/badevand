@@ -2,20 +2,21 @@ import 'dart:convert';
 
 import 'package:badevand/extenstions/date_extensions.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 
 import '../env/env.dart';
 import '../models/beach.dart';
 import '../models/meteo/weather_data.dart';
 
-Future<List<MeteorologicalData>> getWeatherData(Beach beach) async {
+Future<List<MeteorologicalData>> getWeatherData(LatLng position) async {
   final DateTime firstDate = DateTime.now();
   final DateTime lastDate = DateTime.now().add(8.days);
 
   print(firstDate.meteoDateFormatHour);
 
-  final double lat = beach.position.latitude;
-  final double lon = beach.position.longitude;
+  final double lat = position.latitude;
+  final double lon = position.longitude;
 
   final String link = _createLink(
       startDate: firstDate,
@@ -57,9 +58,9 @@ Future<List<MeteorologicalData>> getWeatherData(Beach beach) async {
   }
 }
 
-Future<Twilight> getTwilightForToday(Beach beach) async {
-  final lat = beach.position.latitude;
-  final lon = beach.position.longitude;
+Future<Twilight> getTwilightForToday(position) async {
+  final lat = position.latitude;
+  final lon = position.longitude;
 
   final sunRiseAndSetLink = _createLink(
       startDate: DateTime.now().onlyYearMonthDay,

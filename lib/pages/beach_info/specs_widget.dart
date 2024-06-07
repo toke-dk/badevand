@@ -111,13 +111,13 @@ class _SpecsWidgetState extends State<SpecsWidget> {
 
   Future<void> initMeteorologicalData() async {
     context.read<LoadingProvider>().toggleAppLoadingState(true);
-    await getWeatherData(widget.beach).then((result) {
+    await getWeatherData(widget.beach.position).then((result) {
       setState(() {
         _receivedData = result;
       });
     });
 
-    await getTwilightForToday(widget.beach).then((twilight) {
+    await getTwilightForToday(widget.beach.position).then((twilight) {
       setState(() {
         _twilight = twilight;
       });
