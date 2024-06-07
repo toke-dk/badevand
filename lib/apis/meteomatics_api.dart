@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:badevand/extenstions/date_extensions.dart';
+import 'package:badevand/models/meteo/daily_meteo_data.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -52,6 +53,52 @@ Future<List<MeteorologicalData>> getWeatherData(LatLng position) async {
     final List<dynamic> data = jsonDecode(response.body)["data"];
     print(data);
     return getMeteorologicalDataList(data);
+  } else {
+    // Handle error scenario
+    throw Exception('Could not find the data from the links');
+  }
+}
+
+Future<List<DailyForecastMeteoData>> getDailyForecastData(LatLng position) async {
+  final DateTime now = DateTime.now();
+  final DateTime firstDate = DateTime(now.year, now.month, now.day, 23);
+  final DateTime lastDate = firstDate.add(8.days);
+
+  print(firstDate.meteoDateFormatHour);
+
+  final double lat = position.latitude;
+  final double lon = position.longitude;
+
+  final String link = _createLink(
+      startDate: firstDate,
+      endDate: lastDate,
+      parameters: [
+        "precip_24h:mm",
+        "weather_symbol_24h:idx"
+      ],
+      timeGap: "24H",
+      lat: lat,
+      lon: lon);
+
+  final url = Uri.parse(link);
+
+  // final response = await http.get(url);
+
+  final username = Env.meteoUsername;
+  final password = Env.meteoPassword;
+
+  Codec<String, String> stringToBase64 = utf8.fuse(base64);
+
+  final headers = {
+    'Authorization': 'Basic ${stringToBase64.encode("$username:$password")}'
+  };
+
+  final response = await http.get(url, headers: headers);
+
+  if (response.statusCode == 200) {
+    final List<dynamic> data = jsonDecode(response.body)["data"];
+    print(data);
+    return getDailyMeteorologicalDataList(data);
   } else {
     // Handle error scenario
     throw Exception('Could not find the data from the links');

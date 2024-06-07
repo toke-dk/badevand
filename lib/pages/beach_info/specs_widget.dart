@@ -1,6 +1,7 @@
 import 'package:badevand/extenstions/date_extensions.dart';
 import 'package:badevand/extenstions/meteorological_data_extension.dart';
 import 'package:badevand/extenstions/numbers_extension.dart';
+import 'package:badevand/models/meteo/daily_meteo_data.dart';
 import 'package:badevand/models/meteo/day_grouped_data.dart';
 import 'package:badevand/pages/beach_info/weather_info_exapnsions.dart';
 import 'package:badevand/providers/loading_provider.dart';
@@ -29,15 +30,14 @@ class SpecsWidget extends StatefulWidget {
 }
 
 class _SpecsWidgetState extends State<SpecsWidget> {
-  List<MeteorologicalData>? _receivedData;
+  List<DayGroupedMeteorologicalData>? _receivedData;
 
   Twilight? _twilight;
 
   bool get _isAppLoading => context.watch<LoadingProvider>().getIsAppLoading;
 
   late List<DayGroupedMeteorologicalData> _groupedDataWithoutToday =
-      _receivedData!.groupData
-        ..removeWhere((d) => d.day.isSameDate(DateTime.now()));
+      _receivedData!.where((d) => d.day.isAfter(DateTime.now())).toList();
 
   late TextTheme _textTheme = Theme.of(context).textTheme;
 
@@ -51,6 +51,9 @@ class _SpecsWidgetState extends State<SpecsWidget> {
 
   late Position? userPosition =
       context.watch<UserPositionProvider>().getPosition;
+
+  late MeteorologicalData _currentMomentData =
+      _receivedData!.first.dataList.first;
 
   @override
   Widget build(BuildContext context) {
@@ -81,22 +84,23 @@ class _SpecsWidgetState extends State<SpecsWidget> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    _receivedData!.first.getWeatherType.weatherSymbolImage(scale: 0.7),
+                    _currentMomentData.getWeatherType
+                        .weatherSymbolImage(scale: 0.7),
                     Text(
-                      _receivedData!.first.temperature.asDegrees,
+                      _currentMomentData.temperature.asDegrees,
                       style: _textTheme.displayMedium,
                     )
                   ],
                 ),
                 Text(
-                  _receivedData!.first.getWeatherType.weatherDescription,
+                  _currentMomentData.getWeatherType.weatherDescription,
                   style: _textTheme.titleMedium,
                 )
               ],
             ),
             Gap(25),
             ForecastScroll(
-              dataList: _receivedData!.take(8).toList(),
+              dataList: _receivedData!.first.dataList,
             ),
             Gap(35),
             WeatherInfoExpansions(groupedData: _groupedDataWithoutToday),
@@ -111,11 +115,16 @@ class _SpecsWidgetState extends State<SpecsWidget> {
 
   Future<void> initMeteorologicalData() async {
     context.read<LoadingProvider>().toggleAppLoadingState(true);
-    await getWeatherData(widget.beach.position).then((result) {
-      setState(() {
-        _receivedData = result;
-      });
-    });
+
+    final List<MeteorologicalData> meteoData =
+        await getWeatherData(widget.beach.position);
+
+    final List<DailyForecastMeteoData> forecastMeteoData =
+        await getDailyForecastData(widget.beach.position);
+
+    print(forecastMeteoData.map((e) => e.precipitation24h));
+
+    _receivedData = groupMeteoData(meteoData, forecastMeteoData);
 
     await getTwilightForToday(widget.beach.position).then((twilight) {
       setState(() {

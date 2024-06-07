@@ -45,6 +45,8 @@ class _WeatherInfoExpansionsState extends State<WeatherInfoExpansions> {
                       children: [
                         Text(idxData.day.stringAsDayName),
                         Gap(8),
+                        idxData.dailyForeCast?.getWeatherType.weatherSymbolImage(scale: 3) ?? SizedBox.shrink(),
+                        Gap(8),
                         Text(idxData.dataOverviewString),
 
                       ],
