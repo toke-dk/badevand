@@ -24,33 +24,34 @@ class MeteorologicalData {
 }
 
 List<MeteorologicalData> getMeteorologicalDataList(List<dynamic> map) {
-  List<double> getDatesInfoFromString(String string) {
-    return (map
-            .firstWhere((e) => e["parameter"] == string)["coordinates"]
-            .first["dates"] as List<dynamic>)
-        .map((m) => double.parse(m["value"].toString()))
-        .toList();
-  }
-
-  List<DateTime> getDates() {
-    return (map.first["coordinates"].first["dates"] as List<dynamic>)
-        .map((m) => DateTime.parse(m["date"].toString()).toLocal())
-        .toList();
-  }
 
   List<MeteorologicalData> dataList = [];
-  for (int i = 0; i < getDates().length; i++) {
+  for (int i = 0; i < getDates(map).length; i++) {
     dataList.add(MeteorologicalData(
-        date: getDates()[i],
-        temperature: getDatesInfoFromString("t_2m:C")[i],
-        precipitation: getDatesInfoFromString("precip_1h:mm")[i],
-        windSpeed: getDatesInfoFromString("wind_speed_10m:ms")[i],
-        windGust: getDatesInfoFromString("wind_gusts_10m_1h:ms")[i],
-        windDirection: getDatesInfoFromString("wind_dir_10m:d")[i],
-        uvIndex: getDatesInfoFromString("uv:idx")[i],
+        date: getDates(map)[i],
+        temperature: getDatesInfoFromString(map, "t_2m:C")[i],
+        precipitation: getDatesInfoFromString(map, "precip_1h:mm")[i],
+        windSpeed: getDatesInfoFromString(map, "wind_speed_10m:ms")[i],
+        windGust: getDatesInfoFromString(map, "wind_gusts_10m_1h:ms")[i],
+        windDirection: getDatesInfoFromString(map, "wind_dir_10m:d")[i],
+        uvIndex: getDatesInfoFromString(map, "uv:idx")[i],
         weatherIdx:
-            getDatesInfoFromString("weather_symbol_1h:idx")[i].toInt()));
+            getDatesInfoFromString(map, "weather_symbol_1h:idx")[i].toInt()));
   }
 
   return dataList;
+}
+
+List<double> getDatesInfoFromString(List<dynamic> map, String string) {
+  return (map
+      .firstWhere((e) => e["parameter"] == string)["coordinates"]
+      .first["dates"] as List<dynamic>)
+      .map((m) => double.parse(m["value"].toString()))
+      .toList();
+}
+
+List<DateTime> getDates(List<dynamic> map) {
+  return (map.first["coordinates"].first["dates"] as List<dynamic>)
+      .map((m) => DateTime.parse(m["date"].toString()).toLocal())
+      .toList();
 }
