@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:badevand/extenstions/beaches_extension.dart';
 import 'package:badevand/extenstions/http_override.dart';
@@ -16,6 +18,7 @@ import 'package:badevand/providers/loading_provider.dart';
 import 'package:badevand/providers/user_position_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -98,7 +101,7 @@ class _MyAppState extends State<MyApp> {
       home: context.watch<BeachesProvider>().getBeaches.isEmpty
           ? Scaffold()
           : Scaffold(
-              drawer: Drawer(),
+              drawer: MyLocationDrawer(),
               appBar: AppBar(
                 actions: [
                   _selectedBeach.createFavoriteIcon(context,
@@ -193,5 +196,111 @@ class _MyAppState extends State<MyApp> {
     position = await Geolocator.getCurrentPosition();
 
     context.read<UserPositionProvider>().setPosition = position;
+  }
+}
+
+class MyLocationDrawer extends StatefulWidget {
+  const MyLocationDrawer({super.key});
+
+  @override
+  State<MyLocationDrawer> createState() => _MyLocationDrawerState();
+}
+
+class _MyLocationDrawerState extends State<MyLocationDrawer> {
+  late SharedPreferences prefs;
+
+  List<Beach> _lastVisitedBeaches = [];
+
+  late List<Beach> _beaches = context.read<BeachesProvider>().getBeaches;
+
+  Future<void> _initPrefs() async {
+    prefs = await SharedPreferences.getInstance();
+
+    List<String>? stringIds = prefs.getStringList("lastVisited");
+    if (stringIds == null) return;
+
+    setState(() {
+      _lastVisitedBeaches = _beaches.beachesFromId(stringIds);
+    });
+  }
+
+  late TextTheme _textTheme = Theme.of(context).textTheme;
+
+  @override
+  void initState() {
+    _initPrefs();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            "Mine lokationer",
+          ),
+        ),
+        body: ListView(
+          children: [
+            DrawerHeader(
+              padding: EdgeInsets.zero,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Gap(20),
+                  Center(
+                    child: Column(
+                      children: [
+                        Text("Gem dine steder her"),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Tryk på ",
+                              style: _textTheme.labelMedium,
+                            ),
+                            Icon(
+                              Icons.star_outline,
+                              size: _textTheme.labelMedium!.fontSize,
+                            ),
+                            Text(" ikonet for at tilføje som favorit",
+                                style: _textTheme.labelMedium)
+                          ],
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+            ListTile(
+              title: Text(
+                "Sidst besøgt",
+                style: _textTheme.titleMedium,
+              ),
+            ),
+            Column(
+              children: List.generate(_lastVisitedBeaches.length, (index) {
+                Beach idxBeach = _lastVisitedBeaches[index];
+                return Column(
+                  children: [
+                    ListTile(
+                      title: Text(idxBeach.name),
+                      trailing: idxBeach.createFavoriteIcon(context,
+                          color: Theme.of(context).colorScheme.onSurface),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: Divider(),
+                    )
+                  ],
+                );
+              }),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }

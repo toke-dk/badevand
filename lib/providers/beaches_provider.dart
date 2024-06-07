@@ -56,8 +56,22 @@ class BeachesProvider extends ChangeNotifier {
 
   Beach get getCurrentlySelectedBeach => _currentlySelectedBeach ?? _allBeaches.first;
 
-  void setCurrentlySelectedBeach(Beach newBeach) {
+  Future<void> setCurrentlySelectedBeach(Beach newBeach) async {
     if (!_allBeaches.contains(newBeach)) return;
+
+    // chaning isVisited list
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> idsVisited = prefs.getStringList("lastVisited") ?? [];
+
+    // ensuring i remove the old visit
+    idsVisited.removeWhere((id) => id == newBeach.id);
+
+      idsVisited.insert(0, newBeach.id);
+    
+    if (idsVisited.length > 6) {
+      idsVisited.removeLast();
+    }
+    prefs.setStringList("lastVisited", idsVisited);
 
     _currentlySelectedBeach = newBeach;
     notifyListeners();

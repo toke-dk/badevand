@@ -7,7 +7,8 @@ import '../models/sorting_option.dart';
 
 extension ListOfBeachExtension on List<Beach> {
   List<String> get getBeachesMunicipalityStrings =>
-      map((Beach beach) => beach.municipality).toSet().toList()..sort((a, b) => a.compareTo(b));
+      map((Beach beach) => beach.municipality).toSet().toList()
+        ..sort((a, b) => a.compareTo(b));
 
   List<Beach> sortBeach(SortingOption option) {
     LatLng? userPosition = option.userPosition;
@@ -23,9 +24,9 @@ extension ListOfBeachExtension on List<Beach> {
               .compareTo(b.distanceInKm(userPosition)!));
       case SortingValues.waterQuality:
         List<Beach> goodQual =
-        getBeachesFromQuality(WaterQualityTypes.goodQuality);
+            getBeachesFromQuality(WaterQualityTypes.goodQuality);
         List<Beach> badQual =
-        getBeachesFromQuality(WaterQualityTypes.badQuality);
+            getBeachesFromQuality(WaterQualityTypes.badQuality);
         List<Beach> noWarn = getBeachesFromQuality(WaterQualityTypes.noWarning);
         List<Beach> closed = getBeachesFromQuality(WaterQualityTypes.closed);
         beachesToReturn = [...goodQual, ...badQual, ...noWarn, ...closed];
@@ -45,16 +46,25 @@ extension ListOfBeachExtension on List<Beach> {
   }
 
   List<Beach> filterByMunicipality(String municipality) {
-    List<Beach> beachesToReturn =  where((beach) => beach.municipality.toLowerCase() == municipality.toLowerCase()).toList();
+    List<Beach> beachesToReturn = where((beach) =>
+            beach.municipality.toLowerCase() == municipality.toLowerCase())
+        .toList();
     print("those to filter ${beachesToReturn.map((e) => e.municipality)}");
     return beachesToReturn;
   }
 
   List<Beach> filterBySearch(String searchValue) {
-    return where(
-            (item) => item.name.toLowerCase().contains(searchValue.toLowerCase()))
-        .toList();
+    return where((item) =>
+        item.name.toLowerCase().contains(searchValue.toLowerCase())).toList();
   }
 
   List<Beach> get getFavouriteBeaches => where((e) => e.isFavourite).toList();
+
+  List<Beach> beachesFromId(List<String> ids) {
+    List<Beach> result = [];
+    for (final id in ids){
+      result.add(firstWhere((b) => b.id == id));
+    }
+    return result;
+  }
 }
