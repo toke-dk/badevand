@@ -114,10 +114,7 @@ class _SearchBeachPageState extends State<SearchBeachPage> {
                   trailing: indexBeach.createFavoriteIcon(context),
                   onTap: () {
                     context.read<BeachesProvider>().setCurrentlySelectedBeach(indexBeach);
-
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>
-                            BeachInfoPage()));
+                    Navigator.pop(context);
                   },
                   title: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -13,6 +13,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../models/beach.dart';
+import 'home_menu_index.dart';
 
 class GoogleMarkersProvider extends ChangeNotifier {
   Set<Marker> _markers = {};
@@ -75,8 +76,12 @@ Future<Set<Marker>> _initializeMarkers(
         markerId: MarkerId(indexBeach.name),
         position: indexBeach.position,
         infoWindow: InfoWindow(
-            onTap: () => NavigationService.instance
-                .push(BeachInfoPage()),
+            onTap: () {
+              context
+                  .read<BeachesProvider>()
+                  .setCurrentlySelectedBeach(indexBeach);
+              context.read<HomeMenuIndexProvider>().changeSelectedIndex(1);
+            },
             title: indexBeach.name,
             snippet: indexBeach.comments != "" ? indexBeach.comments : null)));
   }

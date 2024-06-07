@@ -43,8 +43,7 @@ Future<Marker> convertToMarker(
             snippet: "Tryk for at se mere",
             onTap: () {
               context.read<BeachesProvider>().setCurrentlySelectedBeach(marker.beach!);
-              NavigationService.instance
-                .push(BeachInfoPage());
+              context.read<HomeMenuIndexProvider>().changeSelectedIndex(0);
             },
           ),
     markerId: MarkerId(marker.id),

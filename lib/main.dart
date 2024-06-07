@@ -83,11 +83,10 @@ class _MyAppState extends State<MyApp> {
     super.initState();
   }
 
-  late Beach _selectedBeach = context.watch<BeachesProvider>().getCurrentlySelectedBeach;
+  Beach get _selectedBeach => context.watch<BeachesProvider>().getCurrentlySelectedBeach;
 
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
       title: 'Dansk Badevand',
       navigatorKey: NavigationService.instance.navigatorKey,
@@ -99,17 +98,19 @@ class _MyAppState extends State<MyApp> {
           drawer: Drawer(),
           appBar: AppBar(
             actions: [
-              _selectedBeach!.createFavoriteIcon(context,
+              _selectedBeach.createFavoriteIcon(context,
                   color: Theme.of(context).colorScheme.onPrimaryContainer),
               IconButton(
                 icon: Icon(Icons.search),
-                onPressed: () => NavigationService.instance
+                onPressed: () {
+                  NavigationService.instance
                     .push(SearchBeachPage())
                     .then((_) =>
-                        context.read<BeachesProvider>().setSearchedValue("")),
+                        context.read<BeachesProvider>().setSearchedValue(""));
+                },
               )
             ],
-            title: Text(_selectedBeach!.name),
+            title: Text(_selectedBeach.name),
             backgroundColor: Theme.of(context).colorScheme.primaryContainer,
           ),
           bottomNavigationBar: BottomNavigationBar(
