@@ -81,7 +81,7 @@ class _SpecsWidgetState extends State<SpecsWidget> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    _receivedData!.first.weatherSymbolImage(scale: 0.7),
+                    _receivedData!.first.getWeatherType.weatherSymbolImage(scale: 0.7),
                     Text(
                       _receivedData!.first.temperature.asDegrees,
                       style: _textTheme.displayMedium,
@@ -89,7 +89,7 @@ class _SpecsWidgetState extends State<SpecsWidget> {
                   ],
                 ),
                 Text(
-                  _receivedData!.first.weatherDescription,
+                  _receivedData!.first.getWeatherType.weatherDescription,
                   style: _textTheme.titleMedium,
                 )
               ],

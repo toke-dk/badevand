@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:badevand/models/meteo/weather_type.dart';
 
 class MeteorologicalData {
   DateTime date;
@@ -20,39 +20,7 @@ class MeteorologicalData {
       required this.uvIndex,
       required this.weatherIdx});
 
-  Image weatherSymbolImage({double? scale}) => Image.asset(
-        "assets/weather_symbols/${weatherIdx}.png",
-        scale: scale,
-      );
-
-  String get weatherDescription {
-    if (weatherIdx < 0 || weatherIdx > 116) {
-      return "Fejl i beskrivelse";
-    }
-    final index = weatherIdx % 100;
-
-    final List<String> descriptions = [
-      "Et vejrsymbol kunne ikke bestemmes",
-      "Skyfri himmel",
-      "Lette skyer",
-      "Delvist skyet",
-      "Overskyet",
-      "Regn",
-      "Regn og sne / slud",
-      "Sne",
-      "Regnbyge",
-      "Snebyge",
-      "Sludbyge",
-      "Let tåge",
-      "Tyk tåge",
-      "Frysende regn",
-      "Tordenvejr",
-      "Støvregn",
-      "Sandstorm"
-    ];
-
-    return descriptions[index];
-  }
+  WeatherType get getWeatherType => WeatherType(weatherIndex: weatherIdx);
 }
 
 List<MeteorologicalData> getMeteorologicalDataList(List<dynamic> map) {
