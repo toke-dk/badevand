@@ -31,7 +31,6 @@ class _WeatherInfoExpansionsState extends State<WeatherInfoExpansions> {
         });
         print(_expandedIndexes);
       },
-      expandedHeaderPadding: EdgeInsets.all(20),
       children: List.generate(widget.groupedData.length, (index) {
         final idxData = widget.groupedData[index];
         return ExpansionPanel(
@@ -40,15 +39,14 @@ class _WeatherInfoExpansionsState extends State<WeatherInfoExpansions> {
               return Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(
-                    padding: const EdgeInsets.all(15),
+                    padding: const EdgeInsets.only(left: 20),
                     child: Row(
                       children: [
                         Text(idxData.day.stringAsDayName),
                         Gap(8),
                         idxData.dailyForeCast?.getWeatherType.weatherSymbolImage(scale: 3) ?? SizedBox.shrink(),
                         Gap(8),
-                        Text(idxData.dataOverviewString),
-
+                        Flexible(child: Text(idxData.dataOverviewString, maxLines: 1, overflow: TextOverflow.ellipsis,)),
                       ],
                     ),
                   ));
