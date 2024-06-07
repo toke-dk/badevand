@@ -50,6 +50,19 @@ class BeachesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Keep track of the currently selected beach
+
+  Beach? _currentlySelectedBeach;
+
+  Beach get getCurrentlySelectedBeach => _currentlySelectedBeach ?? _allBeaches.first;
+
+  void setCurrentlySelectedBeach(Beach newBeach) {
+    if (!_allBeaches.contains(newBeach)) return;
+
+    _currentlySelectedBeach = newBeach;
+    notifyListeners();
+  }
+
   /// I always keep the [_municipalityFilter] so to know what filter is being
   /// used. Then when the beaches are sorted, it sorts all beaches and filter
   /// them afterwards. If it turns out that there is no filter, it does not

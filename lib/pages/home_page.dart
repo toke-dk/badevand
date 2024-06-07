@@ -110,9 +110,13 @@ class _HomeState extends State<Home> {
 
                 return ListTile(
                   trailing: indexBeach.createFavoriteIcon(context),
-                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                  onTap: () {
+                    context.read<BeachesProvider>().setCurrentlySelectedBeach(indexBeach);
+
+                    Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) =>
-                          BeachInfoPage(selectedBeach: indexBeach))),
+                          BeachInfoPage()));
+                  },
                   title: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

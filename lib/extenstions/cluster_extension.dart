@@ -1,7 +1,10 @@
 import 'package:badevand/models/navigator_service.dart';
 import 'package:badevand/pages/beach_info/beach_info_page.dart';
+import 'package:badevand/providers/beaches_provider.dart';
 import 'package:fluster/fluster.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 
 import '../models/beach.dart';
 
@@ -30,14 +33,17 @@ class MapMarker extends Clusterable {
 }
 
 Future<Marker> convertToMarker(
-    MapMarker marker, Map<int, BitmapDescriptor> icons) async {
+    MapMarker marker, Map<int, BitmapDescriptor> icons, BuildContext context) async {
   return Marker(
     infoWindow: marker.beach == null
         ? InfoWindow.noText
         : InfoWindow(
             title: marker.beach!.name,
-            onTap: () => NavigationService.instance
-                .push(BeachInfoPage(selectedBeach: marker.beach!)),
+            onTap: () {
+              context.read<BeachesProvider>().setCurrentlySelectedBeach(marker.beach!);
+              NavigationService.instance
+                .push(BeachInfoPage());
+            },
           ),
     markerId: MarkerId(marker.id),
     position: marker.position,

@@ -1,4 +1,3 @@
-
 import 'package:badevand/enums/water_quality.dart';
 import 'package:badevand/pages/beach_info/specs_widget.dart';
 import 'package:badevand/providers/beaches_provider.dart';
@@ -9,9 +8,7 @@ import 'package:provider/provider.dart';
 import '../../models/beach.dart';
 
 class BeachInfoPage extends StatefulWidget {
-  const BeachInfoPage({super.key, required this.selectedBeach});
-
-  final Beach selectedBeach;
+  const BeachInfoPage({super.key});
 
   @override
   State<BeachInfoPage> createState() => _BeachInfoPageState();
@@ -20,17 +17,13 @@ class BeachInfoPage extends StatefulWidget {
 class _BeachInfoPageState extends State<BeachInfoPage> {
   int? maxLines = 3;
 
-
-  Beach get _beach => context
-      .watch<BeachesProvider>()
-      .getBeaches
-      .firstWhere((element) => element == widget.selectedBeach);
+  Beach get _beach =>
+      context.read<BeachesProvider>().getCurrentlySelectedBeach;
 
   late BeachSpecifications? specsToday = _beach.getSpecsOfToday;
 
   @override
   Widget build(BuildContext context) {
-
     final TextTheme textTheme = Theme.of(context).textTheme;
 
     print('now ${DateTime.now().toUtc().toString().replaceAll(" ", "T")}');
@@ -65,13 +58,13 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
                     onPressed: () {
                       final provider = context.read<HomeMenuIndexProvider>();
                       provider.setMapPageStartLocation(
-                          widget.selectedBeach.position);
+                          _beach.position);
                       provider.changeSelectedIndex(1);
                       Navigator.of(context).pop();
                     },
                   ),
                   Gap(6),
-                  _beach.createFavoriteIcon(context),
+                  context.watch<BeachesProvider>().getCurrentlySelectedBeach.createFavoriteIcon(context),
                 ],
               ),
               _beach.description == "" || _beach.description == null
@@ -109,7 +102,7 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
                               maxLines == null ? null : TextOverflow.ellipsis,
                         ),
                       )),
-              SpecsWidget(beach: widget.selectedBeach),
+              SpecsWidget(beach: _beach),
             ],
           ),
         ),
@@ -117,5 +110,3 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
     );
   }
 }
-
-

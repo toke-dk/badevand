@@ -76,7 +76,7 @@ Future<Set<Marker>> _initializeMarkers(
         position: indexBeach.position,
         infoWindow: InfoWindow(
             onTap: () => NavigationService.instance
-                .push(BeachInfoPage(selectedBeach: indexBeach)),
+                .push(BeachInfoPage()),
             title: indexBeach.name,
             snippet: indexBeach.comments != "" ? indexBeach.comments : null)));
   }
@@ -84,7 +84,7 @@ Future<Set<Marker>> _initializeMarkers(
 }
 
 Future<Set<Marker>> googleMarkers(List<Beach> beaches, double currentZoom,
-    Map<int, BitmapDescriptor> icons) async {
+    Map<int, BitmapDescriptor> icons, BuildContext context) async {
   final List<MapMarker> markers = [];
 
   for (Beach indexBeach in beaches) {
@@ -120,7 +120,7 @@ Future<Set<Marker>> googleMarkers(List<Beach> beaches, double currentZoom,
 
   for (final cluster
       in fluster.clusters([-180, -85, 180, 85], currentZoom.toInt())) {
-    googleMarkers.add(await convertToMarker(cluster, icons));
+    googleMarkers.add(await convertToMarker(cluster, icons, context));
   }
 
   return googleMarkers.toSet();
