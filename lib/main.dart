@@ -235,45 +235,22 @@ class _MyLocationDrawerState extends State<MyLocationDrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "Mine lokationer",
-          ),
-        ),
-        body: ListView(
+      child: ListView(
           children: [
-            DrawerHeader(
-              padding: EdgeInsets.zero,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Gap(20),
-                  Center(
-                    child: Column(
-                      children: [
-                        Text("Gem dine steder her"),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Tryk på ",
-                              style: _textTheme.labelMedium,
-                            ),
-                            Icon(
-                              Icons.star_outline,
-                              size: _textTheme.labelMedium!.fontSize,
-                            ),
-                            Text(" ikonet for at tilføje som favorit",
-                                style: _textTheme.labelMedium)
-                          ],
-                        )
-                      ],
-                    ),
-                  )
-                ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              child: Text(
+                "Mine lokationer", style: _textTheme.titleLarge,
               ),
             ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Gap(20),
+                FavouriteLocationsInDrawer(),
+              ],
+            ),
+            Divider(height: 30,),
             ListTile(
               title: Text(
                 "Sidst besøgt",
@@ -290,10 +267,10 @@ class _MyLocationDrawerState extends State<MyLocationDrawer> {
                       trailing: idxBeach.createFavoriteIcon(context,
                           color: Theme.of(context).colorScheme.onSurface),
                       onTap: () {
-                        context.read<BeachesProvider>().setCurrentlySelectedBeach(idxBeach);
-                        setState(() {
-                          
-                        });
+                        context
+                            .read<BeachesProvider>()
+                            .setCurrentlySelectedBeach(idxBeach);
+                        setState(() {});
                         Navigator.pop(context);
                       },
                     ),
@@ -307,7 +284,71 @@ class _MyLocationDrawerState extends State<MyLocationDrawer> {
             )
           ],
         ),
-      ),
     );
+  }
+}
+
+class FavouriteLocationsInDrawer extends StatefulWidget {
+  const FavouriteLocationsInDrawer({super.key});
+
+  @override
+  State<FavouriteLocationsInDrawer> createState() =>
+      _FavouriteLocationsInDrawerState();
+}
+
+class _FavouriteLocationsInDrawerState
+    extends State<FavouriteLocationsInDrawer> {
+  late TextTheme _textTheme = Theme.of(context).textTheme;
+
+  late List<Beach> _beaches = context.read<BeachesProvider>().getBeaches;
+
+  SharedPreferences? prefs;
+
+  List<Beach> get _favouriteBeaches => _beaches.beachesFromId(prefs?.getStringList("favourites") ?? []);
+
+  Future<void> _initPrefs() async {
+    prefs = await SharedPreferences.getInstance();
+  }
+
+  @override
+  void initState() {
+    _initPrefs();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _favouriteBeaches.isEmpty
+        ? Center(
+          child: Column(
+            children: [
+              Text("Gem dine steder her"),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Tryk på ",
+                      style: _textTheme.labelMedium,
+                    ),
+                    Icon(
+                      Icons.star_outline,
+                      size: _textTheme.labelMedium!.fontSize,
+                    ),
+                    Text(" ikonet for at tilføje som favorit",
+                        style: _textTheme.labelMedium)
+                  ],
+                ),
+            ],
+          ),
+        )
+        : Column(
+            children: _favouriteBeaches.map((indexBeach) {
+              print(_favouriteBeaches.length);
+              return ListTile(
+                title: Text(indexBeach.name),
+                trailing: indexBeach.createFavoriteIcon(context),
+              );
+            }).toList(),
+          );
   }
 }
