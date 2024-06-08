@@ -9,7 +9,7 @@ import '../../models/sorting_option.dart';
 import '../../providers/beaches_provider.dart';
 import '../../providers/google_markers_provider.dart';
 
-Future<List<Beach>> getBeachDataFromAssetFile(BuildContext context) async {
+Future<List<Beach>> getBeachDataFromAssetFile() async {
 
   // List<dynamic> result = [];
   // context.read<LoadingProvider>().toggleAppLoadingState(true);

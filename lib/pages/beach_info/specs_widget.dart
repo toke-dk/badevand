@@ -30,8 +30,8 @@ class SpecsWidget extends StatefulWidget {
 }
 
 class _SpecsWidgetState extends State<SpecsWidget> {
-
-  List<DayGroupedMeteorologicalData>? get _receivedData => context.read<BeachesProvider>().getDataForCurrentBeach;
+  List<DayGroupedMeteorologicalData> get _receivedData =>
+      context.watch<BeachesProvider>().getDataForCurrentBeach;
 
   Twilight? _twilight;
 
@@ -80,81 +80,79 @@ class _SpecsWidgetState extends State<SpecsWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (_isAppLoading) {
+    if (_isAppLoading || _receivedData.isEmpty) {
       return Center(child: CircularProgressIndicator());
     } else {
-      if (_receivedData == null) {
-        return Text("Intet modtaget data");
-      } else {
-        return Column(
-          children: [
-            Row(
-              children: [
-                userPosition == null
-                    ? SizedBox.shrink()
-                    : Expanded(
-                        child: ListTile(
-                          title: Text(
-                              "${userPosition == null ? '???' : (Geolocator.distanceBetween(userPosition!.latitude, userPosition!.longitude, _beach.position.latitude, _beach.position.longitude) / 1000).toInt()}km"),
-                          subtitle: Text("Afstand"),
-                        ),
+      return Column(
+        children: [
+          Row(
+            children: [
+              userPosition == null
+                  ? SizedBox.shrink()
+                  : Expanded(
+                      child: ListTile(
+                        title: Text(
+                            "${userPosition == null ? '???' : (Geolocator.distanceBetween(userPosition!.latitude, userPosition!.longitude, _beach.position.latitude, _beach.position.longitude) / 1000).toInt()}km"),
+                        subtitle: Text("Afstand"),
                       ),
-              ],
-            ),
-            Gap(10),
-            Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _currentMomentData.getWeatherType
-                        .weatherSymbolImage(scale: 0.7),
-                    Text(
-                      _currentMomentData.temperature.asDegrees,
-                      style: _textTheme.displayMedium,
-                    )
-                  ],
-                ),
-                Text(
-                  _currentMomentData.getWeatherType.weatherDescription,
-                  style: _textTheme.titleMedium,
-                )
-              ],
-            ),
-            Gap(25),
-            ForecastScroll(
-              dataList: _receivedData!.first.dataList,
-            ),
-            if (banner == null)
-              SizedBox(
-                height: 60,
-              )
-            else
-              Container(
-                height: 60,
-                child: Center(
-                  child: StatefulBuilder(builder: (context, setState) {
-                    return AdWidget(
-                      ad: banner!,
-                    );
-                  }),
-                ),
+                    ),
+            ],
+          ),
+          Gap(10),
+          Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _currentMomentData.getWeatherType
+                      .weatherSymbolImage(scale: 0.7),
+                  Text(
+                    _currentMomentData.temperature.asDegrees,
+                    style: _textTheme.displayMedium,
+                  )
+                ],
               ),
-            Gap(25),
-            WeatherInfoExpansions(groupedData: _groupedDataWithoutToday),
-            Gap(30),
-            SunRiseSunsetWidget(twilight: _twilight),
-            Gap(30)
-          ],
-        );
-      }
-    }
+              Text(
+                _currentMomentData.getWeatherType.weatherDescription,
+                style: _textTheme.titleMedium,
+              )
+            ],
+          ),
+          Gap(25),
+          ForecastScroll(
+            dataList: _receivedData!.first.dataList,
+          ),
+          if (banner == null)
+            SizedBox(
+              height: 60,
+            )
+          else
+            Container(
+              height: 60,
+              child: Center(
+                child: StatefulBuilder(builder: (context, setState) {
+                  return AdWidget(
+                    ad: banner!,
+                  );
+                }),
+              ),
+            ),
+          Gap(25),
+          WeatherInfoExpansions(groupedData: _groupedDataWithoutToday),
+          Gap(30),
+          SunRiseSunsetWidget(twilight: _twilight),
+          Gap(30)
+        ],
+      );
+        }
   }
 
   Future<void> initMeteorologicalData() async {
     context.read<LoadingProvider>().toggleAppLoadingState(true);
 
-    await getTwilightForToday(context.read<BeachesProvider>().getCurrentlySelectedBeach.position).then((twilight) {
+    await getTwilightForToday(
+            context.read<BeachesProvider>().getCurrentlySelectedBeach.position)
+        .then((twilight) {
       setState(() {
         _twilight = twilight;
       });

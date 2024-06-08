@@ -149,12 +149,9 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> _initBeaches() async {
-    List<Beach> beaches = await getBeachDataFromAssetFile(context);
+    context.read<BeachesProvider>().initBeaches();
 
-    context.read<BeachesProvider>().setBeaches =
-        beaches.sortBeach(SortingOption(value: SortingValues.name));
-
-    await context.read<GoogleMarkersProvider>().initMarkers(context);
+    // await context.read<GoogleMarkersProvider>().initMarkers(context);
   }
 
   Future<void> _determinePosition() async {
