@@ -1,9 +1,15 @@
+import 'dart:async';
 
 import 'package:badevand/extenstions/beaches_extension.dart';
+import 'package:badevand/models/meteo/daily_meteo_data.dart';
+import 'package:badevand/models/meteo/weather_data.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../apis/meteomatics_api.dart';
 import '../models/beach.dart';
+import '../models/meteo/day_grouped_data.dart';
 import '../models/sorting_option.dart';
 
 class BeachesProvider extends ChangeNotifier {
@@ -26,14 +32,14 @@ class BeachesProvider extends ChangeNotifier {
     final bool previousValue = beachToChange.isFavourite;
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final List<String> favouriteBeaches = prefs.getStringList('favourites') ?? [];
+    final List<String> favouriteBeaches =
+        prefs.getStringList('favourites') ?? [];
 
     if (previousValue) {
       prefs.setStringList(
           "favourites", favouriteBeaches..remove(beachChange.id));
     } else if (!previousValue) {
-      prefs.setStringList(
-          'favourites', favouriteBeaches..add(beachChange.id));
+      prefs.setStringList('favourites', favouriteBeaches..add(beachChange.id));
     }
     print("prefs ${prefs.getStringList('favourites')}");
 
@@ -66,15 +72,36 @@ class BeachesProvider extends ChangeNotifier {
     // ensuring i remove the old visit
     idsVisited.removeWhere((id) => id == newBeach.id);
 
-      idsVisited.insert(0, newBeach.id);
-    
+    idsVisited.insert(0, newBeach.id);
+
     if (idsVisited.length > 6) {
       idsVisited.removeLast();
     }
     prefs.setStringList("lastVisited", idsVisited);
 
     _currentlySelectedBeach = newBeach;
+
+    _updateDataForCurrentBeach();
+
     notifyListeners();
+
+  }
+
+  /// Grouped data
+
+  List<DayGroupedMeteorologicalData> _dataForCurrentBeach = [];
+
+  List<DayGroupedMeteorologicalData> get getDataForCurrentBeach => _dataForCurrentBeach;
+
+  Future<void> _updateDataForCurrentBeach() async {
+    final LatLng pos = getCurrentlySelectedBeach.position;
+
+    final List<MeteorologicalData> meteoData = await getWeatherData(pos);
+
+    final List<DailyForecastMeteoData> forecastMeteoData =
+        await getDailyForecastData(pos);
+
+    _dataForCurrentBeach = groupMeteoData(meteoData, forecastMeteoData);
   }
 
   /// I always keep the [_municipalityFilter] so to know what filter is being

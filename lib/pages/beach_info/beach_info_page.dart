@@ -97,7 +97,7 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
                             maxLines == null ? null : TextOverflow.ellipsis,
                       ),
                     )),
-            SpecsWidget(beach: _beach),
+            SpecsWidget(),
           ],
         ),
       ),

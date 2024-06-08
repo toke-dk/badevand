@@ -4,6 +4,7 @@ import 'package:badevand/extenstions/numbers_extension.dart';
 import 'package:badevand/models/meteo/daily_meteo_data.dart';
 import 'package:badevand/models/meteo/day_grouped_data.dart';
 import 'package:badevand/pages/beach_info/weather_info_exapnsions.dart';
+import 'package:badevand/providers/beaches_provider.dart';
 import 'package:badevand/providers/loading_provider.dart';
 import 'package:badevand/providers/user_position_provider.dart';
 import 'package:flutter/material.dart';
@@ -22,23 +23,21 @@ import 'forecast_scroll.dart';
 class SpecsWidget extends StatefulWidget {
   SpecsWidget({
     super.key,
-    required this.beach,
   });
-
-  final Beach beach;
 
   @override
   State<SpecsWidget> createState() => _SpecsWidgetState();
 }
 
 class _SpecsWidgetState extends State<SpecsWidget> {
-  List<DayGroupedMeteorologicalData>? _receivedData;
+
+  List<DayGroupedMeteorologicalData>? get _receivedData => context.read<BeachesProvider>().getDataForCurrentBeach;
 
   Twilight? _twilight;
 
   bool get _isAppLoading => context.watch<LoadingProvider>().getIsAppLoading;
 
-  late List<DayGroupedMeteorologicalData> _groupedDataWithoutToday =
+  List<DayGroupedMeteorologicalData> get _groupedDataWithoutToday =>
       _receivedData!.where((d) => d.day.isAfter(DateTime.now())).toList();
 
   late TextTheme _textTheme = Theme.of(context).textTheme;
@@ -51,13 +50,16 @@ class _SpecsWidgetState extends State<SpecsWidget> {
     super.initState();
   }
 
-  late Position? userPosition =
+  Position? get userPosition =>
       context.watch<UserPositionProvider>().getPosition;
 
-  late MeteorologicalData _currentMomentData =
+  MeteorologicalData get _currentMomentData =>
       _receivedData!.first.dataList.first;
 
   BannerAd? banner;
+
+  Beach get _beach =>
+      context.watch<BeachesProvider>().getCurrentlySelectedBeach;
 
   @override
   void didChangeDependencies() {
@@ -93,7 +95,7 @@ class _SpecsWidgetState extends State<SpecsWidget> {
                     : Expanded(
                         child: ListTile(
                           title: Text(
-                              "${userPosition == null ? '???' : (Geolocator.distanceBetween(userPosition!.latitude, userPosition!.longitude, widget.beach.position.latitude, widget.beach.position.longitude) / 1000).toInt()}km"),
+                              "${userPosition == null ? '???' : (Geolocator.distanceBetween(userPosition!.latitude, userPosition!.longitude, _beach.position.latitude, _beach.position.longitude) / 1000).toInt()}km"),
                           subtitle: Text("Afstand"),
                         ),
                       ),
@@ -131,13 +133,11 @@ class _SpecsWidgetState extends State<SpecsWidget> {
               Container(
                 height: 60,
                 child: Center(
-                  child: StatefulBuilder(
-                      builder: (context, setState) {
-                        return AdWidget(
-                          ad: banner!,
-                        );
-                      }
-                  ),
+                  child: StatefulBuilder(builder: (context, setState) {
+                    return AdWidget(
+                      ad: banner!,
+                    );
+                  }),
                 ),
               ),
             Gap(25),
@@ -154,17 +154,7 @@ class _SpecsWidgetState extends State<SpecsWidget> {
   Future<void> initMeteorologicalData() async {
     context.read<LoadingProvider>().toggleAppLoadingState(true);
 
-    final List<MeteorologicalData> meteoData =
-        await getWeatherData(widget.beach.position);
-
-    final List<DailyForecastMeteoData> forecastMeteoData =
-        await getDailyForecastData(widget.beach.position);
-
-    print(forecastMeteoData.map((e) => e.precipitation24h));
-
-    _receivedData = groupMeteoData(meteoData, forecastMeteoData);
-
-    await getTwilightForToday(widget.beach.position).then((twilight) {
+    await getTwilightForToday(context.read<BeachesProvider>().getCurrentlySelectedBeach.position).then((twilight) {
       setState(() {
         _twilight = twilight;
       });

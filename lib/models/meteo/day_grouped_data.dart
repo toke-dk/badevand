@@ -11,7 +11,7 @@ class DayGroupedMeteorologicalData {
       {required this.day, required this.dataList, required this.dailyForeCast});
 }
 
-groupMeteoData(List<MeteorologicalData> meteorologicalDataList,
+List<DayGroupedMeteorologicalData> groupMeteoData(List<MeteorologicalData> meteorologicalDataList,
     List<DailyForecastMeteoData> dailyData) {
   List<DayGroupedMeteorologicalData> groups = [];
   for (final idxData in meteorologicalDataList) {
