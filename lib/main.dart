@@ -72,7 +72,7 @@ class _MyWebsiteState extends State<MyWebsite> {
     return MaterialApp(
       title: 'Dansk Badevand',
       theme: ThemeData(
-        textTheme: !kIsWeb ? null : GoogleFonts.spinnakerTextTheme(),
+        textTheme: GoogleFonts.spinnakerTextTheme(),
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
