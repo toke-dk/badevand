@@ -1,4 +1,5 @@
 import 'package:badevand/web_landing/features.dart';
+import 'package:badevand/web_landing/register.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -36,6 +37,8 @@ class WebLandingPage extends StatelessWidget {
             ),
             Gap(20),
             Features(),
+            Gap(40),
+            Register(),
           ],
         ),
       ),

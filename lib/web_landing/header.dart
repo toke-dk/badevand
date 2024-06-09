@@ -71,11 +71,6 @@ class Header extends StatelessWidget {
                                 RoundedRectangleBorder(
                                     borderRadius: BorderRadius.zero))),
                       ),
-                      Gap(15),
-                      Text(
-                        "Tak for at tilmelde",
-                        style: textTheme.bodySmall,
-                      ),
                     ],
                   ),
                 ),
