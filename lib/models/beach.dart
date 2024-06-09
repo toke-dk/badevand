@@ -3,6 +3,7 @@ import 'package:badevand/extenstions/date_extensions.dart';
 import 'package:badevand/models/meteo/day_grouped_data.dart';
 import 'package:badevand/models/meteo/weather_data.dart';
 import 'package:badevand/models/wind_direction.dart';
+import 'package:badevand/widgets/max_fav_beach_reached_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -76,7 +77,8 @@ class Beach {
               beachToAdd: this,
               maxLimitIsReached: (isReached) {
                 if (isReached != true) return;
-                print("max limit reached");
+                // show a dialog if the limit is reached
+                showMaxFavBeachDialog(context);
               });
         },
         icon: Icon(
