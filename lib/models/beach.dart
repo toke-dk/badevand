@@ -72,7 +72,12 @@ class Beach {
 
   Widget createFavoriteIcon(BuildContext context, {Color? color}) => IconButton(
         onPressed: () {
-          context.read<BeachesProvider>().addFavoriteBeach(this);
+          context.read<BeachesProvider>().addFavoriteBeach(
+              beachToAdd: this,
+              maxLimitIsReached: (isReached) {
+                if (isReached != true) return;
+                print("max limit reached");
+              });
         },
         icon: Icon(
           isFavourite ? Icons.star : Icons.star_outline,

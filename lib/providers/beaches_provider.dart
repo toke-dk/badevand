@@ -41,22 +41,31 @@ class BeachesProvider extends ChangeNotifier {
 
   /// Favourite beaches
 
-  Future<void> addFavoriteBeach(Beach beachChange) async {
-    if (!_allBeaches.contains(beachChange)) return;
+  Future<void> addFavoriteBeach(
+      {required Beach beachToAdd,
+      required Function(bool) maxLimitIsReached}) async {
+    if (!_allBeaches.contains(beachToAdd)) return;
 
-    final int index = _allBeaches.indexOf(beachChange);
+    final int index = _allBeaches.indexOf(beachToAdd);
     final Beach beachToChange = _allBeaches[index];
     final bool previousValue = beachToChange.isFavourite;
+
+    final int maxFavoritesLimit = 5;
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final List<String> favouriteBeaches =
         prefs.getStringList('favorites') ?? [];
 
+    // if they try to add a beach but limit is reached?
+    if (favouriteBeaches.length == maxFavoritesLimit &&
+        previousValue == false) {
+      return maxLimitIsReached(true);
+    }
+
     if (previousValue) {
-      prefs.setStringList(
-          "favorites", favouriteBeaches..remove(beachChange.id));
+      prefs.setStringList("favorites", favouriteBeaches..remove(beachToAdd.id));
     } else if (!previousValue) {
-      prefs.setStringList('favorites', favouriteBeaches..add(beachChange.id));
+      prefs.setStringList('favorites', favouriteBeaches..add(beachToAdd.id));
     }
 
     _allBeaches[index].isFavourite = !_allBeaches[index].isFavourite;
@@ -80,8 +89,7 @@ class BeachesProvider extends ChangeNotifier {
 
   Future<void> _initCurrentSelectedBeach() async {
     final prefs = await SharedPreferences.getInstance();
-    final favs =
-        _allBeaches.getFavouriteBeaches;
+    final favs = _allBeaches.getFavouriteBeaches;
     final latest =
         _allBeaches.beachesFromId(prefs.getStringList("lastVisited") ?? []);
 
