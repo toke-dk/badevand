@@ -23,7 +23,6 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -99,6 +98,17 @@ class _MyAppState extends State<MyApp> {
               drawer: MyLocationDrawer(),
               appBar: AppBar(
                 actions: [
+                  IconButton(
+                    icon: Icon(Icons.pin_drop_outlined),
+                    onPressed: () {
+                      final provider = context.read<HomeMenuIndexProvider>();
+                      provider.setMapPageStartLocation(context
+                          .read<BeachesProvider>()
+                          .getCurrentlySelectedBeach
+                          .position);
+                      provider.changeSelectedIndex(1);
+                    },
+                  ),
                   _selectedBeach.createFavoriteIcon(context,
                       color: Theme.of(context).colorScheme.onPrimaryContainer),
                   IconButton(

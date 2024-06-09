@@ -19,8 +19,6 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
 
   Beach get _beach => context.read<BeachesProvider>().getCurrentlySelectedBeach;
 
-  late BeachSpecifications? specsToday = _beach.getSpecsOfToday;
-
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
@@ -31,34 +29,6 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                specsToday?.waterQualityType.flag ?? SizedBox.shrink(),
-                Gap(8),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        _beach.name,
-                        softWrap: false,
-                        style: textTheme.titleMedium,
-                        overflow: TextOverflow.fade,
-                      ),
-                      Text(_beach.municipality)
-                    ],
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(Icons.pin_drop_outlined),
-                  onPressed: () {
-                    final provider = context.read<HomeMenuIndexProvider>();
-                    provider.setMapPageStartLocation(_beach.position);
-                    provider.changeSelectedIndex(1);
-                  },
-                ),
-              ],
-            ),
             _beach.description == "" || _beach.description == null
                 ? const SizedBox.shrink()
                 : GestureDetector(
