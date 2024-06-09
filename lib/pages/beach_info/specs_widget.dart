@@ -192,16 +192,20 @@ class MoreInformation extends StatelessWidget {
                         subtitle: Text(coordinatesText),
                         title: Text("Koordinater"),
                         trailing: CopyIconButton(
-                            textToCopy: coordinatesText,
-                            onFinishText: "Koordinater kopieret"),
+                          textToCopy: coordinatesText,
+                          textOnFinish: "Koordinater kopieret",
+                          onFinish: () => Navigator.pop(context),
+                        ),
                       ),
                       ListTile(
                           leading: Icon(Icons.shield_outlined),
                           subtitle: Text(beachIdText),
                           title: Text("ID"),
                           trailing: CopyIconButton(
-                              textToCopy: beachIdText,
-                              onFinishText: "ID kopieret"))
+                            textToCopy: beachIdText,
+                            textOnFinish: "ID kopieret",
+                            onFinish: () => Navigator.pop(context),
+                          ))
                     ],
                   ),
                 ));

@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class CopyIconButton extends StatelessWidget {
-  const CopyIconButton({super.key, required this.textToCopy, required this.onFinishText});
+  const CopyIconButton({super.key, required this.textToCopy, required this.textOnFinish, this.onFinish});
 
   final String textToCopy;
-  final String onFinishText;
+  final String textOnFinish;
+  final Function()? onFinish;
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +19,10 @@ class CopyIconButton extends StatelessWidget {
               text:
               textToCopy))
               .then((value) {
-            Navigator.pop(context);
             ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                    content: Text(onFinishText)));
+                    content: Text(textOnFinish)));
+            onFinish != null ? onFinish!() : null;
           }); // -> show a notification
         });
   }
