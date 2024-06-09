@@ -14,11 +14,14 @@ import 'package:badevand/providers/google_markers_provider.dart';
 import 'package:badevand/providers/home_menu_index.dart';
 import 'package:badevand/providers/loading_provider.dart';
 import 'package:badevand/providers/user_position_provider.dart';
+import 'package:badevand/web_landing/landing_page.dart';
 import 'package:badevand/widgets/locations_drawer.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
@@ -90,10 +93,11 @@ class _MyAppState extends State<MyApp> {
       title: 'Dansk Badevand',
       navigatorKey: NavigationService.instance.navigatorKey,
       theme: ThemeData(
+        textTheme: !kIsWeb ? null : GoogleFonts.spinnakerTextTheme(),
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: context.watch<BeachesProvider>().getBeaches.isEmpty
+      home: kIsWeb ? WebLandingPage() : context.watch<BeachesProvider>().getBeaches.isEmpty
           ? Scaffold()
           : Scaffold(
               drawer: MyLocationDrawer(),
