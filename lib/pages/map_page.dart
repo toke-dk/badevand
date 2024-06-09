@@ -55,23 +55,7 @@ class _MapPageState extends State<MapPage> {
 
   Set<Marker> _markers = {};
 
-  Map<int, BitmapDescriptor> icons = {};
-
-  Future<void> initializeIcons() async {
-    int initialSize = 150;
-    icons = {
-      1: await createBitMapFromAsset(
-          "assets/cluster_icons/p1.png", initialSize),
-      5: await createBitMapFromAsset(
-          "assets/cluster_icons/p5.png", initialSize),
-      10: await createBitMapFromAsset(
-          "assets/cluster_icons/p10.png", initialSize),
-      50: await createBitMapFromAsset(
-          "assets/cluster_icons/p50.png", initialSize),
-      100: await createBitMapFromAsset(
-          "assets/cluster_icons/p100.png", initialSize),
-    };
-  }
+  late Map<int, BitmapDescriptor> icons = context.read<IconMapsProvider>().getIconMap;
 
   late List<Beach> _allBeaches = context.read<BeachesProvider>().getBeaches;
 
@@ -80,7 +64,6 @@ class _MapPageState extends State<MapPage> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      initializeIcons();
       context
           .read<HomeMenuIndexProvider>()
           .setMapPageStartLocation(null);

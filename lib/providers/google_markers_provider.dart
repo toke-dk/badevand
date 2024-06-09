@@ -15,15 +15,14 @@ import 'package:provider/provider.dart';
 import '../models/beach.dart';
 import 'home_menu_index.dart';
 
-class GoogleMarkersProvider extends ChangeNotifier {
-  Set<Marker> _markers = {};
+class IconMapsProvider extends ChangeNotifier {
+  Map<int, BitmapDescriptor> _iconMap = {};
 
-  Set<Marker> get getMarkers => _markers;
+  Map<int, BitmapDescriptor> get getIconMap => _iconMap;
 
   Future<void> initMarkers(BuildContext context) async {
-    final Set<Marker> markers = await _initializeMarkers(
+    _iconMap = await _initializeMarkers(
         context, context.read<BeachesProvider>().getBeaches);
-    _markers = markers;
     print("initing");
     notifyListeners();
   }
@@ -39,53 +38,21 @@ Future<Uint8List> getBytesFromAsset(String path, int width) async {
       .asUint8List();
 }
 
-Future<Set<Marker>> _initializeMarkers(
+Future<Map<int, BitmapDescriptor>> _initializeMarkers(
     BuildContext context, List<Beach> beaches) async {
-  Set<Marker> markerList = {};
-
-  final Uint8List greenFlag =
-      await getBytesFromAsset('assets/green_flag.png', 150);
-  final Uint8List redFlag = await getBytesFromAsset('assets/red_flag.png', 150);
-  final Uint8List yellowFlag =
-      await getBytesFromAsset('assets/yellow_flag.png', 150);
-  final Uint8List greyFlag =
-      await getBytesFromAsset('assets/grey_flag.png', 150);
-
-  final BitmapDescriptor greenIcon = BitmapDescriptor.fromBytes(greenFlag);
-  final BitmapDescriptor redIcon = BitmapDescriptor.fromBytes(redFlag);
-  final BitmapDescriptor yellowIcon = BitmapDescriptor.fromBytes(yellowFlag);
-  final BitmapDescriptor greyIcon = BitmapDescriptor.fromBytes(greyFlag);
-
-  for (Beach indexBeach in beaches) {
-    BitmapDescriptor iconToUse() {
-      final BeachSpecifications? specs = indexBeach.getSpecsOfToday;
-      if (specs == null) return greyIcon;
-      switch (specs.waterQualityType) {
-        case WaterQualityTypes.goodQuality:
-          return greenIcon;
-        case WaterQualityTypes.badQuality:
-          return redIcon;
-        case WaterQualityTypes.noWarning:
-          return yellowIcon;
-        case WaterQualityTypes.closed:
-          return greyIcon;
-      }
-    }
-
-    markerList.add(Marker(
-        markerId: MarkerId(indexBeach.name),
-        position: indexBeach.position,
-        infoWindow: InfoWindow(
-            onTap: () {
-              context
-                  .read<BeachesProvider>()
-                  .setCurrentlySelectedBeach(indexBeach);
-              context.read<HomeMenuIndexProvider>().changeSelectedIndex(1);
-            },
-            title: indexBeach.name,
-            snippet: indexBeach.comments != "" ? indexBeach.comments : null)));
-  }
-  return markerList;
+  int initialSize = 150;
+  return {
+    1: await createBitMapFromAsset(
+        "assets/cluster_icons/p1.png", initialSize),
+    5: await createBitMapFromAsset(
+        "assets/cluster_icons/p5.png", initialSize),
+    10: await createBitMapFromAsset(
+        "assets/cluster_icons/p10.png", initialSize),
+    50: await createBitMapFromAsset(
+        "assets/cluster_icons/p50.png", initialSize),
+    100: await createBitMapFromAsset(
+        "assets/cluster_icons/p100.png", initialSize),
+  };
 }
 
 Future<Set<Marker>> googleMarkers(List<Beach> beaches, double currentZoom,

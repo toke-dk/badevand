@@ -46,7 +46,7 @@ void main() async {
               ChangeNotifierProvider(
                   create: (BuildContext context) => BeachesProvider()),
               ChangeNotifierProvider(
-                  create: (BuildContext context) => GoogleMarkersProvider()),
+                  create: (BuildContext context) => IconMapsProvider()),
               ChangeNotifierProvider(
                   create: (BuildContext context) => UserPositionProvider()),
               ChangeNotifierProvider(
@@ -149,9 +149,8 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> _initBeaches() async {
-    context.read<BeachesProvider>().initBeaches();
-
-    // await context.read<GoogleMarkersProvider>().initMarkers(context);
+    await context.read<BeachesProvider>().initBeaches();
+    await context.read<IconMapsProvider>().initMarkers(context);
   }
 
   Future<void> _determinePosition() async {
