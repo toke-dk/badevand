@@ -75,7 +75,9 @@ class Header extends StatelessWidget {
                   ),
                 ),
               ),
-              Gap(100)
+              Gap(30),
+              Image.asset("assets/soon_gplay.png", width: 200,),
+              Gap(30)
             ],
           ),
         ),
