@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:badevand/extenstions/beaches_extension.dart';
+import 'package:badevand/extenstions/date_extensions.dart';
 import 'package:badevand/models/meteo/daily_meteo_data.dart';
 import 'package:badevand/models/meteo/weather_data.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -117,15 +119,23 @@ class BeachesProvider extends ChangeNotifier {
 
   /// Grouped data
   Future<void> _updateDataForCurrentBeach() async {
-    final LatLng pos = getCurrentlySelectedBeach.position;
+    final Beach currentBeach = getCurrentlySelectedBeach;
+
+    // If the data is less than an hour old, then don't update
+    if (currentBeach.meteoData.isNotEmpty &&
+        currentBeach.getFirstMeteoData.date
+            .isBefore(DateTime.now().subtract(1.hours))) {
+      return;
+    }
+
+    final LatLng pos = currentBeach.position;
 
     final List<MeteorologicalData> meteoData = await getWeatherData(pos);
 
     final List<DailyForecastMeteoData> forecastMeteoData =
         await getDailyForecastData(pos);
 
-    getCurrentlySelectedBeach.meteoData =
-        groupMeteoData(meteoData, forecastMeteoData);
+    currentBeach.meteoData = groupMeteoData(meteoData, forecastMeteoData);
     notifyListeners();
   }
 

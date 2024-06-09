@@ -2,6 +2,7 @@
 import 'package:badevand/enums/weather_types.dart';
 import 'package:badevand/extenstions/date_extensions.dart';
 import 'package:badevand/models/meteo/day_grouped_data.dart';
+import 'package:badevand/models/meteo/weather_data.dart';
 import 'package:badevand/models/wind_direction.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -77,5 +78,7 @@ class Beach {
             1000)
         .toInt();
   }
+
+  MeteorologicalData get getFirstMeteoData => meteoData.first.dataList.first;
 }
 
