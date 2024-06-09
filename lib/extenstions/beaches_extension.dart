@@ -61,7 +61,7 @@ extension ListOfBeachExtension on List<Beach> {
 
   List<Beach> beachesFromId(List<String> ids) {
     List<Beach> result = [];
-    for (final id in ids){
+    for (final id in ids) {
       result.add(firstWhere((b) => b.id == id));
     }
     return result;

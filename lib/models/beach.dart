@@ -1,4 +1,3 @@
-
 import 'package:badevand/enums/weather_types.dart';
 import 'package:badevand/extenstions/date_extensions.dart';
 import 'package:badevand/models/meteo/day_grouped_data.dart';
@@ -52,8 +51,9 @@ class Beach {
       isFavourite: isBeachFavourite,
     );
   }
-  
-  factory Beach.fromMiljoePortalenMap(Map<String, dynamic> map, SharedPreferences prefs) {
+
+  factory Beach.fromMiljoePortalenMap(
+      Map<String, dynamic> map, SharedPreferences prefs) {
     return Beach(
         id: map["id"],
         name: map["name"],
@@ -63,8 +63,8 @@ class Beach {
   }
 
   DhiBeachSpecifications? get getSpecsOfToday {
-    if (dhiBeachSpecifications.indexWhere((specs) => specs.dataDate.isToday) == -1)
-      return null;
+    if (dhiBeachSpecifications.indexWhere((specs) => specs.dataDate.isToday) ==
+        -1) return null;
 
     return dhiBeachSpecifications
         .firstWhere((element) => element.dataDate.isToday);
@@ -93,7 +93,8 @@ class Beach {
 }
 
 bool _getIsFavourite(SharedPreferences prefs, String beachId) {
-  final List<String> favouriteBeachesId = prefs.getStringList('favourites') ?? [];
+  final List<String> favouriteBeachesId =
+      prefs.getStringList('favourites') ?? [];
 
   if (favouriteBeachesId.contains(beachId)) {
     return true;
