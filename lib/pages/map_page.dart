@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:badevand/extenstions/postion_extension.dart';
+import 'package:badevand/providers/home_menu_index.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -80,6 +81,9 @@ class _MapPageState extends State<MapPage> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       initializeIcons();
+      context
+          .read<HomeMenuIndexProvider>()
+          .setMapPageStartLocation(null);
     });
     super.initState();
   }
@@ -100,8 +104,8 @@ class _MapPageState extends State<MapPage> {
 
     _placesToShowMarkers = visibleBeaches;
 
-    final gMarks = await googleMarkers(
-        _placesToShowMarkers, _currentZoom, icons, context);
+    final gMarks =
+        await googleMarkers(_placesToShowMarkers, _currentZoom, icons, context);
 
     setState(() {
       _markers = gMarks.toSet();

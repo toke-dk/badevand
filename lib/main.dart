@@ -233,54 +233,59 @@ class _MyLocationDrawerState extends State<MyLocationDrawer> {
   Widget build(BuildContext context) {
     return Drawer(
       child: ListView(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-              child: Text(
-                "Mine lokationer", style: _textTheme.titleLarge,
-              ),
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            child: Text(
+              "Mine lokationer",
+              style: _textTheme.titleLarge,
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Gap(20),
-                FavouriteLocationsInDrawer(),
-              ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Gap(20),
+              FavouriteLocationsInDrawer(),
+            ],
+          ),
+          Divider(
+            height: 30,
+          ),
+          ListTile(
+            title: Text(
+              "Sidst besøgt",
+              style: _textTheme.titleMedium,
             ),
-            Divider(height: 30,),
-            ListTile(
-              title: Text(
-                "Sidst besøgt",
-                style: _textTheme.titleMedium,
-              ),
-            ),
-            Column(
-              children: List.generate(_lastVisitedBeaches.length, (index) {
-                Beach idxBeach = _lastVisitedBeaches[index];
-                return Column(
-                  children: [
-                    ListTile(
-                      title: Text(idxBeach.name),
-                      trailing: idxBeach.createFavoriteIcon(context,
-                          color: Theme.of(context).colorScheme.onSurface),
-                      onTap: () {
-                        context
-                            .read<BeachesProvider>()
-                            .setCurrentlySelectedBeach(idxBeach);
-                        setState(() {});
-                        Navigator.pop(context);
-                      },
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Divider(),
-                    )
-                  ],
-                );
-              }),
-            )
-          ],
-        ),
+          ),
+          Column(
+            children: List.generate(_lastVisitedBeaches.length, (index) {
+              Beach idxBeach = _lastVisitedBeaches[index];
+              return Column(
+                children: [
+                  ListTile(
+                    title: Text(idxBeach.name),
+                    trailing: idxBeach.createFavoriteIcon(context,
+                        color: Theme.of(context).colorScheme.onSurface),
+                    onTap: () {
+                      context
+                          .read<HomeMenuIndexProvider>()
+                          .changeSelectedIndex(0);
+                      context
+                          .read<BeachesProvider>()
+                          .setCurrentlySelectedBeach(idxBeach);
+                      Navigator.pop(context);
+                    },
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Divider(),
+                  )
+                ],
+              );
+            }),
+          )
+        ],
+      ),
     );
   }
 }
@@ -301,7 +306,8 @@ class _FavouriteLocationsInDrawerState
 
   SharedPreferences? prefs;
 
-  List<Beach> get _favouriteBeaches => _beaches.beachesFromId(prefs?.getStringList("favourites") ?? []);
+  List<Beach> get _favouriteBeaches =>
+      _beaches.beachesFromId(prefs?.getStringList("favourites") ?? []);
 
   Future<void> _initPrefs() async {
     prefs = await SharedPreferences.getInstance();
@@ -317,11 +323,11 @@ class _FavouriteLocationsInDrawerState
   Widget build(BuildContext context) {
     return _favouriteBeaches.isEmpty
         ? Center(
-          child: Column(
-            children: [
-              Text("Gem dine steder her"),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+            child: Column(
+              children: [
+                Text("Gem dine steder her"),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       "Tryk på ",
@@ -335,15 +341,22 @@ class _FavouriteLocationsInDrawerState
                         style: _textTheme.labelMedium)
                   ],
                 ),
-            ],
-          ),
-        )
+              ],
+            ),
+          )
         : Column(
             children: _favouriteBeaches.map((indexBeach) {
               print(_favouriteBeaches.length);
               return ListTile(
                 title: Text(indexBeach.name),
                 trailing: indexBeach.createFavoriteIcon(context),
+                onTap: () {
+                  context.read<HomeMenuIndexProvider>().changeSelectedIndex(0);
+                  context
+                      .read<BeachesProvider>()
+                      .setCurrentlySelectedBeach(indexBeach);
+                  Navigator.pop(context);
+                },
               );
             }).toList(),
           );

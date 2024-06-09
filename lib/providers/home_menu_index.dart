@@ -17,7 +17,7 @@ class HomeMenuIndexProvider extends ChangeNotifier {
 
   LatLng? get getMapStartLocation => _mapStartLocation;
 
-  void setMapPageStartLocation(LatLng startLocation){
+  void setMapPageStartLocation(LatLng? startLocation){
     _mapStartLocation = startLocation;
     notifyListeners();
   }
