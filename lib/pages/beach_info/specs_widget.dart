@@ -5,6 +5,7 @@ import 'package:badevand/pages/beach_info/weather_info_exapnsions.dart';
 import 'package:badevand/providers/beaches_provider.dart';
 import 'package:badevand/providers/loading_provider.dart';
 import 'package:badevand/providers/user_position_provider.dart';
+import 'package:badevand/widgets/copy_icon_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
@@ -172,6 +173,10 @@ class MoreInformation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String coordinatesText =
+        "${beach.position.latitude.toStringAsFixed(3)}, ${beach.position.longitude.toStringAsFixed(3)}";
+    final String beachIdText = beach.id.toString();
+
     return ListTile(
       leading: Icon(Icons.info_outline),
       title: Text("Yderligere information"),
@@ -184,41 +189,19 @@ class MoreInformation extends StatelessWidget {
                     children: [
                       ListTile(
                         leading: Icon(Icons.public_outlined),
-                        title: Text(
-                            "${beach.position.latitude.toStringAsFixed(3)}, ${beach.position.longitude.toStringAsFixed(3)}"),
-                        subtitle: Text("Koordinater"),
-                        trailing: IconButton(
-                            icon: Icon(
-                              Icons.copy,
-                            ),
-                            onPressed: () {
-                              Clipboard.setData(ClipboardData(
-                                      text:
-                                          "${beach.position.latitude.toStringAsFixed(3)}, ${beach.position.longitude.toStringAsFixed(3)}"))
-                                  .then((value) {
-                                Navigator.pop(context);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text("Koordinater kopieret")));
-                              }); // -> show a notification
-                            }),
+                        subtitle: Text(coordinatesText),
+                        title: Text("Koordinater"),
+                        trailing: CopyIconButton(
+                            textToCopy: coordinatesText,
+                            onFinishText: "Koordinater kopieret"),
                       ),
                       ListTile(
-                        leading: Icon(Icons.shield_outlined),
-                        title: Text(beach.id.toString()),
-                        subtitle: Text("Id"),
-                        trailing: IconButton(
-                            icon: Icon(Icons.copy),
-                            onPressed: () {
-                              Clipboard.setData(
-                                      ClipboardData(text: beach.id.toString()))
-                                  .then((value) {
-                                Navigator.pop(context);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text("Id kopieret")));
-                              }); // -> show a notification
-                            }),
-                      )
+                          leading: Icon(Icons.shield_outlined),
+                          subtitle: Text(beachIdText),
+                          title: Text("ID"),
+                          trailing: CopyIconButton(
+                              textToCopy: beachIdText,
+                              onFinishText: "ID kopieret"))
                     ],
                   ),
                 ));
