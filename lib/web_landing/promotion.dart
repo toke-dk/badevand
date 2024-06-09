@@ -12,7 +12,8 @@ class Promotion extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      color: Colors.grey[300],
+      color: Colors.grey[100],
+      padding: EdgeInsets.symmetric(vertical: 40),
       child: Align(
         child: Container(
           width: double.infinity,
@@ -28,11 +29,11 @@ class Promotion extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               Gap(35),
-              _PromotionAttribute(title: "1.900+", description: 'Strande',),
+              _PromotionAttribute(title: "1.900+", description: 'badesteder',),
               Gap(25),
-              _PromotionAttribute(title: "15+", description: "Kommuner"),
+              _PromotionAttribute(title: "15+", description: "kommuner"),
               Gap(25),
-              _PromotionAttribute(title: "9", description: "Dages vejrudsigt")
+              _PromotionAttribute(title: "9", description: "dages vejrudsigt")
             ],
           ),
         ),

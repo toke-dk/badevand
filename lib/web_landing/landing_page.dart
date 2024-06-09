@@ -32,13 +32,14 @@ class WebLandingPage extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Promotion(),
             Header(
               textTheme: textTheme,
               colorScheme: colorScheme,
             ),
             Gap(20),
             Features(),
+            Gap(30),
+            Promotion(),
             Gap(40),
             Register(),
           ],
