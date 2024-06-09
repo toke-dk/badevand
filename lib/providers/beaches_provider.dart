@@ -81,7 +81,7 @@ class BeachesProvider extends ChangeNotifier {
   Future<void> _initCurrentSelectedBeach() async {
     final prefs = await SharedPreferences.getInstance();
     final favs =
-        _allBeaches.beachesFromId(prefs.getStringList("favorites") ?? []);
+        _allBeaches.getFavouriteBeaches;
     final latest =
         _allBeaches.beachesFromId(prefs.getStringList("lastVisited") ?? []);
 
