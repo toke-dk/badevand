@@ -40,14 +40,10 @@ Future<List<Beach>> getBeachesFromCSV(String path) async {
 
   final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  // TODO: make this method inside beach class
   return result
-      .map((e) => Beach(
-      id: e["id"],
-      name: e["name"],
-      position: LatLng(e["lat"], e["lon"]),
-      isFavourite: getIsFavourite(prefs, e["id"]),
-      municipality: e["municipality"]), )
+      .map(
+        (e) => Beach.fromMiljoePortalenMap(e, prefs),
+      )
       .toList();
 }
 
@@ -61,14 +57,4 @@ bool areMapsEqual(Map map1, Map map2) {
 
 Future<String> _loadCSV(String path) async {
   return rootBundle.loadString(path);
-}
-
-bool getIsFavourite(SharedPreferences prefs, String beachId) {
-  final List<String> favouriteBeachesId = prefs.getStringList('favourites') ?? [];
-
-  if (favouriteBeachesId.contains(beachId)) {
-    return true;
-  } else {
-    return false;
-  }
 }

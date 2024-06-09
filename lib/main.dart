@@ -311,7 +311,7 @@ class _FavouriteLocationsInDrawerState
   SharedPreferences? prefs;
 
   List<Beach> get _favouriteBeaches =>
-      _beaches.beachesFromId(prefs?.getStringList("favourites") ?? []);
+      _beaches.getFavouriteBeaches;
 
   Future<void> _initPrefs() async {
     prefs = await SharedPreferences.getInstance();

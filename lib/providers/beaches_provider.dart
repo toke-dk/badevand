@@ -39,6 +39,8 @@ class BeachesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Favourite beaches
+
   Future<void> changeValueFavoriteBeach(Beach beachChange) async {
     if (!_allBeaches.contains(beachChange)) return;
 

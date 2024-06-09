@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../enums/water_quality.dart';
 import '../providers/beaches_provider.dart';
@@ -51,6 +52,15 @@ class Beach {
       isFavourite: isBeachFavourite,
     );
   }
+  
+  factory Beach.fromMiljoePortalenMap(Map<String, dynamic> map, SharedPreferences prefs) {
+    return Beach(
+        id: map["id"],
+        name: map["name"],
+        position: LatLng(map["lat"], map["lon"]),
+        isFavourite: _getIsFavourite(prefs, map["id"]),
+        municipality: map["municipality"]);
+  }
 
   DhiBeachSpecifications? get getSpecsOfToday {
     if (dhiBeachSpecifications.indexWhere((specs) => specs.dataDate.isToday) == -1)
@@ -82,3 +92,12 @@ class Beach {
   MeteorologicalData get getFirstMeteoData => meteoData.first.dataList.first;
 }
 
+bool _getIsFavourite(SharedPreferences prefs, String beachId) {
+  final List<String> favouriteBeachesId = prefs.getStringList('favourites') ?? [];
+
+  if (favouriteBeachesId.contains(beachId)) {
+    return true;
+  } else {
+    return false;
+  }
+}
