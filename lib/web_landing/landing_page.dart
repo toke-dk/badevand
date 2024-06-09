@@ -1,3 +1,4 @@
+import 'package:badevand/web_landing/features.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -25,14 +26,18 @@ class WebLandingPage extends StatelessWidget {
           child: Image.asset("assets/transparent_logo_white.png"),
         ),
       ),
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Header(
-            textTheme: textTheme,
-            colorScheme: colorScheme,
-          ),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Header(
+              textTheme: textTheme,
+              colorScheme: colorScheme,
+            ),
+            Gap(20),
+            Features(),
+          ],
+        ),
       ),
     );
   }
