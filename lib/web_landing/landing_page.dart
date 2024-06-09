@@ -1,4 +1,5 @@
 import 'package:badevand/web_landing/features.dart';
+import 'package:badevand/web_landing/promotion.dart';
 import 'package:badevand/web_landing/register.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -31,6 +32,7 @@ class WebLandingPage extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            Promotion(),
             Header(
               textTheme: textTheme,
               colorScheme: colorScheme,
