@@ -6,6 +6,7 @@ import 'package:badevand/providers/beaches_provider.dart';
 import 'package:badevand/providers/loading_provider.dart';
 import 'package:badevand/providers/user_position_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -139,6 +140,11 @@ class _SpecsWidgetState extends State<SpecsWidget> {
           WeatherInfoExpansions(groupedData: _groupedDataWithoutToday),
           Gap(30),
           SunRiseSunsetWidget(twilight: _twilight),
+          Gap(20),
+          Divider(),
+          MoreInformation(
+            beach: _beach,
+          ),
           Gap(30)
         ],
       );
@@ -156,6 +162,68 @@ class _SpecsWidgetState extends State<SpecsWidget> {
       });
       context.read<LoadingProvider>().toggleAppLoadingState(false);
     });
+  }
+}
+
+class MoreInformation extends StatelessWidget {
+  const MoreInformation({super.key, required this.beach});
+
+  final Beach beach;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Icon(Icons.info_outline),
+      title: Text("Yderligere information"),
+      onTap: () {
+        showDialog(
+            context: context,
+            builder: (_) => Dialog(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ListTile(
+                        leading: Icon(Icons.public_outlined),
+                        title: Text(
+                            "${beach.position.latitude.toStringAsFixed(3)}, ${beach.position.longitude.toStringAsFixed(3)}"),
+                        subtitle: Text("Koordinater"),
+                        trailing: IconButton(
+                            icon: Icon(
+                              Icons.copy,
+                            ),
+                            onPressed: () {
+                              Clipboard.setData(ClipboardData(
+                                      text:
+                                          "${beach.position.latitude.toStringAsFixed(3)}, ${beach.position.longitude.toStringAsFixed(3)}"))
+                                  .then((value) {
+                                Navigator.pop(context);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text("Koordinater kopieret")));
+                              }); // -> show a notification
+                            }),
+                      ),
+                      ListTile(
+                        leading: Icon(Icons.shield_outlined),
+                        title: Text(beach.id.toString()),
+                        subtitle: Text("Id"),
+                        trailing: IconButton(
+                            icon: Icon(Icons.copy),
+                            onPressed: () {
+                              Clipboard.setData(
+                                      ClipboardData(text: beach.id.toString()))
+                                  .then((value) {
+                                Navigator.pop(context);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text("Id kopieret")));
+                              }); // -> show a notification
+                            }),
+                      )
+                    ],
+                  ),
+                ));
+      },
+    );
   }
 }
 
