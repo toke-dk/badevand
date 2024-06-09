@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../models/beach.dart';
+import '../models/dhi/dhi_specifications.dart';
 import '../providers/beaches_provider.dart';
 import 'package:badges/badges.dart' as badges;
 
@@ -103,7 +104,7 @@ class _SearchBeachPageState extends State<SearchBeachPage> {
               children: List.generate(_beachesToDisplay.length, (index) {
                 final Beach indexBeach = _beachesToDisplay[index];
 
-                final BeachSpecifications? specsToday =
+                final DhiBeachSpecifications? specsToday =
                     indexBeach.getSpecsOfToday;
 
                 return ListTile(

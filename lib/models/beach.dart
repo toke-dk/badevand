@@ -9,13 +9,14 @@ import 'package:provider/provider.dart';
 
 import '../enums/water_quality.dart';
 import '../providers/beaches_provider.dart';
+import 'dhi/dhi_specifications.dart';
 
 class Beach {
   String id;
   String name;
   String? description;
   String? comments;
-  List<BeachSpecifications> beachSpecifications;
+  List<DhiBeachSpecifications> dhiBeachSpecifications;
   LatLng position;
   String municipality;
   bool isFavourite;
@@ -25,7 +26,7 @@ class Beach {
     required this.name,
     this.description,
     this.comments,
-    this.beachSpecifications = const [],
+    this.dhiBeachSpecifications = const [],
     required this.position,
     required this.municipality,
     this.isFavourite = false,
@@ -37,8 +38,8 @@ class Beach {
       name: map["name"] as String,
       description: map["description"] as String?,
       comments: map["comments"]?.toString(),
-      beachSpecifications: (map["data"] as List<dynamic>)
-          .map((dataMap) => BeachSpecifications.fromMap(dataMap))
+      dhiBeachSpecifications: (map["data"] as List<dynamic>)
+          .map((dataMap) => DhiBeachSpecifications.fromMap(dataMap))
           .toList(),
       position: LatLng(double.parse(map["latitude"].toString()),
           double.parse(map["longitude"].toString())),
@@ -47,11 +48,11 @@ class Beach {
     );
   }
 
-  BeachSpecifications? get getSpecsOfToday {
-    if (beachSpecifications.indexWhere((specs) => specs.dataDate.isToday) == -1)
+  DhiBeachSpecifications? get getSpecsOfToday {
+    if (dhiBeachSpecifications.indexWhere((specs) => specs.dataDate.isToday) == -1)
       return null;
 
-    return beachSpecifications
+    return dhiBeachSpecifications
         .firstWhere((element) => element.dataDate.isToday);
   }
 
@@ -75,45 +76,3 @@ class Beach {
   }
 }
 
-class BeachSpecifications {
-  DateTime dataDate;
-  WaterQualityTypes waterQualityType;
-  double waterTemperature;
-  double airTemperature;
-  WeatherTypes? weatherType;
-  double? windSpeed;
-  WindDirection? windDirection;
-  double? precipitation;
-
-  BeachSpecifications({
-    required this.dataDate,
-    required this.waterQualityType,
-    required this.waterTemperature,
-    required this.airTemperature,
-    required this.weatherType,
-    required this.windSpeed,
-    required this.windDirection,
-    required this.precipitation,
-  });
-
-  factory BeachSpecifications.fromMap(Map<String, dynamic> map) {
-    return BeachSpecifications(
-        dataDate: DateTime.parse(map["date"].toString()),
-        waterQualityType: convertIntToQualityType(
-            int.parse(map["water_quality"].toString()))!,
-        waterTemperature: double.parse(map["water_temperature"].toString()),
-        airTemperature: double.parse(map["air_temperature"].toString()),
-        weatherType:
-            convertIntToWeatherType(int.parse(map["weather_type"].toString()))!,
-        windSpeed: map["wind_speed"].toString() == ""
-            ? null
-            : double.parse(map["wind_speed"].toString()),
-        windDirection: map["wind_direction"].toString() == ""
-            ? null
-            : WindDirection(
-                angle: double.parse(map["wind_direction"].toString())),
-        precipitation: map["precipitation"].toString() == ""
-            ? null
-            : double.parse(map["precipitation"].toString()));
-  }
-}
