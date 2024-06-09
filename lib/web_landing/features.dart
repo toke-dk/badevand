@@ -21,18 +21,21 @@ class Features extends StatelessWidget {
             description: "Du kan nemt tilføje badesteder",
             image: _imagePlaceholder,
           ),
+          Gap(30),
           _FeatureSection(
             title: "Tætteste badesteder",
             description:
                 "Du kan også se hvilke badesteder der er tættest på hvor du er",
             image: _imagePlaceholder,
           ),
+          Gap(30),
           _FeatureSection(
             title: "Lokalt vejr",
             description:
                 "Med en vejrmodel kan du nemt og let se hvordan vejret på forskellige badesteder er",
             image: _imagePlaceholder,
           ),
+          Gap(30),
           _FeatureSection(
             title: "Favorit badesteder",
             description:
@@ -64,10 +67,10 @@ class _FeatureSection extends StatelessWidget {
       children: [
         Text(
           title,
-          style: textTheme.titleLarge,
+          style: textTheme.displaySmall,
         ),
         Divider(
-          color: colorScheme.primary,
+          color: colorScheme.tertiary,
           thickness: 3,
         ),
         Gap(8),

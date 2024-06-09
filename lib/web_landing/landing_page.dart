@@ -46,7 +46,7 @@ class WebLandingPage extends StatelessWidget {
                 Features(),
                 Gap(30),
                 Promotion(),
-                Gap(40),
+                Gap(60),
                 Register(),
               ],
             ),

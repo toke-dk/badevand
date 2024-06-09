@@ -18,7 +18,7 @@ class Header extends StatelessWidget {
               colors: [Colors.blue[300]!, Colors.blue[900]!])),
       child: Align(
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 20),
+          padding: EdgeInsets.symmetric(horizontal: 30),
           constraints: BoxConstraints(
             maxWidth: 1000,
           ),
@@ -33,11 +33,12 @@ class Header extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-              Gap(15),
+              Gap(10),
               Text(
                 "Tilmeld dig testgruppen på nedenstående felt",
                 style: textTheme.bodyLarge!.copyWith(color: Colors.white),
               ),
+              Gap(20),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 child: Container(
@@ -53,10 +54,9 @@ class Header extends StatelessWidget {
                       ),
                       Gap(10),
                       Container(
-                        padding: EdgeInsets.all(8),
-                        color: Colors.grey[100],
                         child: TextFormField(
                           decoration: InputDecoration(
+                            border: OutlineInputBorder(borderRadius: BorderRadius.zero),
                             labelText: "Skriv din email her*",
                           ),
                         ),
@@ -75,7 +75,7 @@ class Header extends StatelessWidget {
                   ),
                 ),
               ),
-              Gap(20)
+              Gap(100)
             ],
           ),
         ),

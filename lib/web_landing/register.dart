@@ -21,7 +21,7 @@ class Register extends StatelessWidget {
           Text(
             "Tilmeld dig her",
             style: textTheme.displaySmall!.copyWith(
-                color: colorScheme.primary, fontWeight: FontWeight.bold),
+                color: colorScheme.tertiary, fontWeight: FontWeight.bold),
           ),
           Gap(20),
           Text(
@@ -44,10 +44,9 @@ class SubscribeSection extends StatelessWidget {
     return Column(
       children: [
         Container(
-          padding: EdgeInsets.all(8),
-          color: Colors.grey[100],
           child: TextFormField(
             decoration: InputDecoration(
+              border: OutlineInputBorder(borderRadius: BorderRadius.zero),
               labelText: "Skriv din email her*",
             ),
           ),
