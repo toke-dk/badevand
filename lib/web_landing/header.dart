@@ -11,6 +11,7 @@ class Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
+      height: MediaQuery.of(context).size.height,
       decoration: BoxDecoration(
           gradient: LinearGradient(
               begin: Alignment.topCenter,
@@ -38,7 +39,7 @@ class Header extends StatelessWidget {
                 "Tilmeld dig testgruppen på nedenstående felt",
                 style: textTheme.bodyLarge!.copyWith(color: Colors.white),
               ),
-              Gap(20),
+              Gap(50),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 child: Container(
@@ -75,7 +76,7 @@ class Header extends StatelessWidget {
                   ),
                 ),
               ),
-              Gap(30),
+              Gap(50),
               Image.asset("assets/soon_gplay.png", width: 200,),
               Gap(30)
             ],
