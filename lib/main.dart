@@ -14,6 +14,7 @@ import 'package:badevand/providers/google_markers_provider.dart';
 import 'package:badevand/providers/home_menu_index.dart';
 import 'package:badevand/providers/loading_provider.dart';
 import 'package:badevand/providers/user_position_provider.dart';
+import 'package:badevand/widgets/locations_drawer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
