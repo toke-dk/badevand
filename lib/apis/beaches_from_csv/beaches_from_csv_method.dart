@@ -40,6 +40,7 @@ Future<List<Beach>> getBeachesFromCSV(String path) async {
 
   final SharedPreferences prefs = await SharedPreferences.getInstance();
 
+  // TODO: make this method inside beach class
   return result
       .map((e) => Beach(
       id: e["id"],

@@ -17,7 +17,7 @@ import '../models/sorting_option.dart';
 class BeachesProvider extends ChangeNotifier {
   List<Beach> _allBeaches = [];
 
-  Future<void> initBeaches () async {
+  Future<void> initBeaches() async {
     // getting them from asset file
     List<Beach> beaches = await getBeachDataFromAssetFile();
     // sorting them by name
@@ -76,17 +76,21 @@ class BeachesProvider extends ChangeNotifier {
 
   Future<void> _initCurrentSelectedBeach() async {
     final prefs = await SharedPreferences.getInstance();
-    final favs = _allBeaches.beachesFromId(prefs.getStringList("favourites") ?? []);
-    final latest = _allBeaches.beachesFromId(prefs.getStringList("lastVisited") ?? []);
+    final favs =
+        _allBeaches.beachesFromId(prefs.getStringList("favourites") ?? []);
+    final latest =
+        _allBeaches.beachesFromId(prefs.getStringList("lastVisited") ?? []);
 
+    Beach? beachToSet = null;
     if (favs.isNotEmpty) {
-      _currentlySelectedBeach = favs.first;
+      beachToSet = favs.first;
     } else if (latest.isNotEmpty) {
-      _currentlySelectedBeach = latest.first;
+      beachToSet = latest.first;
     } else {
-      _currentlySelectedBeach = _allBeaches.first;
+      beachToSet = _allBeaches.first;
     }
-    _updateDataForCurrentBeach();
+
+    setCurrentlySelectedBeach(beachToSet);
   }
 
   Future<void> setCurrentlySelectedBeach(Beach newBeach) async {
@@ -112,13 +116,6 @@ class BeachesProvider extends ChangeNotifier {
   }
 
   /// Grouped data
-
-  List<DayGroupedMeteorologicalData> _dataForCurrentBeach = [];
-
-  List<DayGroupedMeteorologicalData> get getDataForCurrentBeach {
-    return _dataForCurrentBeach;
-  }
-
   Future<void> _updateDataForCurrentBeach() async {
     final LatLng pos = getCurrentlySelectedBeach.position;
 
@@ -127,7 +124,8 @@ class BeachesProvider extends ChangeNotifier {
     final List<DailyForecastMeteoData> forecastMeteoData =
         await getDailyForecastData(pos);
 
-    _dataForCurrentBeach = groupMeteoData(meteoData, forecastMeteoData);
+    getCurrentlySelectedBeach.meteoData =
+        groupMeteoData(meteoData, forecastMeteoData);
     notifyListeners();
   }
 

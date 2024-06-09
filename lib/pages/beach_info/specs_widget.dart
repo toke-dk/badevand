@@ -29,7 +29,7 @@ class SpecsWidget extends StatefulWidget {
 
 class _SpecsWidgetState extends State<SpecsWidget> {
   List<DayGroupedMeteorologicalData> get _receivedData =>
-      context.watch<BeachesProvider>().getDataForCurrentBeach;
+      context.watch<BeachesProvider>().getCurrentlySelectedBeach.meteoData;
 
   Twilight? _twilight;
 
