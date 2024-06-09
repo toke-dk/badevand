@@ -72,7 +72,7 @@ class Beach {
 
   Widget createFavoriteIcon(BuildContext context, {Color? color}) => IconButton(
         onPressed: () {
-          context.read<BeachesProvider>().changeValueFavoriteBeach(this);
+          context.read<BeachesProvider>().addFavoriteBeach(this);
         },
         icon: Icon(
           isFavourite ? Icons.star : Icons.star_outline,
@@ -94,7 +94,7 @@ class Beach {
 
 bool _getIsFavourite(SharedPreferences prefs, String beachId) {
   final List<String> favouriteBeachesId =
-      prefs.getStringList('favourites') ?? [];
+      prefs.getStringList('favorites') ?? [];
 
   if (favouriteBeachesId.contains(beachId)) {
     return true;

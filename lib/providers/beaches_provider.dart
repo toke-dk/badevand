@@ -41,7 +41,7 @@ class BeachesProvider extends ChangeNotifier {
 
   /// Favourite beaches
 
-  Future<void> changeValueFavoriteBeach(Beach beachChange) async {
+  Future<void> addFavoriteBeach(Beach beachChange) async {
     if (!_allBeaches.contains(beachChange)) return;
 
     final int index = _allBeaches.indexOf(beachChange);
@@ -50,13 +50,13 @@ class BeachesProvider extends ChangeNotifier {
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final List<String> favouriteBeaches =
-        prefs.getStringList('favourites') ?? [];
+        prefs.getStringList('favorites') ?? [];
 
     if (previousValue) {
       prefs.setStringList(
-          "favourites", favouriteBeaches..remove(beachChange.id));
+          "favorites", favouriteBeaches..remove(beachChange.id));
     } else if (!previousValue) {
-      prefs.setStringList('favourites', favouriteBeaches..add(beachChange.id));
+      prefs.setStringList('favorites', favouriteBeaches..add(beachChange.id));
     }
 
     _allBeaches[index].isFavourite = !_allBeaches[index].isFavourite;
@@ -81,7 +81,7 @@ class BeachesProvider extends ChangeNotifier {
   Future<void> _initCurrentSelectedBeach() async {
     final prefs = await SharedPreferences.getInstance();
     final favs =
-        _allBeaches.beachesFromId(prefs.getStringList("favourites") ?? []);
+        _allBeaches.beachesFromId(prefs.getStringList("favorites") ?? []);
     final latest =
         _allBeaches.beachesFromId(prefs.getStringList("lastVisited") ?? []);
 
