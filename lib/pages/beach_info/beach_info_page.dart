@@ -58,7 +58,6 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
                     final provider = context.read<HomeMenuIndexProvider>();
                     provider.setMapPageStartLocation(_beach.position);
                     provider.changeSelectedIndex(1);
-                    Navigator.of(context).pop();
                   },
                 ),
               ],
