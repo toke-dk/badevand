@@ -37,23 +37,48 @@ void main() async {
 
   HttpOverrides.global = MyHttpOverrides();
 
-  runApp(Provider.value(
-      value: adState,
-      builder: (context, child) => MultiProvider(
-            providers: [
-              ChangeNotifierProvider(
-                  create: (BuildContext context) => BeachesProvider()),
-              ChangeNotifierProvider(
-                  create: (BuildContext context) => IconMapsProvider()),
-              ChangeNotifierProvider(
-                  create: (BuildContext context) => UserPositionProvider()),
-              ChangeNotifierProvider(
-                  create: (BuildContext context) => HomeMenuIndexProvider()),
-              ChangeNotifierProvider(
-                  create: (BuildContext context) => LoadingProvider()),
-            ],
-            child: const MyApp(),
-          )));
+  runApp(kIsWeb
+      ? MyWebsite()
+      : Provider.value(
+          value: adState,
+          builder: (context, child) => MultiProvider(
+                providers: [
+                  ChangeNotifierProvider(
+                      create: (BuildContext context) => BeachesProvider()),
+                  ChangeNotifierProvider(
+                      create: (BuildContext context) => IconMapsProvider()),
+                  ChangeNotifierProvider(
+                      create: (BuildContext context) => UserPositionProvider()),
+                  ChangeNotifierProvider(
+                      create: (BuildContext context) =>
+                          HomeMenuIndexProvider()),
+                  ChangeNotifierProvider(
+                      create: (BuildContext context) => LoadingProvider()),
+                ],
+                child: const MyApp(),
+              )));
+}
+
+class MyWebsite extends StatefulWidget {
+  const MyWebsite({super.key});
+
+  @override
+  State<MyWebsite> createState() => _MyWebsiteState();
+}
+
+class _MyWebsiteState extends State<MyWebsite> {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Dansk Badevand',
+      theme: ThemeData(
+        textTheme: !kIsWeb ? null : GoogleFonts.spinnakerTextTheme(),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        useMaterial3: true,
+      ),
+      home: WebLandingPage(),
+    );
+  }
 }
 
 class MyApp extends StatefulWidget {
@@ -93,11 +118,10 @@ class _MyAppState extends State<MyApp> {
       title: 'Dansk Badevand',
       navigatorKey: NavigationService.instance.navigatorKey,
       theme: ThemeData(
-        textTheme: !kIsWeb ? null : GoogleFonts.spinnakerTextTheme(),
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: kIsWeb ? WebLandingPage() : context.watch<BeachesProvider>().getBeaches.isEmpty
+      home: context.watch<BeachesProvider>().getBeaches.isEmpty
           ? Scaffold()
           : Scaffold(
               drawer: MyLocationDrawer(),
