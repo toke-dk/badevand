@@ -59,6 +59,7 @@ dependencies:
   fluster: ^1.2.0
   app_bar_with_search_switch: ^1.8.5
   google_fonts: ^6.2.1
+  footer: ^0.0.4
 
 dev_dependencies:
   build_runner: ^2.4.10

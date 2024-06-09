@@ -1,7 +1,10 @@
 import 'package:badevand/web_landing/features.dart';
+import 'package:badevand/web_landing/footer.dart';
 import 'package:badevand/web_landing/promotion.dart';
 import 'package:badevand/web_landing/register.dart';
 import 'package:flutter/material.dart';
+import 'package:footer/footer.dart';
+import 'package:footer/footer_view.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -28,25 +31,28 @@ class WebLandingPage extends StatelessWidget {
           child: Image.asset("assets/transparent_logo_white.png"),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Header(
-              textTheme: textTheme,
-              colorScheme: colorScheme,
+      body: FooterView(
+        footer: MyFooter(textTheme.bodySmall!.copyWith(color: Colors.white)),
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Header(
+                  textTheme: textTheme,
+                  colorScheme: colorScheme,
+                ),
+                Gap(20),
+                Features(),
+                Gap(30),
+                Promotion(),
+                Gap(40),
+                Register(),
+              ],
             ),
-            Gap(20),
-            Features(),
-            Gap(30),
-            Promotion(),
-            Gap(40),
-            Register(),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 }
-
-
