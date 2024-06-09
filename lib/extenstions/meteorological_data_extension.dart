@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:badevand/extenstions/date_extensions.dart';
 import 'package:badevand/extenstions/numbers_extension.dart';
 import 'package:badevand/models/meteo/weather_data.dart';
 

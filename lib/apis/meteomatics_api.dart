@@ -7,15 +7,12 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 
 import '../env/env.dart';
-import '../models/beach.dart';
 import '../models/meteo/weather_data.dart';
 
 Future<List<MeteorologicalData>> getWeatherData(LatLng position) async {
   final DateTime now = DateTime.now();
   final DateTime firstDate = now;
   final DateTime lastDate = now.add(8.days).lastHourOfDay;
-
-  print(firstDate.meteoDateFormatHour);
 
   final double lat = position.latitude;
   final double lon = position.longitude;
@@ -52,7 +49,6 @@ Future<List<MeteorologicalData>> getWeatherData(LatLng position) async {
 
   if (response.statusCode == 200) {
     final List<dynamic> data = jsonDecode(response.body)["data"];
-    print(data);
     return getMeteorologicalDataList(data);
   } else {
     // Handle error scenario
@@ -64,8 +60,6 @@ Future<List<DailyForecastMeteoData>> getDailyForecastData(LatLng position) async
   final DateTime now = DateTime.now();
   final DateTime firstDate = now.lastHourOfDay;
   final DateTime lastDate = firstDate.add(8.days);
-
-  print(firstDate.meteoDateFormatHour);
 
   final double lat = position.latitude;
   final double lon = position.longitude;
@@ -98,7 +92,6 @@ Future<List<DailyForecastMeteoData>> getDailyForecastData(LatLng position) async
 
   if (response.statusCode == 200) {
     final List<dynamic> data = jsonDecode(response.body)["data"];
-    print(data);
     return getDailyMeteorologicalDataList(data);
   } else {
     // Handle error scenario
@@ -159,7 +152,6 @@ class Twilight {
 
     final DateTime sunSetDate =
         DateTime.parse(getDateFromParameter("sunset:sql")).toLocal();
-    print("set $sunSetDate");
 
     return Twilight(sunRise: sunRiseDate, sunSet: sunSetDate);
   }

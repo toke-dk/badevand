@@ -4,9 +4,7 @@ import 'package:badevand/providers/beaches_provider.dart';
 import 'package:badevand/providers/home_menu_index.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
-import '../../models/ad_state.dart';
 import '../../models/beach.dart';
 
 class BeachInfoPage extends StatefulWidget {
@@ -27,7 +25,6 @@ class _BeachInfoPageState extends State<BeachInfoPage> {
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
 
-    print('now ${DateTime.now().toUtc().toString().replaceAll(" ", "T")}');
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),

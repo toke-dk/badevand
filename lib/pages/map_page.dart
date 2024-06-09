@@ -78,7 +78,6 @@ class _MapPageState extends State<MapPage> {
   }
 
   Future<void> _updateVisibleMarkers() async {
-    print("update");
 
     LatLngBounds visibleRegion = await _controller!.getVisibleRegion();
 

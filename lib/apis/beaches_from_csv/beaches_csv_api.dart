@@ -1,13 +1,6 @@
-import 'package:badevand/extenstions/beaches_extension.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
 
 import 'beaches_from_csv_method.dart';
-import '../../enums/sorting_values.dart';
 import '../../models/beach.dart';
-import '../../models/sorting_option.dart';
-import '../../providers/beaches_provider.dart';
-import '../../providers/google_markers_provider.dart';
 
 Future<List<Beach>> getBeachDataFromAssetFile() async {
 

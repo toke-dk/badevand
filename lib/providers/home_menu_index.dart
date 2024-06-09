@@ -1,7 +1,5 @@
-import 'package:badevand/providers/beaches_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 
 class HomeMenuIndexProvider extends ChangeNotifier {
   int _selectedIndex = 0;
@@ -17,7 +15,7 @@ class HomeMenuIndexProvider extends ChangeNotifier {
 
   LatLng? get getMapStartLocation => _mapStartLocation;
 
-  void setMapPageStartLocation(LatLng? startLocation){
+  void setMapPageStartLocation(LatLng? startLocation) {
     _mapStartLocation = startLocation;
     notifyListeners();
   }

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:badevand/extenstions/beaches_extension.dart';
 import 'package:badevand/extenstions/http_override.dart';
@@ -9,7 +8,6 @@ import 'package:badevand/models/ad_state.dart';
 import 'package:badevand/models/beach.dart';
 import 'package:badevand/models/navigator_service.dart';
 import 'package:badevand/pages/all_pages.dart';
-import 'package:badevand/pages/home_page.dart';
 import 'package:badevand/pages/search_beach.dart';
 import 'package:badevand/providers/beaches_provider.dart';
 import 'package:badevand/providers/google_markers_provider.dart';
@@ -25,9 +23,6 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'apis/beaches_from_csv/beaches_csv_api.dart';
-import 'enums/sorting_values.dart';
-import 'models/sorting_option.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -345,7 +340,6 @@ class _FavouriteLocationsInDrawerState
           )
         : Column(
             children: _favouriteBeaches.map((indexBeach) {
-              print(_favouriteBeaches.length);
               return ListTile(
                 title: Text(indexBeach.name),
                 trailing: indexBeach.createFavoriteIcon(context),

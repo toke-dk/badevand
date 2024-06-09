@@ -1,5 +1,3 @@
-import 'package:badevand/models/navigator_service.dart';
-import 'package:badevand/pages/beach_info/beach_info_page.dart';
 import 'package:badevand/providers/beaches_provider.dart';
 import 'package:badevand/providers/home_menu_index.dart';
 import 'package:fluster/fluster.dart';

@@ -13,10 +13,7 @@ import 'package:shimmer/shimmer.dart';
 
 import '../models/beach.dart';
 import '../providers/beaches_provider.dart';
-import 'beach_info/beach_info_page.dart';
 import 'package:badges/badges.dart' as badges;
-
-import 'home_page.dart';
 
 class SearchBeachPage extends StatefulWidget {
   const SearchBeachPage({super.key});

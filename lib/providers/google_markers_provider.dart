@@ -1,9 +1,6 @@
 import 'dart:ui' as ui;
 
-import 'package:badevand/enums/water_quality.dart';
 import 'package:badevand/extenstions/cluster_extension.dart';
-import 'package:badevand/models/navigator_service.dart';
-import 'package:badevand/pages/beach_info/beach_info_page.dart';
 import 'package:badevand/providers/beaches_provider.dart';
 import 'package:fluster/fluster.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,7 +10,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../models/beach.dart';
-import 'home_menu_index.dart';
 
 class IconMapsProvider extends ChangeNotifier {
   Map<int, BitmapDescriptor> _iconMap = {};
@@ -23,7 +19,6 @@ class IconMapsProvider extends ChangeNotifier {
   Future<void> initMarkers(BuildContext context) async {
     _iconMap = await _initializeMarkers(
         context, context.read<BeachesProvider>().getBeaches);
-    print("initing");
     notifyListeners();
   }
 }
@@ -42,10 +37,8 @@ Future<Map<int, BitmapDescriptor>> _initializeMarkers(
     BuildContext context, List<Beach> beaches) async {
   int initialSize = 150;
   return {
-    1: await createBitMapFromAsset(
-        "assets/cluster_icons/p1.png", initialSize),
-    5: await createBitMapFromAsset(
-        "assets/cluster_icons/p5.png", initialSize),
+    1: await createBitMapFromAsset("assets/cluster_icons/p1.png", initialSize),
+    5: await createBitMapFromAsset("assets/cluster_icons/p5.png", initialSize),
     10: await createBitMapFromAsset(
         "assets/cluster_icons/p10.png", initialSize),
     50: await createBitMapFromAsset(

@@ -29,7 +29,6 @@ class _WeatherInfoExpansionsState extends State<WeatherInfoExpansions> {
             _expandedIndexes.remove(index);
           }
         });
-        print(_expandedIndexes);
       },
       children: List.generate(widget.groupedData.length, (index) {
         final idxData = widget.groupedData[index];

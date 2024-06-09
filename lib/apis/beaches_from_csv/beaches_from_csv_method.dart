@@ -1,5 +1,4 @@
 import 'package:badevand/extenstions/string_extension.dart';
-import 'package:badevand/main.dart';
 import 'package:badevand/models/beach.dart';
 import 'package:csv/csv.dart';
 import 'package:coordinate_converter/coordinate_converter.dart';
@@ -38,8 +37,6 @@ Future<List<Beach>> getBeachesFromCSV(String path) async {
 
   final Set ids = result.map((e) => "${e['lat']}, ${e['lon']}").toSet();
   result.retainWhere((x) => ids.remove("${x['lat']}, ${x['lon']}"));
-
-  print(result.length);
 
   final SharedPreferences prefs = await SharedPreferences.getInstance();
 

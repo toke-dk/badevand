@@ -54,7 +54,6 @@ class BeachesProvider extends ChangeNotifier {
     } else if (!previousValue) {
       prefs.setStringList('favourites', favouriteBeaches..add(beachChange.id));
     }
-    print("prefs ${prefs.getStringList('favourites')}");
 
     _allBeaches[index].isFavourite = !_allBeaches[index].isFavourite;
 
@@ -117,7 +116,6 @@ class BeachesProvider extends ChangeNotifier {
   List<DayGroupedMeteorologicalData> _dataForCurrentBeach = [];
 
   List<DayGroupedMeteorologicalData> get getDataForCurrentBeach {
-    print("here $_dataForCurrentBeach");
     return _dataForCurrentBeach;
   }
 

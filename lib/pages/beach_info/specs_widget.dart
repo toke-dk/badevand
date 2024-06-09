@@ -1,7 +1,5 @@
 import 'package:badevand/extenstions/date_extensions.dart';
-import 'package:badevand/extenstions/meteorological_data_extension.dart';
 import 'package:badevand/extenstions/numbers_extension.dart';
-import 'package:badevand/models/meteo/daily_meteo_data.dart';
 import 'package:badevand/models/meteo/day_grouped_data.dart';
 import 'package:badevand/pages/beach_info/weather_info_exapnsions.dart';
 import 'package:badevand/providers/beaches_provider.dart';
@@ -38,7 +36,7 @@ class _SpecsWidgetState extends State<SpecsWidget> {
   bool get _isAppLoading => context.watch<LoadingProvider>().getIsAppLoading;
 
   List<DayGroupedMeteorologicalData> get _groupedDataWithoutToday =>
-      _receivedData!.where((d) => d.day.isAfter(DateTime.now())).toList();
+      _receivedData.where((d) => d.day.isAfter(DateTime.now())).toList();
 
   late TextTheme _textTheme = Theme.of(context).textTheme;
 
@@ -54,7 +52,7 @@ class _SpecsWidgetState extends State<SpecsWidget> {
       context.watch<UserPositionProvider>().getPosition;
 
   MeteorologicalData get _currentMomentData =>
-      _receivedData!.first.dataList.first;
+      _receivedData.first.dataList.first;
 
   BannerAd? banner;
 
@@ -120,7 +118,7 @@ class _SpecsWidgetState extends State<SpecsWidget> {
           ),
           Gap(25),
           ForecastScroll(
-            dataList: _receivedData!.first.dataList,
+            dataList: _receivedData.first.dataList,
           ),
           if (banner == null)
             SizedBox(
@@ -144,7 +142,7 @@ class _SpecsWidgetState extends State<SpecsWidget> {
           Gap(30)
         ],
       );
-        }
+    }
   }
 
   Future<void> initMeteorologicalData() async {

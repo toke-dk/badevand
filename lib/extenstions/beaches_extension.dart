@@ -49,7 +49,6 @@ extension ListOfBeachExtension on List<Beach> {
     List<Beach> beachesToReturn = where((beach) =>
             beach.municipality.toLowerCase() == municipality.toLowerCase())
         .toList();
-    print("those to filter ${beachesToReturn.map((e) => e.municipality)}");
     return beachesToReturn;
   }
 
