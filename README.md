@@ -1,4 +1,4 @@
-# Badevandsapp
+# Badevand app
 
 En app der viser badevandsinformationer over hele Danmark
 
